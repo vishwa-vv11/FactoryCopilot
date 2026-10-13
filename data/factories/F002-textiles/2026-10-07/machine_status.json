@@ -1,0 +1,88 @@
+{
+  "as_of": "2026-10-07T14:00:00+00:00",
+  "factory_id": "F002",
+  "factory_name": "Mysuru Textile Works",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "code": "YP1",
+      "name": "Yarn preparation 1",
+      "line_id": "L01",
+      "line_name": "Cotton Fabric",
+      "status": "running",
+      "reason": "thread break or loom stoppage"
+    },
+    {
+      "machine_id": "L01-M02",
+      "code": "WL2",
+      "name": "Weaving loom 2",
+      "line_id": "L01",
+      "line_name": "Cotton Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L01-M03",
+      "code": "DAP3",
+      "name": "Dyeing and packing 3",
+      "line_id": "L01",
+      "line_name": "Cotton Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M01",
+      "code": "YP1",
+      "name": "Yarn preparation 1",
+      "line_id": "L02",
+      "line_name": "Denim Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M02",
+      "code": "DW2",
+      "name": "Denim weaving 2",
+      "line_id": "L02",
+      "line_name": "Denim Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M03",
+      "code": "FAP3",
+      "name": "Finishing and packing 3",
+      "line_id": "L02",
+      "line_name": "Denim Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M01",
+      "code": "FB1",
+      "name": "Fiber blending 1",
+      "line_id": "L03",
+      "line_name": "Blended Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M02",
+      "code": "WL2",
+      "name": "Weaving loom 2",
+      "line_id": "L03",
+      "line_name": "Blended Fabric",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M03",
+      "code": "FAP3",
+      "name": "Finishing and packing 3",
+      "line_id": "L03",
+      "line_name": "Blended Fabric",
+      "status": "running",
+      "reason": ""
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "as_of": "2026-10-12T14:01:00+00:00",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "machine_code": "CP1",
+      "name": "Component placement 1",
+      "machine_type": "Component placement",
+      "factory_id": "F003",
+      "line_id": "L01",
+      "status": "down",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L01-M02",
+      "machine_code": "RS2",
+      "name": "Reflow soldering 2",
+      "machine_type": "Reflow soldering",
+      "factory_id": "F003",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L01-M03",
+      "machine_code": "BTAP3",
+      "name": "Board testing and packing 3",
+      "machine_type": "Board testing and packing",
+      "factory_id": "F003",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L02-M01",
+      "machine_code": "PA1",
+      "name": "PCB assembly 1",
+      "machine_type": "PCB assembly",
+      "factory_id": "F003",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L02-M02",
+      "machine_code": "SI2",
+      "name": "Sensor integration 2",
+      "machine_type": "Sensor integration",
+      "factory_id": "F003",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L02-M03",
+      "machine_code": "CAP3",
+      "name": "Calibration and packing 3",
+      "machine_type": "Calibration and packing",
+      "factory_id": "F003",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L03-M01",
+      "machine_code": "CP1",
+      "name": "Component placement 1",
+      "machine_type": "Component placement",
+      "factory_id": "F003",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L03-M02",
+      "machine_code": "PS2",
+      "name": "Power soldering 2",
+      "machine_type": "Power soldering",
+      "factory_id": "F003",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    },
+    {
+      "machine_id": "L03-M03",
+      "machine_code": "ETAP3",
+      "name": "Electrical test and packing 3",
+      "machine_type": "Electrical test and packing",
+      "factory_id": "F003",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-12T14:01:00+00:00"
+    }
+  ]
+}

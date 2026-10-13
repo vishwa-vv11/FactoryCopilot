@@ -1,0 +1,4 @@
+date,factory_id,line_id,line_name,product_name,inspected_units,passed_units,rework_units,rejected_units,yield_pct
+2026-10-09,F003,L01,Control Boards,Tested Control Board,793,783,6,4,98.74
+2026-10-09,F003,L02,Sensor Modules,Tested Sensor Module,1004,992,7,5,98.8
+2026-10-09,F003,L03,Power Modules,Tested Power Module,920,909,6,5,98.8

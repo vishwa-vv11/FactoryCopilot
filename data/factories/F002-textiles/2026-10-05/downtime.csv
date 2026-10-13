@@ -1,0 +1,2 @@
+event_id,factory_id,line_id,machine_id,started_at,ended_at,duration_minutes,reason
+DT-5dc3c58c,F002,L01,L01-M01,2026-10-05T09:30:00+00:00,2026-10-05T11:15:00+00:00,104,thread break or loom stoppage

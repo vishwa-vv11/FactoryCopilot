@@ -1,0 +1,4 @@
+date,factory_id,factory_name,industry,line_id,line_code,line_name,product_code,product_name,target_units,achieved_units,shortfall_units,attainment_pct,line_status
+2026-10-08,F001,Coimbatore Auto Components,automotive,L01,EC,Engine Components,FC,Finished Crankshaft,960,927,33,96.6,material_shortage
+2026-10-08,F001,Coimbatore Auto Components,automotive,L02,TG,Transmission Gears,FTG,Finished Transmission Gear,900,895,5,99.4,material_shortage
+2026-10-08,F001,Coimbatore Auto Components,automotive,L03,BA,Brake Assemblies,FBC,Finished Brake Caliper,840,818,22,97.4,material_shortage

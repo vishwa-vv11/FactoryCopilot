@@ -1,0 +1,62 @@
+[
+  {
+    "code": "CTN",
+    "name": "Cotton fiber",
+    "unit": "kg",
+    "opening_stock": 42000,
+    "reorder_level": 7000,
+    "supplier_name": "MTW Cotton fiber Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 14000
+  },
+  {
+    "code": "POL",
+    "name": "Polyester fiber",
+    "unit": "kg",
+    "opening_stock": 26000,
+    "reorder_level": 4500,
+    "supplier_name": "MTW Polyester fiber Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 9000
+  },
+  {
+    "code": "DYE",
+    "name": "Textile dye",
+    "unit": "kg",
+    "opening_stock": 3200,
+    "reorder_level": 550,
+    "supplier_name": "MTW Textile dye Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 1100
+  },
+  {
+    "code": "SIZ",
+    "name": "Sizing starch",
+    "unit": "kg",
+    "opening_stock": 3000,
+    "reorder_level": 500,
+    "supplier_name": "MTW Sizing starch Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 1000
+  },
+  {
+    "code": "FIN",
+    "name": "Finishing agent",
+    "unit": "liters",
+    "opening_stock": 1800,
+    "reorder_level": 300,
+    "supplier_name": "MTW Finishing agent Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 600
+  },
+  {
+    "code": "PKG",
+    "name": "Fabric roll packaging",
+    "unit": "roll kits",
+    "opening_stock": 9000,
+    "reorder_level": 1500,
+    "supplier_name": "MTW Fabric roll packaging Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 3000
+  }
+]

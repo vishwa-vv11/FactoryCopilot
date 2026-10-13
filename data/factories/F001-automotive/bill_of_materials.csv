@@ -1,0 +1,10 @@
+factory_id,line_id,product_code,product_name,material_code,material_name,unit,quantity_per_finished_unit
+F001,L01,FC,Finished Crankshaft,STL,Steel blanks,pieces,1.0
+F001,L01,FC,Finished Crankshaft,CLT,Coolant,liters,0.05
+F001,L01,FC,Finished Crankshaft,FST,Fasteners,pieces,1.0
+F001,L02,FTG,Finished Transmission Gear,STL,Steel blanks,pieces,0.8
+F001,L02,FTG,Finished Transmission Gear,BRG,Bearings,pieces,1.0
+F001,L02,FTG,Finished Transmission Gear,CLT,Coolant,liters,0.03
+F001,L03,FBC,Finished Brake Caliper,ALU,Aluminum alloy,kg,1.1
+F001,L03,FBC,Finished Brake Caliper,SEA,Caliper seals,pieces,2.0
+F001,L03,FBC,Finished Brake Caliper,FST,Fasteners,pieces,4.0

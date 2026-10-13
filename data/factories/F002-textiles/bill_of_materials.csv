@@ -1,0 +1,15 @@
+factory_id,line_id,product_code,product_name,material_code,material_name,unit,quantity_per_finished_unit
+F002,L01,PCFR,Packed Cotton Fabric Roll,CTN,Cotton fiber,kg,4.0
+F002,L01,PCFR,Packed Cotton Fabric Roll,DYE,Textile dye,kg,0.15
+F002,L01,PCFR,Packed Cotton Fabric Roll,SIZ,Sizing starch,kg,0.1
+F002,L01,PCFR,Packed Cotton Fabric Roll,FIN,Finishing agent,liters,0.08
+F002,L01,PCFR,Packed Cotton Fabric Roll,PKG,Fabric roll packaging,roll kits,1.0
+F002,L02,PDFR,Packed Denim Fabric Roll,CTN,Cotton fiber,kg,2.0
+F002,L02,PDFR,Packed Denim Fabric Roll,POL,Polyester fiber,kg,2.0
+F002,L02,PDFR,Packed Denim Fabric Roll,DYE,Textile dye,kg,0.2
+F002,L02,PDFR,Packed Denim Fabric Roll,FIN,Finishing agent,liters,0.1
+F002,L02,PDFR,Packed Denim Fabric Roll,PKG,Fabric roll packaging,roll kits,1.0
+F002,L03,PBFR,Packed Blended Fabric Roll,CTN,Cotton fiber,kg,2.0
+F002,L03,PBFR,Packed Blended Fabric Roll,POL,Polyester fiber,kg,3.0
+F002,L03,PBFR,Packed Blended Fabric Roll,FIN,Finishing agent,liters,0.12
+F002,L03,PBFR,Packed Blended Fabric Roll,PKG,Fabric roll packaging,roll kits,1.0

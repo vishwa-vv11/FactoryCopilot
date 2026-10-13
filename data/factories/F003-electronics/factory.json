@@ -1,0 +1,225 @@
+{
+  "factory_id": "F003",
+  "factory_code": "HEA",
+  "name": "Hosur Electronics Assembly",
+  "industry": "electronics",
+  "location": "Hosur",
+  "lines": [
+    {
+      "line_id": "L01",
+      "code": "CB",
+      "name": "Control Boards",
+      "daily_target": 1200,
+      "product_code": "TCB",
+      "product_name": "Tested Control Board",
+      "process_description": "Produces tested control board through Solder Paste Printer \u2192 Pick & Place High-Speed \u2192 Pick & Place Multi \u2192 Reflow Oven \u2192 AOI Optical Inspection \u2192 Through-Hole Insertion \u2192 Wave Soldering \u2192 In-Circuit Tester \u2192 Conformal Coating \u2192 Final Pack.",
+      "finished_output_stage": "Final Pack",
+      "machines": [
+        {
+          "machine_id": "L01-M01",
+          "code": "SPP1",
+          "name": "Solder Paste Printer 1",
+          "machine_type": "Solder Paste Printer"
+        },
+        {
+          "machine_id": "L01-M02",
+          "code": "P&PH2",
+          "name": "Pick & Place High-Speed 2",
+          "machine_type": "Pick & Place High-Speed"
+        },
+        {
+          "machine_id": "L01-M03",
+          "code": "P&PM3",
+          "name": "Pick & Place Multi 3",
+          "machine_type": "Pick & Place Multi"
+        },
+        {
+          "machine_id": "L01-M04",
+          "code": "RO4",
+          "name": "Reflow Oven 4",
+          "machine_type": "Reflow Oven"
+        },
+        {
+          "machine_id": "L01-M05",
+          "code": "AOI5",
+          "name": "AOI Optical Inspection 5",
+          "machine_type": "AOI Optical Inspection"
+        },
+        {
+          "machine_id": "L01-M06",
+          "code": "TI6",
+          "name": "Through-Hole Insertion 6",
+          "machine_type": "Through-Hole Insertion"
+        },
+        {
+          "machine_id": "L01-M07",
+          "code": "WS7",
+          "name": "Wave Soldering 7",
+          "machine_type": "Wave Soldering"
+        },
+        {
+          "machine_id": "L01-M08",
+          "code": "IT8",
+          "name": "In-Circuit Tester 8",
+          "machine_type": "In-Circuit Tester"
+        },
+        {
+          "machine_id": "L01-M09",
+          "code": "CC9",
+          "name": "Conformal Coating 9",
+          "machine_type": "Conformal Coating"
+        },
+        {
+          "machine_id": "L01-M10",
+          "code": "FP10",
+          "name": "Final Pack 10",
+          "machine_type": "Final Pack"
+        }
+      ]
+    },
+    {
+      "line_id": "L02",
+      "code": "SM",
+      "name": "Sensor Modules",
+      "daily_target": 1050,
+      "product_code": "TSM",
+      "product_name": "Tested Sensor Module",
+      "process_description": "Produces tested sensor module through SMT Stencil Printer \u2192 Chip Mounter High-Speed \u2192 Component Mounter Fine \u2192 Nitrogen Reflow Oven \u2192 3D AOI Inspection \u2192 Selective Soldering \u2192 Sensor Integration \u2192 Thermal Calibration \u2192 X-Ray Inspection \u2192 Final Pack.",
+      "finished_output_stage": "Final Pack",
+      "machines": [
+        {
+          "machine_id": "L02-M01",
+          "code": "SSP1",
+          "name": "SMT Stencil Printer 1",
+          "machine_type": "SMT Stencil Printer"
+        },
+        {
+          "machine_id": "L02-M02",
+          "code": "CMH2",
+          "name": "Chip Mounter High-Speed 2",
+          "machine_type": "Chip Mounter High-Speed"
+        },
+        {
+          "machine_id": "L02-M03",
+          "code": "CMF3",
+          "name": "Component Mounter Fine 3",
+          "machine_type": "Component Mounter Fine"
+        },
+        {
+          "machine_id": "L02-M04",
+          "code": "NRO4",
+          "name": "Nitrogen Reflow Oven 4",
+          "machine_type": "Nitrogen Reflow Oven"
+        },
+        {
+          "machine_id": "L02-M05",
+          "code": "3AI5",
+          "name": "3D AOI Inspection 5",
+          "machine_type": "3D AOI Inspection"
+        },
+        {
+          "machine_id": "L02-M06",
+          "code": "SS6",
+          "name": "Selective Soldering 6",
+          "machine_type": "Selective Soldering"
+        },
+        {
+          "machine_id": "L02-M07",
+          "code": "SI7",
+          "name": "Sensor Integration 7",
+          "machine_type": "Sensor Integration"
+        },
+        {
+          "machine_id": "L02-M08",
+          "code": "TC8",
+          "name": "Thermal Calibration 8",
+          "machine_type": "Thermal Calibration"
+        },
+        {
+          "machine_id": "L02-M09",
+          "code": "XI9",
+          "name": "X-Ray Inspection 9",
+          "machine_type": "X-Ray Inspection"
+        },
+        {
+          "machine_id": "L02-M10",
+          "code": "FP10",
+          "name": "Final Pack 10",
+          "machine_type": "Final Pack"
+        }
+      ]
+    },
+    {
+      "line_id": "L03",
+      "code": "PM",
+      "name": "Power Modules",
+      "daily_target": 960,
+      "product_code": "TPM",
+      "product_name": "Tested Power Module",
+      "process_description": "Produces tested power module through Substrate Feeder \u2192 High-Speed SMT Placer \u2192 Odd-Form Inserter \u2192 Vacuum Reflow \u2192 Automated X-Ray (AXI) \u2192 Heatsink Attachment \u2192 Torque Screwdriving \u2192 Burn-in Testing \u2192 Hipot Safety Test \u2192 Final Pack.",
+      "finished_output_stage": "Final Pack",
+      "machines": [
+        {
+          "machine_id": "L03-M01",
+          "code": "SF1",
+          "name": "Substrate Feeder 1",
+          "machine_type": "Substrate Feeder"
+        },
+        {
+          "machine_id": "L03-M02",
+          "code": "HSP2",
+          "name": "High-Speed SMT Placer 2",
+          "machine_type": "High-Speed SMT Placer"
+        },
+        {
+          "machine_id": "L03-M03",
+          "code": "OI3",
+          "name": "Odd-Form Inserter 3",
+          "machine_type": "Odd-Form Inserter"
+        },
+        {
+          "machine_id": "L03-M04",
+          "code": "VR4",
+          "name": "Vacuum Reflow 4",
+          "machine_type": "Vacuum Reflow"
+        },
+        {
+          "machine_id": "L03-M05",
+          "code": "AX(5",
+          "name": "Automated X-Ray (AXI) 5",
+          "machine_type": "Automated X-Ray (AXI)"
+        },
+        {
+          "machine_id": "L03-M06",
+          "code": "HA6",
+          "name": "Heatsink Attachment 6",
+          "machine_type": "Heatsink Attachment"
+        },
+        {
+          "machine_id": "L03-M07",
+          "code": "TS7",
+          "name": "Torque Screwdriving 7",
+          "machine_type": "Torque Screwdriving"
+        },
+        {
+          "machine_id": "L03-M08",
+          "code": "BT8",
+          "name": "Burn-in Testing 8",
+          "machine_type": "Burn-in Testing"
+        },
+        {
+          "machine_id": "L03-M09",
+          "code": "HST9",
+          "name": "Hipot Safety Test 9",
+          "machine_type": "Hipot Safety Test"
+        },
+        {
+          "machine_id": "L03-M10",
+          "code": "FP10",
+          "name": "Final Pack 10",
+          "machine_type": "Final Pack"
+        }
+      ]
+    }
+  ]
+}

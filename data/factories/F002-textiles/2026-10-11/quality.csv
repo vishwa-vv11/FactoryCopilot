@@ -1,0 +1,4 @@
+date,factory_id,line_id,line_name,product_name,inspected_units,passed_units,rework_units,rejected_units,yield_pct
+2026-10-11,F002,L01,Cotton Fabric,Packed Cotton Fabric Roll,753,744,5,4,98.8
+2026-10-11,F002,L02,Denim Fabric,Packed Denim Fabric Roll,974,962,7,5,98.77
+2026-10-11,F002,L03,Blended Fabric,Packed Blended Fabric Roll,891,880,6,5,98.77

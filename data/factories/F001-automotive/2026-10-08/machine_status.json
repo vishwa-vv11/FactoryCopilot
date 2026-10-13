@@ -1,0 +1,88 @@
+{
+  "as_of": "2026-10-08T14:00:00+00:00",
+  "factory_id": "F001",
+  "factory_name": "Coimbatore Auto Components",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "code": "CT1",
+      "name": "CNC turning 1",
+      "line_id": "L01",
+      "line_name": "Engine Components",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L01-M02",
+      "code": "M2",
+      "name": "Milling 2",
+      "line_id": "L01",
+      "line_name": "Engine Components",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L01-M03",
+      "code": "IAP3",
+      "name": "Inspection and packing 3",
+      "line_id": "L01",
+      "line_name": "Engine Components",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M01",
+      "code": "GC1",
+      "name": "Gear cutting 1",
+      "line_id": "L02",
+      "line_name": "Transmission Gears",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M02",
+      "code": "HT2",
+      "name": "Heat treatment 2",
+      "line_id": "L02",
+      "line_name": "Transmission Gears",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M03",
+      "code": "GAP3",
+      "name": "Grinding and packing 3",
+      "line_id": "L02",
+      "line_name": "Transmission Gears",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M01",
+      "code": "CP1",
+      "name": "Casting preparation 1",
+      "line_id": "L03",
+      "line_name": "Brake Assemblies",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M02",
+      "code": "CM2",
+      "name": "CNC machining 2",
+      "line_id": "L03",
+      "line_name": "Brake Assemblies",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M03",
+      "code": "AAP3",
+      "name": "Assembly and packing 3",
+      "line_id": "L03",
+      "line_name": "Brake Assemblies",
+      "status": "running",
+      "reason": ""
+    }
+  ]
+}

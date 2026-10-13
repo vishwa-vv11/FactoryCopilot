@@ -1,0 +1,1 @@
+{"event_id": "DEL-F001-STL-20261011", "factory_id": "F001", "material_code": "STL", "material_name": "Steel blanks", "supplier_name": "CAC Steel blanks Supplier", "expected_at": "2026-10-11T09:00:00Z", "actual_at": "2026-10-11T11:30:00Z", "quantity": 6000, "unit": "pieces", "status": "delivered_late", "delay_minutes": 150}

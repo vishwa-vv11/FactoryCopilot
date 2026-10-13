@@ -1,0 +1,2 @@
+event_id,factory_id,line_id,machine_id,started_at,ended_at,duration_minutes,reason
+DT-ed837a4e,F001,L01,L01-M01,2026-10-07T09:30:00+00:00,2026-10-07T11:15:00+00:00,76,tool wear or coolant fault

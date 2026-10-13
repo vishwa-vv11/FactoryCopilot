@@ -1,0 +1,305 @@
+{
+  "as_of": "2026-10-13T19:27:00+00:00",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "machine_code": "BO1",
+      "name": "Bale Opening 1",
+      "machine_type": "Bale Opening",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M02",
+      "machine_code": "CM2",
+      "name": "Carding Machine 2",
+      "machine_type": "Carding Machine",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M03",
+      "machine_code": "DF3",
+      "name": "Drawing Frame 3",
+      "machine_type": "Drawing Frame",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M04",
+      "machine_code": "RF4",
+      "name": "Roving Frame 4",
+      "machine_type": "Roving Frame",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M05",
+      "machine_code": "RS5",
+      "name": "Ring Spinning 5",
+      "machine_type": "Ring Spinning",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M06",
+      "machine_code": "WM6",
+      "name": "Winding Machine 6",
+      "machine_type": "Winding Machine",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M07",
+      "machine_code": "WM7",
+      "name": "Warping Mill 7",
+      "machine_type": "Warping Mill",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M08",
+      "machine_code": "WL8",
+      "name": "Weaving Loom 8",
+      "machine_type": "Weaving Loom",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "down",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M09",
+      "machine_code": "DJ9",
+      "name": "Dyeing Jet 9",
+      "machine_type": "Dyeing Jet",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L01-M10",
+      "machine_code": "S&I10",
+      "name": "Stenter & Inspection 10",
+      "machine_type": "Stenter & Inspection",
+      "factory_id": "F002",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M01",
+      "machine_code": "YP1",
+      "name": "Yarn Prep 1",
+      "machine_type": "Yarn Prep",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M02",
+      "machine_code": "RD2",
+      "name": "Rope Dyeing 2",
+      "machine_type": "Rope Dyeing",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "down",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M03",
+      "machine_code": "SR3",
+      "name": "Sizing Range 3",
+      "machine_type": "Sizing Range",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M04",
+      "machine_code": "AJL4",
+      "name": "Air Jet Loom 4",
+      "machine_type": "Air Jet Loom",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M05",
+      "machine_code": "DW5",
+      "name": "Desizing Wash 5",
+      "machine_type": "Desizing Wash",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M06",
+      "machine_code": "M6",
+      "name": "Mercerization 6",
+      "machine_type": "Mercerization",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M07",
+      "machine_code": "S7",
+      "name": "Sanforizing 7",
+      "machine_type": "Sanforizing",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "down",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M08",
+      "machine_code": "IT8",
+      "name": "Inspection Table 8",
+      "machine_type": "Inspection Table",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M09",
+      "machine_code": "RU9",
+      "name": "Rolling Unit 9",
+      "machine_type": "Rolling Unit",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L02-M10",
+      "machine_code": "PS10",
+      "name": "Packaging Station 10",
+      "machine_type": "Packaging Station",
+      "factory_id": "F002",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M01",
+      "machine_code": "FB1",
+      "name": "Fiber Blending 1",
+      "machine_type": "Fiber Blending",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M02",
+      "machine_code": "CW2",
+      "name": "Carding Web 2",
+      "machine_type": "Carding Web",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M03",
+      "machine_code": "DS3",
+      "name": "Drafting System 3",
+      "machine_type": "Drafting System",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M04",
+      "machine_code": "VS4",
+      "name": "Vortex Spinning 4",
+      "machine_type": "Vortex Spinning",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M05",
+      "machine_code": "AW5",
+      "name": "Assembly Winder 5",
+      "machine_type": "Assembly Winder",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M06",
+      "machine_code": "TM6",
+      "name": "Twisting Machine 6",
+      "machine_type": "Twisting Machine",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M07",
+      "machine_code": "RL7",
+      "name": "Rapier Loom 7",
+      "machine_type": "Rapier Loom",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M08",
+      "machine_code": "HS8",
+      "name": "Heat Setting 8",
+      "machine_type": "Heat Setting",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M09",
+      "machine_code": "CFQ9",
+      "name": "Color Fastness QA 9",
+      "machine_type": "Color Fastness QA",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    },
+    {
+      "machine_id": "L03-M10",
+      "machine_code": "RP10",
+      "name": "Roll Packaging 10",
+      "machine_type": "Roll Packaging",
+      "factory_id": "F002",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-13T19:27:00+00:00"
+    }
+  ]
+}

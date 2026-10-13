@@ -1,0 +1,16 @@
+factory_id,line_id,product_code,product_name,material_code,material_name,unit,quantity_per_finished_unit
+F003,L01,TCB,Tested Control Board,PCB,Printed circuit boards,pieces,1.0
+F003,L01,TCB,Tested Control Board,MCU,Microcontrollers,pieces,1.0
+F003,L01,TCB,Tested Control Board,PAS,Resistor and capacitor sets,sets,1.0
+F003,L01,TCB,Tested Control Board,CON,Connector sets,sets,1.0
+F003,L01,TCB,Tested Control Board,SLD,Solder wire,grams,5.0
+F003,L02,TSM,Tested Sensor Module,PCB,Printed circuit boards,pieces,1.0
+F003,L02,TSM,Tested Sensor Module,MCU,Microcontrollers,pieces,1.0
+F003,L02,TSM,Tested Sensor Module,SNS,Sensors,pieces,2.0
+F003,L02,TSM,Tested Sensor Module,CON,Connector sets,sets,1.0
+F003,L02,TSM,Tested Sensor Module,SLD,Solder wire,grams,5.0
+F003,L03,TPM,Tested Power Module,PCB,Printed circuit boards,pieces,1.0
+F003,L03,TPM,Tested Power Module,MCU,Microcontrollers,pieces,2.0
+F003,L03,TPM,Tested Power Module,PAS,Resistor and capacitor sets,sets,2.0
+F003,L03,TPM,Tested Power Module,CON,Connector sets,sets,2.0
+F003,L03,TPM,Tested Power Module,SLD,Solder wire,grams,8.0

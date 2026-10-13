@@ -1,0 +1,1 @@
+{"event_id": "DEL-F002-CTN-20261005", "factory_id": "F002", "material_code": "CTN", "material_name": "Cotton fiber", "supplier_name": "MTW Cotton fiber Supplier", "expected_at": "2026-10-05T09:00:00Z", "actual_at": "2026-10-05T11:30:00Z", "quantity": 14000, "unit": "kg", "status": "delivered_late", "delay_minutes": 150}

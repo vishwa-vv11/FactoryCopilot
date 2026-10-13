@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FactoryOS V2 · Floor Monitor</title>
+  <link rel="stylesheet" href="/static/styles.css?v=2">
+  <link rel="stylesheet" href="/static/theme.css?v=2">
+  <link rel="stylesheet" href="/static/copilot.css?v=2">
+  <link rel="stylesheet" href="/static/line-overrides.css?v=2">
+  <style>
+    .top-nav-bar {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 12px 28px !important;
+      background: #0f1c16 !important;
+      border-bottom: 1px solid #284233 !important;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 100 !important;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4) !important;
+      gap: 16px !important;
+      flex-wrap: nowrap !important;
+    }
+    .nav-left {
+      display: flex !important;
+      align-items: center !important;
+      gap: 14px !important;
+      min-width: 0 !important;
+    }
+    .top-nav-bar .brand {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      text-decoration: none !important;
+      padding: 0 !important;
+    }
+    .top-nav-bar .brand-icon {
+      width: 34px !important;
+      height: 34px !important;
+      border-radius: 8px !important;
+      background: linear-gradient(135deg, #24764d, #195235) !important;
+      color: #e5ffed !important;
+      display: grid !important;
+      place-items: center !important;
+      font-size: 16px !important;
+      font-weight: 800 !important;
+      box-shadow: 0 2px 8px rgba(36, 118, 77, 0.4) !important;
+    }
+    .top-nav-bar .brand-info {
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .top-nav-bar .brand-title {
+      color: #f4f8f5 !important;
+      font-size: 15px !important;
+      font-weight: 750 !important;
+      letter-spacing: -0.2px !important;
+      line-height: 1.1 !important;
+    }
+    .top-nav-bar .brand-tag {
+      color: #8daea0 !important;
+      font-size: 8px !important;
+      font-weight: 700 !important;
+      letter-spacing: 1.2px !important;
+      margin-top: 1px !important;
+    }
+    .top-nav-bar .nav-divider {
+      width: 1px !important;
+      height: 24px !important;
+      background: #2b4536 !important;
+    }
+    .top-nav-bar .nav-factory-capsule {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    .top-nav-bar select {
+      background: #172720 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a49a' d='m2 4 4 4 4-4z'/%3E%3C/svg%3E") no-repeat right 10px center !important;
+      border: 1px solid #335442 !important;
+      color: #e7efe9 !important;
+      padding: 6px 28px 6px 10px !important;
+      border-radius: 6px !important;
+      font-size: 12px !important;
+      font-weight: 650 !important;
+      box-shadow: none !important;
+      cursor: pointer !important;
+      appearance: none !important;
+      width: auto !important;
+    }
+    .top-nav-bar .factory-location-chip {
+      background: #1e3328 !important;
+      border: 1px solid #365e48 !important;
+      color: #8be0af !important;
+      font-size: 10.5px !important;
+      font-weight: 600 !important;
+      padding: 4px 8px !important;
+      border-radius: 5px !important;
+      white-space: nowrap !important;
+    }
+    .nav-right {
+      display: flex !important;
+      align-items: center !important;
+      gap: 12px !important;
+      flex-shrink: 0 !important;
+    }
+    .nav-date-group {
+      display: flex !important;
+      align-items: center !important;
+      gap: 7px !important;
+    }
+    .nav-label {
+      font-size: 8.5px !important;
+      font-weight: 700 !important;
+      color: #8faea0 !important;
+      letter-spacing: 0.8px !important;
+      white-space: nowrap !important;
+    }
+    .nav-status-toggles {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+    }
+    .nav-status-chip {
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      padding: 5px 11px !important;
+      border-radius: 16px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      user-select: none !important;
+    }
+    .nav-status-chip.is-running {
+      background: rgba(36, 118, 77, 0.45) !important;
+      border: 1px solid #347c54 !important;
+      color: #a8efc5 !important;
+    }
+    .nav-status-chip.is-down {
+      background: rgba(196, 72, 60, 0.45) !important;
+      border: 1px solid #94453e !important;
+      color: #ffb5ad !important;
+    }
+    .nav-status-chip b {
+      font-size: 12.5px !important;
+      font-weight: 800 !important;
+      color: #fff !important;
+      margin-left: 2px !important;
+    }
+    .nav-sim-pill {
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      font-size: 9.5px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.6px !important;
+      color: #8be0af !important;
+      background: #172c21 !important;
+      border: 1px solid #2b543c !important;
+      padding: 5px 11px !important;
+      border-radius: 16px !important;
+      white-space: nowrap !important;
+    }
+    .refresh-state {
+      font-size: 9px !important;
+      color: #7da08e !important;
+      white-space: nowrap !important;
+    }
+    main, .main-full {
+      margin-left: 0 !important;
+      max-width: 1780px !important;
+      width: 100% !important;
+      margin: 0 auto !important;
+      padding: 22px 32px 36px !important;
+      box-sizing: border-box !important;
+    }
+  </style>
+  <script src="/static/app.js?v=2" defer></script>
+</head>
+<body>
+  <div class="app-shell full-width-layout">
+    <header class="top-nav-bar">
+      <div class="nav-left">
+        <a class="brand" href="/" aria-label="FactoryOS home">
+          <span class="brand-icon">F</span>
+          <span class="brand-info">
+            <span class="brand-title">FactoryOS</span>
+            <small class="brand-tag">V2 OPERATIONS</small>
+          </span>
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-factory-capsule">
+          <label class="select-wrap">
+            <span class="sr-only">Select a factory</span>
+            <select id="factory-picker" aria-label="Select factory"><option>Loading…</option></select>
+          </label>
+          <div class="factory-location-chip" id="factory-location">Loading factory…</div>
+        </div>
+      </div>
+
+      <div class="nav-right">
+        <div class="nav-date-group">
+          <span class="nav-label">PRODUCTION DATE</span>
+          <select id="day-picker"><option>Loading…</option></select>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <!-- Top-Right Floor Status Toggles -->
+        <div class="nav-status-toggles" id="floor-status-toggles">
+          <div class="nav-status-chip is-running" title="Running workstations">
+            <span class="status-dot running"></span>
+            <span class="chip-label">Running</span>
+            <b id="running-count">—</b>
+          </div>
+          <div class="nav-status-chip is-down" title="Down or attention workstations">
+            <span class="status-dot down"></span>
+            <span class="chip-label">Down / Attn</span>
+            <b id="down-count">—</b>
+          </div>
+        </div>
+
+        <div class="nav-sim-pill" title="Deterministic factory simulator is active">
+          <span class="live-dot pulse"></span>
+          <span>LOCAL SIMULATOR</span>
+        </div>
+
+        <span class="refresh-state"><i></i> 10s</span>
+      </div>
+    </header>
+
+    <main class="main-full">
+      <div class="page-intro-bar">
+        <div>
+          <div class="breadcrumb">OPERATIONS <span>/</span> FLOOR MONITOR</div>
+          <h1 id="page-title">Factory floor</h1>
+          <p class="subhead">Line performance, machine state, and material flow.</p>
+        </div>
+      </div>
+
+      <section class="metric-grid" aria-label="Daily factory metrics">
+        <article class="metric"><span>FINISHED OUTPUT</span><strong id="total-output">—</strong><small id="output-caption">units completed today</small></article>
+        <article class="metric"><span>PLAN ATTAINMENT</span><strong id="attainment">—</strong><small id="target-caption">against daily target</small></article>
+        <article class="metric"><span>MACHINE AVAILABILITY</span><strong id="availability">—</strong><small id="machine-caption">machines operating</small></article>
+        <article class="metric"><span>INPUT MATERIALS</span><strong id="material-alerts">—</strong><small id="material-caption">below reorder level</small></article>
+        <article class="metric quality-metric"><span>FIRST-PASS YIELD</span><strong id="quality-yield">—</strong><small id="quality-caption">passed inspection</small></article>
+      </section>
+
+      <section class="panel floor-panel">
+        <div class="panel-heading">
+          <div>
+            <div class="eyebrow">LIVE OPERATIONAL VIEW</div>
+            <h2>Production Floor Monitor</h2>
+            <p>Real-time machine state, 10-station process routes, and live lane throughput.</p>
+          </div>
+          <div class="legend">
+            <span><i class="status-dot running"></i> Running</span>
+            <span><i class="status-dot down"></i> Attention / Down</span>
+            <span><i class="status-dot idle"></i> Idle</span>
+          </div>
+        </div>
+        <div id="floor-lines" class="floor-lines"><div class="loading">Loading factory lines…</div></div>
+      </section>
+      <footer>FactoryOS V2 <span>·</span> Autonomous Operations & Macho Agent <span>·</span> Refreshes every 10 seconds</footer>
+      <div id="toast" class="toast" role="status" hidden></div>
+
+      <!-- Floating Macho Robot Machine Companion in Bottom Right Corner -->
+      <aside id="macho-robot-widget" class="macho-robot-widget" aria-label="Ask Macho Agent">
+        <div class="macho-speech-tag">
+          <span class="macho-online-dot"></span>
+          <span>Ask Macho</span>
+        </div>
+        <button type="button" id="floating-macho-btn" class="macho-machine-actor-btn" title="Click to chat with Macho AI Agent (Ctrl+K)" aria-label="Open Macho AI Agent">
+          <img src="/static/robot-cutout.png" alt="Macho AI Machine Agent" class="macho-robot-machine-img">
+          <div class="macho-machine-shadow"></div>
+          <span class="macho-shortcut-pill">Ctrl+K</span>
+        </button>
+      </aside>
+    </main>
+  </div>
+
+  <!-- Slide-over Macho AI Agent Drawer -->
+  <div id="copilot-backdrop" class="copilot-backdrop" hidden></div>
+  <aside id="copilot-drawer" class="copilot-drawer" aria-label="Macho AI Agent" hidden>
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <img src="/static/robot.png" alt="Macho Agent" class="drawer-macho-header-avatar">
+        <div>
+          <div class="drawer-eyebrow">MACHO AI AGENT</div>
+          <h2>Operations Co-Pilot</h2>
+        </div>
+      </div>
+      <div class="drawer-header-right">
+        <label class="drawer-mode-toggle" title="Toggle between single-agent and multi-agent supervisor">
+          <input type="checkbox" id="agent-multi-toggle">
+          <span class="mode-toggle-slider"></span>
+          <span id="agent-mode-label" class="mode-toggle-label">Single-Agent</span>
+        </label>
+        <button type="button" id="close-copilot-btn" class="drawer-close-btn" aria-label="Close Macho Copilot">✕</button>
+      </div>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Welcome State with Macho Hero -->
+      <div id="copilot-welcome" class="copilot-welcome">
+        <div class="welcome-macho-hero">
+          <img src="/static/robot.png" alt="Macho AI Agent" class="welcome-macho-img">
+          <div class="welcome-macho-speech">
+            <strong>Hi, I'm Macho! 🤖</strong>
+            <p>Your autonomous operations co-pilot. I analyze telemetry, 10-station line flows, equipment downtime, and maintenance SOPs.</p>
+          </div>
+        </div>
+        <div class="suggestion-list">
+          <div class="suggestion-title">SUGGESTED INQUIRIES</div>
+          <button type="button" class="suggestion-card" data-prompt="Compare today's production output with yesterday and explain line variance.">
+            <span>📊 Compare today vs yesterday & explain line variance</span>
+            <span class="suggestion-arrow">→</span>
+          </button>
+          <button type="button" class="suggestion-card" data-prompt="Why did Line L001 miss target? Check vibration telemetry and equipment manual.">
+            <span>⚡ Why did Line L001 miss target? Check vibration & manual</span>
+            <span class="suggestion-arrow">→</span>
+          </button>
+          <button type="button" class="suggestion-card" data-prompt="Investigate machine breakdown on M001 and check SOP manual for corrective procedures.">
+            <span>🛠️ Machine breakdown on M001 & SOP corrective procedures</span>
+            <span class="suggestion-arrow">→</span>
+          </button>
+          <button type="button" class="suggestion-card" data-prompt="Analyze component inventory for stockout risks, safety stock, and supplier lead times.">
+            <span>📦 Component inventory stockout risks & reorder thresholds</span>
+            <span class="suggestion-arrow">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Investigation Results -->
+      <div id="agent-results" class="agent-results" hidden>
+        <div class="result-status-bar">
+          <div class="status-left">
+            <span class="status-indicator-dot"></span>
+            <span id="agent-badge-mode" class="status-badge-mode">Single-Agent</span>
+          </div>
+          <div class="status-right">
+            <span id="agent-meta-time" class="status-meta">⏱️ 0.1s</span>
+            <span class="status-meta-separator">•</span>
+            <span id="agent-meta-citations" class="status-meta">🔖 3 facts</span>
+          </div>
+        </div>
+
+        <div class="user-query-echo">
+          <span class="echo-label">Query:</span>
+          <span id="agent-query-echo-text" class="echo-text">—</span>
+        </div>
+
+        <div class="agent-response-card">
+          <div class="response-header">INVESTIGATION SYNTHESIS</div>
+          <div id="agent-response-text" class="agent-response-text"></div>
+        </div>
+
+        <details class="agent-clean-drawer" id="agent-evidence-drawer">
+          <summary>Verified Evidence (<span id="evidence-count-tag">0</span> facts registered)</summary>
+          <div id="agent-evidence-list" class="evidence-list-container"></div>
+        </details>
+
+        <details class="agent-clean-drawer" id="agent-trace-drawer">
+          <summary>Reasoning Trace (<span id="trace-count-tag">0</span> events)</summary>
+          <div id="agent-trace-list" class="trace-list-container"></div>
+        </details>
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <form id="copilot-form" class="copilot-input-form" onsubmit="event.preventDefault();">
+        <input 
+          type="text" 
+          id="agent-query-input" 
+          placeholder="Ask anything about factory lines, downtime, or inventory..." 
+          autocomplete="off" 
+        />
+        <button type="submit" id="agent-query-btn" class="copilot-send-btn macho-send-btn" aria-label="Query Macho">
+          <img src="/static/robot.png" alt="" class="btn-macho-ico">
+          <span class="btn-text">Query Macho</span>
+        </button>
+      </form>
+    </div>
+  </aside>
+</body>
+</html>

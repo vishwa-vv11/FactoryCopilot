@@ -1,0 +1,88 @@
+{
+  "as_of": "2026-10-06T14:00:00+00:00",
+  "factory_id": "F003",
+  "factory_name": "Hosur Electronics Assembly",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "code": "CP1",
+      "name": "Component placement 1",
+      "line_id": "L01",
+      "line_name": "Control Boards",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L01-M02",
+      "code": "RS2",
+      "name": "Reflow soldering 2",
+      "line_id": "L01",
+      "line_name": "Control Boards",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L01-M03",
+      "code": "BTAP3",
+      "name": "Board testing and packing 3",
+      "line_id": "L01",
+      "line_name": "Control Boards",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M01",
+      "code": "PA1",
+      "name": "PCB assembly 1",
+      "line_id": "L02",
+      "line_name": "Sensor Modules",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M02",
+      "code": "SI2",
+      "name": "Sensor integration 2",
+      "line_id": "L02",
+      "line_name": "Sensor Modules",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L02-M03",
+      "code": "CAP3",
+      "name": "Calibration and packing 3",
+      "line_id": "L02",
+      "line_name": "Sensor Modules",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M01",
+      "code": "CP1",
+      "name": "Component placement 1",
+      "line_id": "L03",
+      "line_name": "Power Modules",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M02",
+      "code": "PS2",
+      "name": "Power soldering 2",
+      "line_id": "L03",
+      "line_name": "Power Modules",
+      "status": "running",
+      "reason": ""
+    },
+    {
+      "machine_id": "L03-M03",
+      "code": "ETAP3",
+      "name": "Electrical test and packing 3",
+      "line_id": "L03",
+      "line_name": "Power Modules",
+      "status": "running",
+      "reason": ""
+    }
+  ]
+}

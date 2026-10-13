@@ -1,0 +1,62 @@
+[
+  {
+    "code": "PCB",
+    "name": "Printed circuit boards",
+    "unit": "pieces",
+    "opening_stock": 10000,
+    "reorder_level": 1700,
+    "supplier_name": "HEA Printed circuit boards Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 3400
+  },
+  {
+    "code": "MCU",
+    "name": "Microcontrollers",
+    "unit": "pieces",
+    "opening_stock": 10000,
+    "reorder_level": 1700,
+    "supplier_name": "HEA Microcontrollers Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 3400
+  },
+  {
+    "code": "PAS",
+    "name": "Resistor and capacitor sets",
+    "unit": "sets",
+    "opening_stock": 18000,
+    "reorder_level": 3000,
+    "supplier_name": "HEA Resistor and capacitor sets Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 6000
+  },
+  {
+    "code": "CON",
+    "name": "Connector sets",
+    "unit": "sets",
+    "opening_stock": 12000,
+    "reorder_level": 2000,
+    "supplier_name": "HEA Connector sets Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 4000
+  },
+  {
+    "code": "SNS",
+    "name": "Sensors",
+    "unit": "pieces",
+    "opening_stock": 7000,
+    "reorder_level": 1200,
+    "supplier_name": "HEA Sensors Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 2400
+  },
+  {
+    "code": "SLD",
+    "name": "Solder wire",
+    "unit": "grams",
+    "opening_stock": 90000,
+    "reorder_level": 15000,
+    "supplier_name": "HEA Solder wire Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 30000
+  }
+]

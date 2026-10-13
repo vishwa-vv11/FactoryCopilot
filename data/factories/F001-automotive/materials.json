@@ -1,0 +1,62 @@
+[
+  {
+    "code": "STL",
+    "name": "Steel blanks",
+    "unit": "pieces",
+    "opening_stock": 18000,
+    "reorder_level": 3000,
+    "supplier_name": "CAC Steel blanks Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 6000
+  },
+  {
+    "code": "ALU",
+    "name": "Aluminum alloy",
+    "unit": "kg",
+    "opening_stock": 5000,
+    "reorder_level": 800,
+    "supplier_name": "CAC Aluminum alloy Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 1600
+  },
+  {
+    "code": "BRG",
+    "name": "Bearings",
+    "unit": "pieces",
+    "opening_stock": 6000,
+    "reorder_level": 1000,
+    "supplier_name": "CAC Bearings Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 2000
+  },
+  {
+    "code": "FST",
+    "name": "Fasteners",
+    "unit": "pieces",
+    "opening_stock": 24000,
+    "reorder_level": 4000,
+    "supplier_name": "CAC Fasteners Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 8000
+  },
+  {
+    "code": "SEA",
+    "name": "Caliper seals",
+    "unit": "pieces",
+    "opening_stock": 12000,
+    "reorder_level": 2000,
+    "supplier_name": "CAC Caliper seals Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 4000
+  },
+  {
+    "code": "CLT",
+    "name": "Coolant",
+    "unit": "liters",
+    "opening_stock": 900,
+    "reorder_level": 150,
+    "supplier_name": "CAC Coolant Supplier",
+    "delivery_every_days": 3,
+    "delivery_quantity": 300
+  }
+]

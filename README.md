@@ -360,6 +360,26 @@ flowchart LR
 
 ---
 
+### 6. End-to-End Autonomous Remediation: Stoppage Diagnosis & Floater Dispatch
+
+This unified workflow demonstrates Macho's core operational capabilities—from live bottleneck detection on the physical floor, to direct 2-line root cause diagnosis, autonomous floater dispatch, and production recovery:
+
+#### Step 1 — Floor Alert: Line 01 Halted (Operator Absent)
+![Line 01 Bottleneck Stoppage](docs/screenshots/06_bottleneck_operator_absent.png)
+* **Live Bottleneck Detection:** Operator Murugan Palanisamy is absent at Milling (`WS 1/1`), a single-workstation bottleneck stage on Line 01. Stage capacity drops to `0%`, freezing production at `324 / 960 TODAY` units and triggering a red floor alert (`BOTTLENECK: MILLING (OPERATOR ABSENT)`).
+
+#### Step 2 — Macho Diagnosis: "Why is Line 1 Halted ..??" & Autonomous Action: "Assign a Floater to the WS"
+| 1. Root Cause Diagnosis (*"why is line 1 halted ..??"*) | 2. Autonomous Floater Dispatch (*"assign a floater to the WS"*) |
+| :---: | :---: |
+| ![Macho Halt Diagnosis](docs/screenshots/07_macho_halt_diagnosis_concise.png) | ![Macho Floater Dispatch](docs/screenshots/08_macho_floater_dispatch_action.png) |
+| **Direct 2-Line Diagnosis:** Macho queries live staffing telemetry and cuts through boilerplate: *"The line L01 is halted because the workstation Milling (WS 1/1) on line L01 is UNSTAFFED due to operator Murugan Palanisamy (EMP-103) being absent with no relief floater assigned. Immediate action needed: Assign a relief floater to workstation Milling (WS 1/1)."* | **Autonomous Dispatch:** Upon receiving *"assign a floater to the WS"*, Macho validates cross-training certifications against the standby Free Pool, calls `assign_floater`, and deploys **Arunachalam S. (`EMP-133`)** directly to the station. |
+
+#### Step 3 — Floor Recovered & Production Resumed
+![Floor Recovered and Running](docs/screenshots/09_floor_recovered_running.png)
+* **Instant Production Recovery:** The red bottleneck clears and turns into green `RUNNING (NEW ORDER LOADED)`. Stage 03 shows active coverage (`FLOATER RELIEF: Arunachalam...`), and Line 01 immediately resumes throughput, advancing live units from `324` to `338 / 960 TODAY`.
+
+---
+
 ## 🚀 4. Getting Started
 
 ### 1. Prerequisites

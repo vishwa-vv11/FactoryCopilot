@@ -1,3 +1,4 @@
+
 """Document Retrieval-Augmented Generation (RAG) Engine for FactoryOS V2.
 
 This module provides:

@@ -1,0 +1,7 @@
+date,factory_id,material_code,material_name,unit,opening_quantity,received_quantity,consumed_quantity,available_quantity,reorder_level,status
+2026-10-27,F003,PCB,Printed circuit boards,pieces,7500.0,10000.0,12742.0,4758.0,1700,in_stock
+2026-10-27,F003,MCU,Microcontrollers,pieces,3703.0,18400.0,16626.0,5477.0,1700,in_stock
+2026-10-27,F003,PAS,Resistor and capacitor sets,sets,13117.0,9000.0,12511.0,9606.0,3000,in_stock
+2026-10-27,F003,CON,Connector sets,sets,5603.0,12000.0,16626.0,977.0,2000,reorder
+2026-10-27,F003,SNS,Sensors,pieces,3722.0,5900.0,8230.0,1392.0,1200,in_stock
+2026-10-27,F003,SLD,Solder wire,grams,60389.0,45000.0,75362.0,30027.0,15000,in_stock

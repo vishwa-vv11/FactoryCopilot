@@ -1,0 +1,7 @@
+date,factory_id,material_code,material_name,unit,opening_quantity,received_quantity,consumed_quantity,available_quantity,reorder_level,status
+2026-10-25,F002,CTN,Cotton fiber,kg,0.0,14000.0,10256.0,3744.0,7000,reorder
+2026-10-25,F002,POL,Polyester fiber,kg,22374.0,0.0,5809.0,16565.0,4500,in_stock
+2026-10-25,F002,DYE,Textile dye,kg,1826.55,0.0,454.45,1372.1,550,in_stock
+2026-10-25,F002,SIZ,Sizing starch,kg,1881.3,1000.0,139.1,2742.2,500,in_stock
+2026-10-25,F002,FIN,Finishing agent,liters,1558.96,0.0,368.22,1190.74,300,in_stock
+2026-10-25,F002,PKG,Fabric roll packaging,roll kits,3737.0,0.0,3737.0,0.0,1500,out_of_stock

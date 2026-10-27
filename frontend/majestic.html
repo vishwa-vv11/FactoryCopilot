@@ -1,0 +1,1680 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FactoryOS · 3D Digital Twin Studio</title>
+  <meta name="description" content="Next-Generation 3D Factory Floor Digital Twin, Telemetry Visualization, and Macho Operations Commander.">
+  
+  <!-- Architectural & Non-AI Typography: Syne, Space Mono, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Three.js + OrbitControls + Tween.js for 3D digital twin rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+
+  <style>
+    :root {
+      --bg-void: #07090e;
+      --bg-panel: rgba(14, 18, 27, 0.88);
+      --bg-panel-solid: #0e121b;
+      --bg-surface: #141a27;
+      --bg-surface-elevated: #1a2334;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-wire: rgba(70, 140, 255, 0.22);
+      --border-brass: rgba(229, 169, 59, 0.35);
+      
+      --text-main: #f0f4fc;
+      --text-muted: #8b9bb4;
+      --text-dim: #505e75;
+      
+      --accent-brass: #e5a93b;
+      --accent-brass-glow: rgba(229, 169, 59, 0.25);
+      --accent-emerald: #10b981;
+      --accent-emerald-glow: rgba(16, 185, 129, 0.28);
+      --accent-amber: #f59e0b;
+      --accent-amber-glow: rgba(245, 158, 11, 0.3);
+      --accent-crimson: #ef4444;
+      --accent-cyan: #06b6d4;
+      
+      --font-display: 'Syne', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-ui: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-void);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+
+    /* 3D WebGL Canvas */
+    #viewport-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    #three-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* UI Overlay Layer */
+    .hud-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: grid;
+      grid-template-rows: 64px 1fr auto;
+      grid-template-columns: 320px 1fr 340px;
+      grid-template-areas:
+        "nav nav nav"
+        "left center right"
+        "left bottom right";
+      gap: 16px;
+      padding: 16px 20px 20px;
+    }
+
+    /* Elements that should receive pointer events */
+    .interactive {
+      pointer-events: auto;
+    }
+
+    /* TOP COMMAND BAR */
+    .hud-header {
+      grid-area: nav;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0 18px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      background: linear-gradient(135deg, #1e2638, #0e131d);
+      border: 1px solid var(--accent-brass);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-brass);
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.1rem;
+      box-shadow: 0 0 14px var(--accent-brass-glow);
+    }
+
+    .brand-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-tag {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--accent-brass);
+      background: rgba(229, 169, 59, 0.12);
+      border: 1px solid rgba(229, 169, 59, 0.3);
+      padding: 1px 6px;
+      border-radius: 3px;
+      letter-spacing: 0.08em;
+    }
+
+    .brand-coord {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    /* Navigation Center: Camera View Presets */
+    .camera-presets {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 3px;
+      gap: 4px;
+    }
+
+    .cam-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      letter-spacing: 0.04em;
+    }
+
+    .cam-btn:hover {
+      color: #fff;
+      background: var(--bg-surface);
+    }
+
+    .cam-btn.active {
+      color: var(--text-main);
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-wire);
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    /* Navigation Right Controls */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .telemetry-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--accent-emerald);
+    }
+
+    .pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-emerald);
+      box-shadow: 0 0 8px var(--accent-emerald);
+      animation: pulseAnim 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseAnim {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .view-toggle-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 5px;
+      background: var(--bg-surface);
+      transition: all 0.2s;
+    }
+
+    .view-toggle-link:hover {
+      color: #fff;
+      border-color: var(--accent-brass);
+    }
+
+    /* LEFT HUD: Line Metrics & Quick Station Jump */
+    .hud-left {
+      grid-area: left;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-subtle) transparent;
+    }
+
+    .architectural-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .architectural-card::before {
+      content: '+';
+      position: absolute;
+      top: 5px;
+      left: 6px;
+      color: var(--border-wire);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+    }
+
+    .architectural-card::after {
+      content: '+';
+      position: absolute;
+      bottom: 5px;
+      right: 6px;
+      color: var(--border-wire);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+    }
+
+    .card-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-label span.badge {
+      color: var(--accent-brass);
+      background: rgba(229, 169, 59, 0.1);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* Line Progress Rows */
+    .line-row {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .line-row:hover {
+      border-color: var(--border-wire);
+      background: var(--bg-surface-elevated);
+      transform: translateX(2px);
+    }
+
+    .line-row-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .line-name {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .line-code {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-cyan);
+    }
+
+    .line-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .line-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-emerald), var(--accent-cyan));
+      border-radius: 2px;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .line-meta-flex {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Bottleneck Alert Pill */
+    .bottleneck-cell {
+      border-left: 3px solid var(--accent-amber);
+      background: rgba(245, 158, 11, 0.06);
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .bottleneck-cell:hover {
+      background: rgba(245, 158, 11, 0.12);
+    }
+
+    .bottleneck-info strong {
+      color: var(--accent-amber);
+      font-family: var(--font-mono);
+    }
+
+    /* Free Pool Standby Dock */
+    .standby-dock {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .floater-pill {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 5px;
+      padding: 7px 10px;
+      font-size: 0.76rem;
+    }
+
+    .floater-meta strong {
+      color: #fff;
+      display: block;
+    }
+
+    .floater-meta small {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+    }
+
+    .floater-badge {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+
+    /* RIGHT HUD: Workstation Inspector Drawer */
+    .hud-right {
+      grid-area: right;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 100px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-subtle) transparent;
+    }
+
+    .station-detail-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-wire);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .station-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .station-id-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .station-code-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: var(--accent-brass);
+      background: rgba(229, 169, 59, 0.12);
+      border: 1px solid var(--border-brass);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .station-status-pill {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .status-running {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-emerald);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .status-unstaffed {
+      background: rgba(245, 158, 11, 0.18);
+      color: var(--accent-amber);
+      border: 1px solid var(--accent-amber);
+      animation: alertPulse 1.8s infinite;
+    }
+
+    @keyframes alertPulse {
+      0%, 100% { box-shadow: 0 0 4px rgba(245, 158, 11, 0.2); }
+      50% { box-shadow: 0 0 16px rgba(245, 158, 11, 0.6); }
+    }
+
+    .station-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: 4px;
+      word-break: break-word;
+      line-height: 1.25;
+    }
+
+    .station-line-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Operator Profile Block */
+    .operator-profile-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    .operator-box-header {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .operator-info-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .op-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 6px;
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-wire);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .op-details strong {
+      color: #fff;
+      font-size: 0.9rem;
+      display: block;
+    }
+
+    .op-details small {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .op-tag-strip {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1px 6px;
+      border-radius: 3px;
+      color: var(--text-muted);
+    }
+
+    /* Live Optical CCTV Feed Box */
+    .cctv-viewport-box {
+      position: relative;
+      width: 100%;
+      height: 146px;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border-wire);
+      background: #000;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+    .cctv-feed-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.1) brightness(0.95);
+      transition: all 0.3s ease;
+    }
+    .cctv-header-strip {
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      right: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 2;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.05em;
+    }
+    .cctv-live-tag {
+      background: rgba(239, 68, 68, 0.88);
+      color: #fff;
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-weight: 700;
+      animation: pulseAnim 1.5s infinite;
+    }
+    .cctv-status-tag {
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      color: var(--accent-amber);
+      padding: 1px 6px;
+      border-radius: 3px;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .cctv-overlay-reticle {
+      position: absolute;
+      bottom: 6px;
+      left: 8px;
+      right: 8px;
+      background: rgba(14, 18, 27, 0.88);
+      backdrop-filter: blur(4px);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Instant Floater Dispatch Action */
+    .action-panel-box {
+      background: rgba(229, 169, 59, 0.08);
+      border: 1px dashed var(--accent-brass);
+      border-radius: 6px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .action-panel-box p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .btn-deploy-floater {
+      width: 100%;
+      background: linear-gradient(135deg, #e5a93b, #b88022);
+      color: #0b0e14;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px var(--accent-brass-glow);
+    }
+
+    .btn-deploy-floater:hover {
+      background: linear-gradient(135deg, #f5b74c, #c78f2d);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(229, 169, 59, 0.45);
+    }
+
+    .btn-deploy-floater:active {
+      transform: translateY(1px);
+    }
+
+    /* BOTTOM COMMANDER HUD */
+    .hud-bottom {
+      grid-area: bottom;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+
+    .commander-dock {
+      width: 640px;
+      background: var(--bg-panel);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-wire);
+      border-radius: 10px;
+      padding: 12px 16px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .commander-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .commander-title {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .commander-title::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-brass);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-brass);
+    }
+
+    .commander-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+    }
+
+    .cmd-chip {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .cmd-chip:hover {
+      color: #fff;
+      border-color: var(--accent-brass);
+      background: var(--bg-surface-elevated);
+    }
+
+    .commander-form {
+      display: flex;
+      gap: 8px;
+    }
+
+    .commander-input {
+      flex: 1;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      color: #fff;
+      font-family: var(--font-ui);
+      font-size: 0.85rem;
+      padding: 8px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .commander-input:focus {
+      border-color: var(--accent-brass);
+    }
+
+    .commander-submit {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-wire);
+      color: var(--text-main);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 0 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .commander-submit:hover {
+      background: var(--accent-brass);
+      color: #000;
+    }
+
+    /* Live Response Drawer */
+    #commander-response-drawer {
+      display: none;
+      background: rgba(10, 14, 22, 0.95);
+      border: 1px solid var(--border-wire);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      max-height: 180px;
+      overflow-y: auto;
+      line-height: 1.5;
+    }
+
+    /* 3D Tooltip Overlay */
+    #station-tooltip {
+      position: absolute;
+      display: none;
+      background: rgba(14, 18, 27, 0.92);
+      border: 1px solid var(--border-brass);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #fff;
+      pointer-events: none;
+      z-index: 100;
+      transform: translate(-50%, -130%);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Three.js Viewport Container -->
+  <div id="viewport-container">
+    <canvas id="three-canvas"></canvas>
+  </div>
+
+  <!-- Interactive 3D Station Tooltip -->
+  <div id="station-tooltip"></div>
+
+  <!-- HUD Layer -->
+  <div class="hud-layer">
+    
+    <!-- Top Header -->
+    <header class="hud-header interactive">
+      <div class="brand-cluster">
+        <div class="brand-mark">3D</div>
+        <div class="brand-info">
+          <div class="brand-title">
+            FactoryOS Twin
+            <span class="brand-tag">MAJESTIC DIGITAL TWIN</span>
+          </div>
+          <div class="brand-coord">CAC PLANT 01 // COIMBATORE AUTOMOTIVE // 3 LINES 25 WORKSTATIONS</div>
+        </div>
+      </div>
+
+      <!-- Camera Preset Angles -->
+      <div class="camera-presets">
+        <button class="cam-btn active" id="btn-cam-iso" onclick="setCameraPreset('iso')">ISOMETRIC</button>
+        <button class="cam-btn" id="btn-cam-l1" onclick="setCameraPreset('l1')">LINE 1 · CRANK</button>
+        <button class="cam-btn" id="btn-cam-l2" onclick="setCameraPreset('l2')">LINE 2 · GEAR</button>
+        <button class="cam-btn" id="btn-cam-l3" onclick="setCameraPreset('l3')">LINE 3 · BRAKE</button>
+        <button class="cam-btn" id="btn-cam-top" onclick="setCameraPreset('top')">TOP DRAFT</button>
+      </div>
+
+      <!-- Telemetry Status & Classic View Link -->
+      <div class="header-actions">
+        <div class="telemetry-status">
+          <div class="pulse-dot"></div>
+          <span id="telemetry-clock">LIVE FLOOR TELEMETRY · 5S TICK</span>
+        </div>
+        <a href="/" class="view-toggle-link" title="Switch back to Classic View">
+          <span>📋</span> Classic Floor
+        </a>
+      </div>
+    </header>
+
+    <!-- Left HUD: Telemetry & Production Lines -->
+    <aside class="hud-left interactive">
+      <!-- Factory Production Summary -->
+      <div class="architectural-card">
+        <div class="card-label">
+          <span>LINE EFFICIENCY MATRIX</span>
+          <span class="badge" id="factory-attainment-total">88.4%</span>
+        </div>
+
+        <!-- Line 1 Row -->
+        <div class="line-row" onclick="setCameraPreset('l1')">
+          <div class="line-row-header">
+            <span class="line-name">Engine Components</span>
+            <span class="line-code">L01 · CRANK</span>
+          </div>
+          <div class="line-progress-bar">
+            <div class="line-progress-fill" id="l01-progress-fill" style="width: 17.7%; background: var(--accent-amber);"></div>
+          </div>
+          <div class="line-meta-flex">
+            <span>Target: 960</span>
+            <span id="l01-achieved-text" style="color: var(--accent-amber);">170 units (17.7%)</span>
+          </div>
+          <div class="bottleneck-cell" onclick="event.stopPropagation(); selectMachineById('L01-M02');">
+            <div class="bottleneck-info">
+              <strong>⚠️ L01-M02 & L01-M03</strong>
+              <div style="font-size:0.68rem; color:var(--text-dim);">Operator absent (Unstaffed)</div>
+            </div>
+            <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--accent-amber);">INSPECT ➔</span>
+          </div>
+        </div>
+
+        <!-- Line 2 Row -->
+        <div class="line-row" onclick="setCameraPreset('l2')">
+          <div class="line-row-header">
+            <span class="line-name">Transmission Gears</span>
+            <span class="line-code">L02 · GEAR</span>
+          </div>
+          <div class="line-progress-bar">
+            <div class="line-progress-fill" id="l02-progress-fill" style="width: 95%;"></div>
+          </div>
+          <div class="line-meta-flex">
+            <span>Target: 900</span>
+            <span id="l02-achieved-text" style="color: var(--accent-emerald);">855 units (95.0%)</span>
+          </div>
+          <div class="bottleneck-cell" onclick="event.stopPropagation(); selectMachineById('L02-M04');">
+            <div class="bottleneck-info">
+              <strong>⚠️ L02-M04 Hobbing</strong>
+              <div style="font-size:0.68rem; color:var(--text-dim);">Saravanan on casual leave</div>
+            </div>
+            <span style="font-family:var(--font-mono); font-size:0.68rem; color:var(--accent-amber);">INSPECT ➔</span>
+          </div>
+        </div>
+
+        <!-- Line 3 Row -->
+        <div class="line-row" onclick="setCameraPreset('l3')">
+          <div class="line-row-header">
+            <span class="line-name">Brake Assemblies</span>
+            <span class="line-code">L03 · CALIPER</span>
+          </div>
+          <div class="line-progress-bar">
+            <div class="line-progress-fill" id="l03-progress-fill" style="width: 98%;"></div>
+          </div>
+          <div class="line-meta-flex">
+            <span>Target: 840</span>
+            <span id="l03-achieved-text" style="color: var(--accent-emerald);">823 units (98.0%)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Pool Standby Roster -->
+      <div class="architectural-card">
+        <div class="card-label">
+          <span>FREE POOL (STANDBY FLOATERS)</span>
+          <span class="badge" id="freepool-count-badge">5 AVAILABLE</span>
+        </div>
+        <div class="standby-dock" id="standby-roster-list">
+          <div class="floater-pill">
+            <div class="floater-meta">
+              <strong>Suresh Mani</strong>
+              <small>EMP-131 · CNC Turning, Milling</small>
+            </div>
+            <span class="floater-badge">STANDBY</span>
+          </div>
+          <div class="floater-pill">
+            <div class="floater-meta">
+              <strong>Kishore Kumar</strong>
+              <small>EMP-132 · Gear Hobbing, Grinding</small>
+            </div>
+            <span class="floater-badge">STANDBY</span>
+          </div>
+          <div class="floater-pill">
+            <div class="floater-meta">
+              <strong>Arunachalam S.</strong>
+              <small>EMP-133 · Precision Milling</small>
+            </div>
+            <span class="floater-badge">STANDBY</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Right HUD: Workstation Inspector Drawer -->
+    <aside class="hud-right interactive" id="station-inspector-panel">
+      <div class="station-detail-card" id="station-card-inner">
+        <div class="station-header">
+          <div class="station-id-row">
+            <span class="station-code-badge" id="insp-station-code">L01-M02</span>
+            <span class="station-status-pill status-unstaffed" id="insp-status-pill">UNSTAFFED</span>
+          </div>
+          <h2 class="station-title" id="insp-station-name">CNC Turning (WS 2/2)</h2>
+          <div class="station-line-subtitle" id="insp-line-name">Engine Components Line · Stage 2</div>
+        </div>
+
+        <!-- Live Optical CCTV Feed Box -->
+        <div class="cctv-viewport-box" id="cctv-viewport-box">
+          <div class="cctv-header-strip">
+            <span class="cctv-live-tag">● LIVE CAM 24</span>
+            <span class="cctv-status-tag" id="cctv-status-tag">IR OCCUPANCY: 0%</span>
+          </div>
+          <img id="cctv-feed-img" src="/static/feed_unstaffed.jpg" alt="Workstation Optical CCTV Feed" class="cctv-feed-img">
+          <div class="cctv-overlay-reticle" id="cctv-overlay-reticle">
+            <span class="cctv-caption" id="cctv-caption">⚠️ OPERATOR ABSENT · UNSTAFFED BOTTLENECK</span>
+          </div>
+        </div>
+
+        <!-- Telemetry Metrics Grid -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+          <div style="background:var(--bg-surface); padding:8px 10px; border-radius:5px; border:1px solid var(--border-subtle);">
+            <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--text-dim);">FEED SPEED</div>
+            <div style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:#fff;" id="insp-metric-speed">1,820 RPM</div>
+          </div>
+          <div style="background:var(--bg-surface); padding:8px 10px; border-radius:5px; border:1px solid var(--border-subtle);">
+            <div style="font-family:var(--font-mono); font-size:0.62rem; color:var(--text-dim);">CYCLE TIME</div>
+            <div style="font-family:var(--font-mono); font-size:0.9rem; font-weight:700; color:var(--accent-emerald);" id="insp-metric-cycle">45.2s</div>
+          </div>
+        </div>
+
+        <!-- Primary Operator Box -->
+        <div class="operator-profile-box">
+          <div class="operator-box-header">PRIMARY ASSIGNED OPERATOR</div>
+          <div class="operator-info-grid">
+            <div class="op-avatar" id="insp-op-avatar">👨‍🔧</div>
+            <div class="op-details">
+              <strong id="insp-op-name">Karthik Subramanian</strong>
+              <small id="insp-op-id">EMP-102 · CNC Operator</small>
+              <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-amber); margin-top:2px;" id="insp-op-status">
+                ABSENT (Medical Leave)
+              </div>
+            </div>
+          </div>
+          <div class="op-tag-strip" id="insp-op-skills">
+            <span class="skill-tag">CNC Turning</span>
+            <span class="skill-tag">Tool Setting</span>
+            <span class="skill-tag">Precision Lathe</span>
+          </div>
+        </div>
+
+        <!-- Action / Floater Allocation -->
+        <div class="action-panel-box" id="insp-action-box">
+          <p id="insp-action-description">Station is unstaffed. Eligible standby floater available in Free Pool.</p>
+          <button class="btn-deploy-floater" id="btn-deploy-floater-action" onclick="executeInspectorFloaterAssign()">
+            ⚡ DISPATCH FLOATER COVERAGE
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Bottom Commander Console -->
+    <footer class="hud-bottom interactive">
+      <div class="commander-dock">
+        <div class="commander-header">
+          <span class="commander-title">MACHO OPERATIONS COMMANDER</span>
+          <div class="commander-chips">
+            <button class="cmd-chip" onclick="quickPrompt('Why is Line 1 delayed?')">Why is Line 1 delayed?</button>
+            <button class="cmd-chip" onclick="quickPrompt('Assign floater for WS 2 in line 1')">Assign floater for WS 2 on Line 1</button>
+            <button class="cmd-chip" onclick="quickPrompt('List all unstaffed workstations')">List unstaffed workstations</button>
+          </div>
+        </div>
+
+        <!-- AI Query Response Drawer -->
+        <div id="commander-response-drawer"></div>
+
+        <!-- Command Form -->
+        <form class="commander-form" onsubmit="handleCommanderSubmit(event)">
+          <input type="text" class="commander-input" id="cmd-input" placeholder="Type a floor directive or ask Macho anything..." autocomplete="off">
+          <button type="submit" class="commander-submit" id="cmd-submit-btn">EXECUTE</button>
+        </form>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // =========================================================================
+    // 3D DIGITAL TWIN ENGINE (Three.js WebGL)
+    // =========================================================================
+
+    let scene, camera, renderer, controls;
+    const machinesData = [];
+    const machineMeshes = [];
+    let selectedMachineId = 'L01-M02';
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    const LINE_CONFIG = {
+      'L01': { name: 'Engine Components', color: 0x38bdf8, zOffset: -18, count: 10, target: 960 },
+      'L02': { name: 'Transmission Gears', color: 0xf59e0b, zOffset: 0, count: 7, target: 900 },
+      'L03': { name: 'Brake Assemblies', color: 0x10b981, zOffset: 18, count: 8, target: 840 }
+    };
+
+    function init3D() {
+      const container = document.getElementById('viewport-container');
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      // 1. Scene setup
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07090e);
+      scene.fog = new THREE.FogExp2(0x07090e, 0.012);
+
+      // 2. Camera setup
+      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      camera.position.set(45, 40, 50);
+
+      // 3. Renderer setup
+      renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById('three-canvas'),
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+      // 4. Orbit Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2.05; // Do not go below floor
+      controls.minDistance = 15;
+      controls.maxDistance = 120;
+      controls.target.set(0, 0, 0);
+
+      // 5. Architectural Lighting
+      const ambientLight = new THREE.AmbientLight(0x242d42, 1.8);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xfffaed, 2.2);
+      dirLight.position.set(40, 60, 30);
+      dirLight.castShadow = true;
+      dirLight.shadow.mapSize.width = 2048;
+      dirLight.shadow.mapSize.height = 2048;
+      dirLight.shadow.camera.near = 10;
+      dirLight.shadow.camera.far = 150;
+      dirLight.shadow.camera.left = -50;
+      dirLight.shadow.camera.right = 50;
+      dirLight.shadow.camera.top = 50;
+      dirLight.shadow.camera.bottom = -50;
+      dirLight.shadow.bias = -0.0005;
+      scene.add(dirLight);
+
+      // Cyan accent flood
+      const cyanFlood = new THREE.DirectionalLight(0x06b6d4, 0.8);
+      cyanFlood.position.set(-40, 20, -30);
+      scene.add(cyanFlood);
+
+      // 6. Architectural Blueprint Floor Grid
+      buildFactoryFloor();
+
+      // 7. Build Lines & Machines in 3D
+      buildFactoryLines3D();
+
+      // 8. Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('click', onMouseClick);
+
+      animate();
+    }
+
+    // Factory Floor with Blueprint Markings
+    function buildFactoryFloor() {
+      const floorSize = 130;
+      const floorGeo = new THREE.PlaneGeometry(floorSize, floorSize);
+      const floorMat = new THREE.MeshStandardMaterial({
+        color: 0x0a0d14,
+        roughness: 0.85,
+        metalness: 0.2
+      });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      scene.add(floor);
+
+      // Dual Grid: Architectural Coordinate Grid
+      const gridHelper = new THREE.GridHelper(floorSize, 52, 0x1f293d, 0x0f1524);
+      gridHelper.position.y = 0.02;
+      scene.add(gridHelper);
+
+      // Glowing Lane Guide Lines (Conveyor routes)
+      [-18, 0, 18].forEach(z => {
+        const lineGeo = new THREE.PlaneGeometry(80, 0.4);
+        const lineMat = new THREE.MeshBasicMaterial({
+          color: 0x22324e,
+          transparent: true,
+          opacity: 0.8
+        });
+        const lane = new THREE.Mesh(lineGeo, lineMat);
+        lane.rotation.x = -Math.PI / 2;
+        lane.position.set(0, 0.03, z);
+        scene.add(lane);
+      });
+    }
+
+    // Build the 3D Machine Workstations
+    function buildFactoryLines3D() {
+      const lineKeys = ['L01', 'L02', 'L03'];
+      
+      lineKeys.forEach(lId => {
+        const conf = LINE_CONFIG[lId];
+        const count = conf.count;
+        const startX = -((count - 1) * 7) / 2;
+
+        for (let i = 1; i <= count; i++) {
+          const mId = `${lId}-M${i < 10 ? '0' + i : i}`;
+          const x = startX + (i - 1) * 7;
+          const z = conf.zOffset;
+
+          const machineGroup = createMachine3DModel(mId, lId, i, x, z);
+          scene.add(machineGroup);
+          machineMeshes.push(machineGroup);
+        }
+      });
+    }
+
+    // Creates a single architectural 3D workstation
+    function createMachine3DModel(mId, lineId, index, x, z) {
+      const group = new THREE.Group();
+      group.position.set(x, 0, z);
+      group.name = mId;
+      group.userData = {
+        machineId: mId,
+        lineId: lineId,
+        stationIndex: index,
+        isUnstaffed: (mId === 'L01-M02' || mId === 'L01-M03' || mId === 'L02-M04'),
+        status: (mId === 'L01-M02' || mId === 'L01-M03' || mId === 'L02-M04') ? 'unstaffed' : 'running'
+      };
+
+      // 1. Base Pedestal (Titanium Slate)
+      const baseGeo = new THREE.BoxGeometry(4.2, 0.6, 3.8);
+      const baseMat = new THREE.MeshStandardMaterial({
+        color: 0x141a26,
+        roughness: 0.5,
+        metalness: 0.7
+      });
+      const base = new THREE.Mesh(baseGeo, baseMat);
+      base.position.y = 0.3;
+      base.castShadow = true;
+      base.receiveShadow = true;
+      group.add(base);
+
+      // 2. Machine Chassis Body
+      const bodyGeo = new THREE.BoxGeometry(3.6, 2.6, 3.2);
+      const bodyMat = new THREE.MeshStandardMaterial({
+        color: group.userData.isUnstaffed ? 0x221c16 : 0x182030,
+        roughness: 0.35,
+        metalness: 0.8
+      });
+      const body = new THREE.Mesh(bodyGeo, bodyMat);
+      body.position.y = 1.9;
+      body.castShadow = true;
+      group.add(body);
+      group.userData.bodyMesh = body;
+
+      // 3. Safety Glass Viewing Chamber
+      const glassGeo = new THREE.BoxGeometry(2.4, 1.4, 0.4);
+      const glassMat = new THREE.MeshPhysicalMaterial({
+        color: group.userData.isUnstaffed ? 0xf59e0b : 0x38bdf8,
+        transparent: true,
+        opacity: 0.45,
+        roughness: 0.1,
+        metalness: 0.1,
+        transmission: 0.8
+      });
+      const glass = new THREE.Mesh(glassGeo, glassMat);
+      glass.position.set(0, 2.0, 1.5);
+      group.add(glass);
+      group.userData.glassMesh = glass;
+
+      // 4. Rotating Spindle / Toolhead inside chamber
+      const toolGeo = new THREE.CylinderGeometry(0.2, 0.35, 1.0, 16);
+      const toolMat = new THREE.MeshStandardMaterial({
+        color: 0xe5a93b,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+      const tool = new THREE.Mesh(toolGeo, toolMat);
+      tool.position.set(0, 2.0, 0.8);
+      group.add(tool);
+      group.userData.spindleMesh = tool;
+
+      // 5. Holographic Status Beacon Halo
+      const ringGeo = new THREE.TorusGeometry(0.7, 0.08, 16, 32);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: group.userData.isUnstaffed ? 0xf59e0b : 0x10b981,
+        wireframe: true
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 4.2;
+      group.add(ring);
+      group.userData.haloMesh = ring;
+
+      // 6. Selection Energy Bracket (Hidden until selected)
+      const bracketGeo = new THREE.BoxGeometry(4.6, 3.8, 4.2);
+      const bracketMat = new THREE.MeshBasicMaterial({
+        color: 0xe5a93b,
+        wireframe: true,
+        transparent: true,
+        opacity: 0
+      });
+      const bracket = new THREE.Mesh(bracketGeo, bracketMat);
+      bracket.position.y = 2.0;
+      group.add(bracket);
+      group.userData.bracketMesh = bracket;
+
+      return group;
+    }
+
+    // Smooth Camera Presets using Tween.js
+    function setCameraPreset(preset) {
+      document.querySelectorAll('.cam-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById(`btn-cam-${preset}`);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      let targetPos, targetLook;
+
+      switch(preset) {
+        case 'iso':
+          targetPos = { x: 45, y: 40, z: 50 };
+          targetLook = { x: 0, y: 0, z: 0 };
+          break;
+        case 'l1':
+          targetPos = { x: 0, y: 22, z: 12 };
+          targetLook = { x: 0, y: 0, z: -18 };
+          break;
+        case 'l2':
+          targetPos = { x: 0, y: 22, z: 30 };
+          targetLook = { x: 0, y: 0, z: 0 };
+          break;
+        case 'l3':
+          targetPos = { x: 0, y: 22, z: 48 };
+          targetLook = { x: 0, y: 0, z: 18 };
+          break;
+        case 'top':
+          targetPos = { x: 0, y: 75, z: 1 };
+          targetLook = { x: 0, y: 0, z: 0 };
+          break;
+      }
+
+      animateCamera(targetPos, targetLook, 1200);
+    }
+
+    function animateCamera(pos, target, duration = 1000) {
+      new TWEEN.Tween(camera.position)
+        .to(pos, duration)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+
+      new TWEEN.Tween(controls.target)
+        .to(target, duration)
+        .easing(TWEEN.Easing.Cubic.Out)
+        .start();
+    }
+
+    // Select Machine and Zoom In
+    function selectMachineById(mId) {
+      selectedMachineId = mId;
+      const meshGroup = machineMeshes.find(m => m.userData.machineId === mId);
+      if (!meshGroup) return;
+
+      // Update Selection Brackets
+      machineMeshes.forEach(m => {
+        m.userData.bracketMesh.material.opacity = (m.userData.machineId === mId) ? 0.8 : 0;
+      });
+
+      // Camera smoothly tracks machine
+      const mPos = meshGroup.position;
+      animateCamera(
+        { x: mPos.x + 10, y: mPos.y + 9, z: mPos.z + 12 },
+        { x: mPos.x, y: 2.0, z: mPos.z },
+        900
+      );
+
+      // Update Inspector Sidebar
+      updateInspectorUI(mId);
+    }
+
+    // Interactive Hover & Click Raycasting
+    function onMouseMove(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+      const tooltip = document.getElementById('station-tooltip');
+
+      if (intersects.length > 0) {
+        // Find topmost machine group
+        let obj = intersects[0].object;
+        while (obj.parent && obj.parent !== scene) {
+          obj = obj.parent;
+        }
+
+        if (obj.userData && obj.userData.machineId) {
+          tooltip.style.display = 'block';
+          tooltip.style.left = `${event.clientX}px`;
+          tooltip.style.top = `${event.clientY}px`;
+          const statusText = obj.userData.isUnstaffed ? '⚠️ UNSTAFFED (BOTTLENECK)' : '✓ OPERATIONAL';
+          tooltip.innerHTML = `<strong>${obj.userData.machineId}</strong> · ${statusText}`;
+          document.body.style.cursor = 'pointer';
+          return;
+        }
+      }
+
+      tooltip.style.display = 'none';
+      document.body.style.cursor = 'default';
+    }
+
+    function onMouseClick(event) {
+      // Ignore clicks on HUD panels
+      if (event.target.closest('.interactive')) return;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+
+      if (intersects.length > 0) {
+        let obj = intersects[0].object;
+        while (obj.parent && obj.parent !== scene) {
+          obj = obj.parent;
+        }
+        if (obj.userData && obj.userData.machineId) {
+          selectMachineById(obj.userData.machineId);
+        }
+      }
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // Render loop with rotations and live animations
+    let clock = new THREE.Clock();
+    function animate() {
+      requestAnimationFrame(animate);
+      TWEEN.update();
+      controls.update();
+
+      const time = clock.getElapsedTime();
+
+      // Animate Machine Elements
+      machineMeshes.forEach(m => {
+        // Rotate Spindles for active machines
+        if (!m.userData.isUnstaffed && m.userData.spindleMesh) {
+          m.userData.spindleMesh.rotation.y += 0.08;
+        }
+        // Pulse Halos
+        if (m.userData.haloMesh) {
+          m.userData.haloMesh.rotation.z += 0.015;
+          const scale = 1 + Math.sin(time * 3 + m.userData.stationIndex) * 0.08;
+          m.userData.haloMesh.scale.set(scale, scale, scale);
+        }
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    // =========================================================================
+    // HUD & API SYNC (Floor Intelligence)
+    // =========================================================================
+
+    const STATION_ROSTER_MAP = {
+      'L01-M01': { name: 'CNC Turning (WS 1/2)', op: 'Rajesh Kumar', opId: 'EMP-101', role: 'Senior CNC Operator', status: 'present', skills: ['CNC Turning', 'Precision Lathe'] },
+      'L01-M02': { name: 'CNC Turning (WS 2/2)', op: 'Karthik Subramanian', opId: 'EMP-102', role: 'CNC Operator', status: 'absent', skills: ['CNC Turning', 'Tool Setting'] },
+      'L01-M03': { name: 'Milling (WS 1/1)', op: 'Murugan Palanisamy', opId: 'EMP-103', role: 'Milling Machinist', status: 'absent', skills: ['CNC Milling', 'Face Milling'] },
+      'L01-M04': { name: 'Gun Drilling (WS 1/1)', op: 'Praveen Kumar', opId: 'EMP-104', role: 'Drill Specialist', status: 'present', skills: ['Gun Drilling'] },
+      'L02-M04': { name: 'Gear Hobbing (WS 3/3)', op: 'Saravanan Natarajan', opId: 'EMP-114', role: 'Gear Hobbing Operator', status: 'absent', skills: ['Gear Hobbing'] },
+    };
+
+    function updateInspectorUI(mId) {
+      const station = STATION_ROSTER_MAP[mId] || {
+        name: `${mId} Workstation`,
+        op: 'Standard Shift Operator',
+        opId: 'EMP-120',
+        role: 'Line Operator',
+        status: 'present',
+        skills: ['General Machining']
+      };
+
+      const mesh = machineMeshes.find(m => m.userData.machineId === mId);
+      const isUnstaffed = mesh ? mesh.userData.isUnstaffed : false;
+
+      document.getElementById('insp-station-code').textContent = mId;
+      document.getElementById('insp-station-name').textContent = station.name;
+      
+      const lineName = mId.startsWith('L01') ? 'Engine Components Line' : (mId.startsWith('L02') ? 'Transmission Gears Line' : 'Brake Assemblies Line');
+      document.getElementById('insp-line-name').textContent = `${lineName} · Stage Workstation`;
+
+      const statusPill = document.getElementById('insp-status-pill');
+      const actionBox = document.getElementById('insp-action-box');
+
+      const cctvImg = document.getElementById('cctv-feed-img');
+      const cctvStatus = document.getElementById('cctv-status-tag');
+      const cctvCaption = document.getElementById('cctv-caption');
+
+      if (isUnstaffed) {
+        statusPill.className = 'station-status-pill status-unstaffed';
+        statusPill.textContent = 'UNSTAFFED';
+        actionBox.style.display = 'block';
+        document.getElementById('insp-action-description').textContent = `Station ${mId} is unstaffed. Eligible standby floater available in Free Pool.`;
+        document.getElementById('insp-op-status').textContent = 'ABSENT (Leave / Medical)';
+        document.getElementById('insp-op-status').style.color = 'var(--accent-amber)';
+        
+        if (cctvImg) cctvImg.src = '/static/feed_unstaffed.jpg';
+        if (cctvStatus) {
+          cctvStatus.textContent = 'IR OCCUPANCY: 0%';
+          cctvStatus.style.color = 'var(--accent-amber)';
+          cctvStatus.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+        }
+        if (cctvCaption) cctvCaption.innerHTML = '⚠️ OPERATOR VACANT · UNSTAFFED BOTTLENECK';
+      } else {
+        statusPill.className = 'station-status-pill status-running';
+        statusPill.textContent = 'OPERATIONAL';
+        actionBox.style.display = 'none';
+        document.getElementById('insp-op-status').textContent = 'ACTIVE OPERATING (Clocked in 05:50 AM)';
+        document.getElementById('insp-op-status').style.color = 'var(--accent-emerald)';
+        
+        if (cctvImg) cctvImg.src = '/static/feed_running.jpg';
+        if (cctvStatus) {
+          cctvStatus.textContent = 'OCCUPANCY: 100% · ACTIVE';
+          cctvStatus.style.color = 'var(--accent-emerald)';
+          cctvStatus.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+        }
+        if (cctvCaption) cctvCaption.innerHTML = '✓ OPERATOR PRESENT · CUTTING FEED NOMINAL';
+      }
+
+      document.getElementById('insp-op-name').textContent = station.op;
+      document.getElementById('insp-op-id').textContent = `${station.opId} · ${station.role}`;
+
+      const skillsContainer = document.getElementById('insp-op-skills');
+      skillsContainer.innerHTML = station.skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+    }
+
+    // 1-Click Floater Dispatch from 3D Inspector
+    async function executeInspectorFloaterAssign() {
+      const btn = document.getElementById('btn-deploy-floater-action');
+      btn.textContent = 'DISPATCHING...';
+      btn.disabled = true;
+
+      try {
+        const queryText = `assign floater for ${selectedMachineId}`;
+        const res = await fetch('/api/agent/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: queryText, factory_id: 'F001' })
+        });
+        const data = await res.json();
+
+        // Update 3D Model state immediately
+        const mesh = machineMeshes.find(m => m.userData.machineId === selectedMachineId);
+        if (mesh) {
+          mesh.userData.isUnstaffed = false;
+          mesh.userData.status = 'running';
+          mesh.userData.bodyMesh.material.color.setHex(0x182030);
+          mesh.userData.glassMesh.material.color.setHex(0x38bdf8);
+          mesh.userData.haloMesh.material.color.setHex(0x10b981);
+        }
+
+        updateInspectorUI(selectedMachineId);
+
+        // Show Macho Response in commander drawer
+        const drawer = document.getElementById('commander-response-drawer');
+        drawer.style.display = 'block';
+        drawer.innerHTML = `<strong>Macho Dispatch Result:</strong><br>${data.final_answer.replace(/\n/g, '<br>')}`;
+
+      } catch (err) {
+        console.error('Dispatch error:', err);
+        alert('Failed to dispatch floater: ' + err.message);
+      } finally {
+        btn.textContent = '⚡ DISPATCH FLOATER COVERAGE';
+        btn.disabled = false;
+      }
+    }
+
+    // Macho Commander Queries
+    function quickPrompt(text) {
+      document.getElementById('cmd-input').value = text;
+      handleCommanderSubmit(new Event('submit'));
+    }
+
+    async function handleCommanderSubmit(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('cmd-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      const submitBtn = document.getElementById('cmd-submit-btn');
+      const drawer = document.getElementById('commander-response-drawer');
+      
+      submitBtn.textContent = 'RUNNING...';
+      submitBtn.disabled = true;
+      drawer.style.display = 'block';
+      drawer.innerHTML = `<em>Querying floor intelligence engine for "${query}"...</em>`;
+
+      try {
+        const res = await fetch('/api/agent/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: query, factory_id: 'F001' })
+        });
+        const data = await res.json();
+        
+        drawer.innerHTML = `<strong>Macho Analysis:</strong><br>${data.final_answer.replace(/\n/g, '<br>')}`;
+
+        // If the query was an assignment, refresh 3D view
+        if (/assign|deploy|floater/i.test(query)) {
+          syncFloorData();
+        }
+      } catch (err) {
+        drawer.innerHTML = `<span style="color:var(--accent-crimson);">Error executing query: ${err.message}</span>`;
+      } finally {
+        submitBtn.textContent = 'EXECUTE';
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Sync live floor data
+    async function syncFloorData() {
+      try {
+        const res = await fetch('/api/factories/F001/employees');
+        const emps = await res.json();
+        
+        emps.forEach(emp => {
+          const mId = emp.machine_id;
+          if (!mId) return;
+          const mesh = machineMeshes.find(m => m.userData.machineId === mId);
+          if (!mesh) return;
+
+          const isUnstaffed = emp.attendance === 'absent' && !emp.replacement_employee_id;
+          mesh.userData.isUnstaffed = isUnstaffed;
+          mesh.userData.bodyMesh.material.color.setHex(isUnstaffed ? 0x221c16 : 0x182030);
+          mesh.userData.glassMesh.material.color.setHex(isUnstaffed ? 0xf59e0b : 0x38bdf8);
+          mesh.userData.haloMesh.material.color.setHex(isUnstaffed ? 0xf59e0b : 0x10b981);
+        });
+
+        if (selectedMachineId) {
+          updateInspectorUI(selectedMachineId);
+        }
+      } catch (e) {
+        // Background sync error ignored if server quiet
+      }
+    }
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', () => {
+      init3D();
+      selectMachineById('L01-M02');
+      // Periodic poll
+      setInterval(syncFloorData, 5000);
+    });
+  </script>
+</body>
+</html>

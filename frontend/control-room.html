@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FactoryOS · Operations Room</title>
+  <meta name="description" content="A clear, live view of production, people, and plant operations.">
+  <link rel="stylesheet" href="/static/creative.css?v=2">
+  <link rel="stylesheet" href="/static/control-room.css?v=1">
+  <script src="/static/app.js?v=13" defer></script>
+</head>
+<body>
+  <div class="cyber-shell">
+    <!-- Top Command Deck (Header) -->
+    <header class="cyber-nav" id="cyber-nav">
+      <div class="cyber-nav-left">
+        <a class="cyber-brand" href="/static/control-room.html" aria-label="FactoryOS Operations Room">
+          <div class="brand-hexagon" aria-hidden="true"><span>F</span></div>
+          <div class="brand-text-block">
+            <div class="brand-title-wrap">
+              <span class="brand-title">FactoryOS</span>
+              <span class="brand-badge">PLANT JOURNAL · VOL. 01</span>
+            </div>
+            <span class="brand-subtitle">Production, people & plant intelligence</span>
+          </div>
+        </a>
+
+        <div class="cyber-nav-divider"></div>
+
+        <div class="nav-control-group">
+          <div class="cyber-select-capsule">
+            <label for="factory-picker">PLANT</label>
+            <select id="factory-picker" aria-label="Select factory"><option>Loading…</option></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="cyber-nav-right">
+        <!-- Live Factory Telemetry Clock -->
+        <div class="live-clock-pill" id="live-clock-pill" title="Live Floor Synchronization Time">
+          <span class="clock-live-dot"></span>
+          <span id="digital-clock-time">00:00:00 IST</span>
+          <span class="meta-separator">•</span>
+          <span id="digital-clock-shift">SHIFT A</span>
+        </div>
+
+        <!-- Date Selector -->
+        <div class="cyber-select-capsule">
+          <label for="day-picker">DATE</label>
+          <select id="day-picker" aria-label="Select production date"><option>Loading…</option></select>
+        </div>
+
+        <div class="refresh-countdown" title="Auto-refresh rate">
+          <i></i> <span class="refresh-state">10s</span>
+        </div>
+
+        <div class="cyber-nav-divider"></div>
+
+        <!-- Link back to the existing v2 dashboard -->
+        <a href="/static/index.html" class="view-mode-toggle" id="toggle-view-btn" title="Open the original v2 dashboard">
+          Original dashboard
+        </a>
+      </div>
+    </header>
+
+    <!-- Main Operations Studio View -->
+    <main class="cyber-main">
+      <!-- Plant Executive Telemetry Deck -->
+      <section class="cyber-hero-hud" id="plant-banner" aria-label="Selected Factory Floor Overview">
+        <div class="plant-identity-block">
+          <div class="plant-status-beacon" id="plant-status-beacon">
+            <span class="beacon-pulse-core"></span>
+            <span id="beacon-status-text">SYSTEM OPERATIONAL · 3 LINES ACTIVE</span>
+          </div>
+          <h1 class="plant-main-title" id="plant-title">Coimbatore Auto Components</h1>
+          <div class="plant-meta-strip">
+            <span class="plant-industry-tag" id="plant-industry">AUTOMOTIVE</span>
+            <span class="meta-separator">•</span>
+            <span class="plant-location" id="plant-location">Coimbatore, Tamil Nadu</span>
+            <span class="meta-separator">•</span>
+            <span class="plant-lines-count" id="plant-lines-count">3 Active Production Lines</span>
+            <span class="meta-separator">•</span>
+            <span id="plant-code-pill" style="display:none !important;"></span>
+          </div>
+        </div>
+
+        <!-- Shift Attendance & Standby Floaters HUD Deck -->
+        <div class="cyber-roster-deck" id="plant-roster-capsule">
+          <div class="roster-metric-cell">
+            <span class="roster-cell-label">SHIFT ATTENDANCE</span>
+            <div class="roster-cell-val">
+              <strong id="roster-attendance-rate">—</strong>
+              <small id="roster-attendance-detail">Shift A</small>
+            </div>
+          </div>
+          <div class="roster-deck-divider"></div>
+          <div class="roster-metric-cell">
+            <span class="roster-cell-label">FREE POOL (STANDBY)</span>
+            <div class="roster-cell-val">
+              <strong id="roster-freepool-count">—</strong>
+              <small>Ready floaters</small>
+            </div>
+          </div>
+          <div class="roster-deck-divider"></div>
+          <div class="roster-metric-cell">
+            <span class="roster-cell-label">UNSTAFFED STATIONS</span>
+            <div class="roster-cell-val">
+              <strong id="roster-unstaffed-count" class="unstaffed-alert roster-unstaffed-val">—</strong>
+              <small id="roster-unstaffed-detail">Awaiting floater</small>
+            </div>
+          </div>
+          <button type="button" class="btn-open-roster" id="open-roster-btn" title="View floor crew roster & cross-skill matrix">
+            Crew Roster & Skills ▾
+          </button>
+        </div>
+      </section>
+
+      <!-- 5-Card Telemetry Metric Grid (KPI Deck) -->
+      <section class="cyber-kpi-grid" aria-label="Daily Factory KPIs">
+        <article class="cyber-kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">FINISHED OUTPUT</span>
+            <span class="kpi-pulse-ring" style="background:#10b981;box-shadow:0 0 6px #10b981;"></span>
+          </div>
+          <div class="kpi-value-row">
+            <div class="kpi-value" id="total-output">—</div>
+          </div>
+          <div class="kpi-subtext" id="output-caption">units completed today</div>
+        </article>
+
+        <article class="cyber-kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">PLAN ATTAINMENT</span>
+            <span class="kpi-pulse-ring" style="background:#00f2fe;box-shadow:0 0 6px #00f2fe;"></span>
+          </div>
+          <div class="kpi-value-row">
+            <div class="kpi-value" id="attainment">—</div>
+          </div>
+          <div class="kpi-subtext" id="target-caption">against daily target</div>
+        </article>
+
+        <article class="cyber-kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">MACHINE AVAILABILITY</span>
+            <span class="kpi-pulse-ring" style="background:#8b5cf6;box-shadow:0 0 6px #8b5cf6;"></span>
+          </div>
+          <div class="kpi-value-row">
+            <div class="kpi-value" id="availability">—</div>
+          </div>
+          <div class="kpi-subtext" id="machine-caption">operating capacity</div>
+        </article>
+
+        <article class="cyber-kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">INPUT MATERIALS</span>
+            <span class="kpi-pulse-ring" style="background:#f59e0b;box-shadow:0 0 6px #f59e0b;"></span>
+          </div>
+          <div class="kpi-value-row">
+            <div class="kpi-value" id="material-alerts">—</div>
+          </div>
+          <div class="kpi-subtext" id="material-caption">below reorder level</div>
+        </article>
+
+        <article class="cyber-kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">FIRST-PASS YIELD</span>
+            <span class="kpi-pulse-ring" style="background:#06b6d4;box-shadow:0 0 6px #06b6d4;"></span>
+          </div>
+          <div class="kpi-value-row">
+            <div class="kpi-value" id="quality-yield">—</div>
+          </div>
+          <div class="kpi-subtext" id="quality-caption">quality pass rate</div>
+        </article>
+      </section>
+
+      <!-- Autonomous Production Highway Floor Monitor -->
+      <section class="cyber-floor-panel" aria-label="Floor Operations Monitor">
+        <div class="floor-panel-head">
+          <div class="panel-title-wrap">
+            <span class="panel-eyebrow">THE PRODUCTION FLOOR</span>
+            <h2 class="panel-h2">Production lines</h2>
+            <p class="panel-desc">Follow throughput, workstation health, staffing, and active orders across every line.</p>
+          </div>
+          <div class="cyber-legend">
+            <span class="cyber-legend-item"><i class="status-dot running"></i> Nominal</span>
+            <span class="cyber-legend-item"><i class="status-dot down"></i> Halted / Alert</span>
+            <span class="cyber-legend-item" style="color:#fbbf24;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#f59e0b;"></span> Slowed Down</span>
+          </div>
+        </div>
+
+        <!-- Rendered Floor Lines Container -->
+        <div id="floor-lines" class="floor-lines">
+          <div class="loading">Initializing telemetry conduit…</div>
+        </div>
+      </section>
+
+      <footer class="cyber-footer">
+        FactoryOS Operations Room <span>·</span> Live factory data refreshes every 10 seconds
+      </footer>
+    </main>
+
+    <!-- Draggable Macho Robot Companion -->
+    <aside id="macho-robot-widget" class="macho-robot-widget" aria-label="Ask Macho Copilot">
+      <div class="macho-speech-tag">
+        <span class="macho-online-dot"></span>
+        <span>Ask Macho</span>
+      </div>
+      <button type="button" id="floating-macho-btn" class="macho-machine-actor-btn" title="Click to chat with Macho AI Agent" aria-label="Open Macho AI Agent">
+        <img src="/static/robot-cutout.png" alt="Macho AI Agent" class="macho-robot-machine-img" draggable="false">
+      </button>
+    </aside>
+  </div>
+
+  <!-- Slide-over Macho AI Agent Drawer -->
+  <div id="copilot-backdrop" class="copilot-backdrop" hidden></div>
+  <aside id="copilot-drawer" class="copilot-drawer" aria-label="Macho AI Agent" hidden>
+    <div class="drawer-header">
+      <div class="drawer-header-left">
+        <img src="/static/robot.png" alt="Macho Agent" class="drawer-macho-header-avatar">
+        <div>
+          <div class="drawer-eyebrow">MACHO COPILOT · ONLINE</div>
+          <h2>Floor Intelligence Console</h2>
+        </div>
+      </div>
+      <div class="drawer-header-right">
+        <button type="button" id="close-copilot-btn" class="drawer-close-btn" aria-label="Close Macho">✕</button>
+      </div>
+    </div>
+
+    <div class="drawer-body" id="copilot-chat-body">
+      <div id="copilot-intro" class="chat-intro-card">
+        <p><b>Hello! I am Macho, your autonomous factory copilot.</b></p>
+        <p style="margin-top:6px;font-size:11px;">You can query me on active work orders, line bottlenecks, unstaffed stations, or recommended floater allocations.</p>
+      </div>
+      <div id="copilot-chat-stream" class="chat-stream"></div>
+    </div>
+
+    <div class="drawer-footer">
+      <form id="copilot-form" class="copilot-input-form" onsubmit="event.preventDefault();">
+        <input 
+          type="text" 
+          id="agent-query-input" 
+          placeholder="Ask Macho about line output, machine downtime, or floaters..." 
+          autocomplete="off" 
+        />
+        <button type="submit" id="agent-query-btn" class="copilot-send-btn macho-send-btn" aria-label="Ask Macho">
+          <span class="btn-text">Ask Macho</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Free Pool Floater Assignment Modal -->
+  <div id="floater-modal-backdrop" class="modal-backdrop" hidden></div>
+  <div id="floater-modal" class="custom-modal" role="dialog" aria-modal="true" aria-labelledby="floater-modal-title" hidden>
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <span class="modal-badge">STANDBY RELIEF ALLOCATION</span>
+        <h3 id="floater-modal-title">Assign Replacement Floater</h3>
+      </div>
+      <button type="button" class="modal-close-btn" id="close-floater-modal-btn" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal-body" id="floater-modal-body"></div>
+  </div>
+
+  <!-- Floor Crew & Attendance Roster Modal -->
+  <div id="roster-modal-backdrop" class="modal-backdrop" hidden></div>
+  <div id="roster-modal" class="custom-modal roster-modal-large" role="dialog" aria-modal="true" aria-labelledby="roster-modal-title" hidden>
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <span class="modal-badge">SHIFT A WORKFORCE ROSTER</span>
+        <h3 id="roster-modal-title">Floor Crew Attendance & Cross-Skill Matrix</h3>
+      </div>
+      <button type="button" class="modal-close-btn" id="close-roster-modal-btn" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal-body" id="roster-modal-body"></div>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <!-- Live Digital Clock & Beacon Monitor Script -->
+  <script>
+    function updateDigitalClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: false });
+      const clockEl = document.getElementById('digital-clock-time');
+      if (clockEl) clockEl.textContent = `${timeStr} IST`;
+    }
+    setInterval(updateDigitalClock, 1000);
+    updateDigitalClock();
+
+    // Auto-update beacon status based on unstaffed / line status
+    setInterval(() => {
+      const beacon = document.getElementById('plant-status-beacon');
+      const beaconText = document.getElementById('beacon-status-text');
+      const unstaffedEl = document.getElementById('roster-unstaffed-count');
+      const unstaffedVal = parseInt(unstaffedEl?.textContent || '0', 10);
+      const haltedEl = document.querySelector('.line-number.is-halted');
+
+      if (haltedEl || unstaffedVal > 0) {
+        if (beacon) beacon.classList.add('is-halted');
+        if (beaconText) beaconText.textContent = `CRITICAL ALERT · LINE HALTED (${unstaffedVal} UNSTAFFED STATION)`;
+      } else {
+        if (beacon) beacon.classList.remove('is-halted');
+        if (beaconText) beaconText.textContent = 'SYSTEM OPERATIONAL · 3 LINES ACTIVE';
+      }
+    }, 2000);
+  </script>
+</body>
+</html>

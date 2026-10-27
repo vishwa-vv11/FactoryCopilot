@@ -1,0 +1,4 @@
+date,factory_id,factory_name,industry,line_id,line_code,line_name,product_code,product_name,target_units,achieved_units,active_batch_units,shortfall_units,attainment_pct,line_status
+2026-10-27,F001,Coimbatore Auto Components,automotive,L01,EC,Engine Components,FC,Finished Crankshaft,960,2860,1901,0,198.0,running
+2026-10-27,F001,Coimbatore Auto Components,automotive,L02,TG,Transmission Gears,FTG,Finished Transmission Gear,900,3549,2650,0,294.4,running
+2026-10-27,F001,Coimbatore Auto Components,automotive,L03,BA,Brake Assemblies,FBC,Finished Brake Caliper,840,3837,2999,0,357.0,running

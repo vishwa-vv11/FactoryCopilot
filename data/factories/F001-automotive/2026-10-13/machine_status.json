@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-13T19:27:00+00:00",
+  "as_of": "2026-10-13T23:59:00+00:00",
   "machines": [
     {
       "machine_id": "L01-M01",
@@ -9,7 +9,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M02",
@@ -18,8 +18,9 @@
       "machine_type": "Milling",
       "factory_id": "F001",
       "line_id": "L01",
-      "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "status": "unstaffed",
+      "updated_at": "2026-10-13T23:59:00+00:00",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L01-M03",
@@ -28,8 +29,9 @@
       "machine_type": "Gun Drilling",
       "factory_id": "F001",
       "line_id": "L01",
-      "status": "down",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "status": "unstaffed",
+      "updated_at": "2026-10-13T23:59:00+00:00",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L01-M04",
@@ -39,7 +41,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M05",
@@ -49,7 +51,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M06",
@@ -59,7 +61,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M07",
@@ -69,7 +71,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M08",
@@ -79,7 +81,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M09",
@@ -89,7 +91,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L01-M10",
@@ -99,7 +101,7 @@
       "factory_id": "F001",
       "line_id": "L01",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M01",
@@ -109,7 +111,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M02",
@@ -119,7 +121,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M03",
@@ -129,7 +131,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M04",
@@ -138,8 +140,9 @@
       "machine_type": "Carburizing Furnace",
       "factory_id": "F001",
       "line_id": "L02",
-      "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "status": "unstaffed",
+      "updated_at": "2026-10-13T23:59:00+00:00",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L02-M05",
@@ -148,8 +151,8 @@
       "machine_type": "Quenching Bath",
       "factory_id": "F001",
       "line_id": "L02",
-      "status": "down",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "status": "running",
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M06",
@@ -159,7 +162,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M07",
@@ -169,7 +172,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M08",
@@ -179,7 +182,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M09",
@@ -189,7 +192,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L02-M10",
@@ -199,7 +202,7 @@
       "factory_id": "F001",
       "line_id": "L02",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M01",
@@ -208,8 +211,8 @@
       "machine_type": "Sand Casting Prep",
       "factory_id": "F001",
       "line_id": "L03",
-      "status": "down",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "status": "running",
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M02",
@@ -219,7 +222,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M03",
@@ -229,7 +232,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M04",
@@ -239,7 +242,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M05",
@@ -249,7 +252,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M06",
@@ -259,7 +262,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M07",
@@ -269,7 +272,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M08",
@@ -279,7 +282,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M09",
@@ -289,7 +292,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     },
     {
       "machine_id": "L03-M10",
@@ -299,7 +302,7 @@
       "factory_id": "F001",
       "line_id": "L03",
       "status": "running",
-      "updated_at": "2026-10-13T19:27:00+00:00"
+      "updated_at": "2026-10-13T23:59:00+00:00"
     }
   ]
 }

@@ -1,20 +1,21 @@
 """Agent Harness (Runtime & Execution Engine) for FactoryOS V2.
 
-The Harness surrounds the LLM with an operational scaffolding:
+The Harness surrounds Ollama with an autonomous operational scaffolding:
 1. ReAct Execution Loop: Manages Think -> Tool Call -> Observe cycles up to MAX_ROUNDS.
 2. Memory & State: Tracks message history, accumulated evidence, and execution trace events.
 3. Environment Interfacing: Executes tool calls via ToolRegistry.
-4. Dual Mode:
-   - Live LLM Mode: Connects to any OpenAI-compatible provider (OpenAI, Ollama, Groq, OpenRouter).
-   - Deterministic Fallback Mode: Runs an offline, evidence-gathering investigation when no API key is set.
+4. Ollama Exclusive: Directly interfaces with local Ollama service without deterministic fallbacks.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 import json
 import os
+from pathlib import Path
+import re
+import socket
 import time
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -26,22 +27,31 @@ try:
 except ImportError:
     pass
 
-from .tools import EvidenceStore, ToolRegistry
+from .tools import EvidenceStore, ToolRegistry, normalize_factory_id, DATA_DIR
 from .guardrails import InputGuardrail, ExecutionGuardrail, OutputGuardrail
 from .skills import SKILL_REGISTRY, Skill
 
 MAX_TOOL_ROUNDS = 5
-REQUEST_TIMEOUT_SECONDS = 45
+REQUEST_TIMEOUT_SECONDS = 120
 
-SYSTEM_PROMPT = """You are FactoryOS, an autonomous industrial operations analyst.
-Your objective is to investigate operational problems, production shortfalls, machine breakdowns, and material delays.
+SYSTEM_PROMPT = """You are Macho, an autonomous industrial operations AI copilot powered by Ollama.
+Your objective is to answer questions about factory operations, production output, machine telemetry, workforce staffing, inventory, and quality.
 
 Strict Operating Rules:
-1. Use only the provided read-only tools to gather facts. Never assume facts not returned by tools.
-2. Every factual statement in your answer MUST cite an evidence ID using square brackets, e.g., [E1], [E2].
-3. Distinguish confirmed observations from speculative hypotheses.
-4. If a line missed its target, correlate the shortfall with downtime, low inventory, or quality defects.
-5. If evidence is missing or a tool returns no records, state this explicitly.
+1. Answer ONLY what the user asked. Be direct, precise, and concise. Do NOT generate unsolicited observations, unrelated line summaries, or extraneous context that the user did not ask for.
+2. If the user asks a conversational question, capability question (e.g. "what can you do", "who are you", "help"), or greeting, answer conversationally describing your assistant capabilities without calling operational tools or dumping factory targets.
+3. When gathering operational data, use only the provided tools. Every factual statement derived from tool data MUST cite an evidence ID using square brackets, e.g., [E1], [E2].
+4. Do NOT call get_factory_overview unless the user explicitly asks for an overview of the entire factory. For specific lines, queries, or dates, use the specific tool (e.g. get_production_data for production numbers).
+5. If a tool returns no data or records, state this directly without making up facts.
+6. When asked when a machine was repaired, serviced, or maintained, call get_machine_logs with event_type='repair' and machine_id (e.g. machine_id='L01-M01'). State the exact repair date and time directly and cite the evidence tag [E#].
+7. When asked about manufacturing orders, order completion, or next queued orders, use get_orders_data. Explain order status, unique sequential order IDs (ORD-001, ORD-002, ORD-004, etc.), and next queued orders concisely.
+8. When instructed to assign a floater, call assign_floater ONLY for the exact workstation(s) specified by the user. Do NOT assign floaters to other machines or lines.
+9. When asked 'who is replaced for absent operators' or 'who replaced whom', clearly identify the relief floaters covering for absent operators (from `active_replacements` or `replacement_employee_name`). Do NOT confuse the absent operators with their replacements.
+10. When asked for absent operators across the factory, include all absentees across all production lines in the plant with their workstations and lines.
+11. When asked about available Free Pool operators or standby floaters, report ONLY unassigned standby personnel. If an employee is on standby in the Free Pool, do NOT claim they are assigned to a machine. If a floater has already been deployed to a machine (is_replacement=True or machine_id assigned), report them as an active operating floater covering that machine, NOT as available in the Free Pool.
+12. When investigating why a line is halted, stopped, or slowed down, check for unstaffed operator bottlenecks first (using get_shortfall_analysis, get_employees_data, or get_machine_status). If an absent operator has no floater assigned to their workstation, conclude definitively that the line is halted due to the UNSTAFFED OPERATOR BOTTLENECK. Do NOT invent or search for mechanical coolant faults when an unstaffed operator bottleneck is present.
+13. Never cite or output raw hex event IDs (e.g. 7c417439...). Always cite clean evidence bracket tags like [E1], [E2] or workstation/machine IDs like L01-M03.
+14. Give ONLY the direct answer in 1 or 2 clear lines. NEVER output repetitive boilerplate headers like 'Problem Statement:', 'Direct Observed Causes:', 'Operational Guidelines:', or 'Root Cause Determination:'. Answer directly without filler.
 """
 
 
@@ -61,7 +71,7 @@ class TraceEvent:
 class InvestigationResult:
     question: str
     factory_id: str
-    mode: str  # 'llm' or 'deterministic'
+    mode: str  # 'ollama', 'guardrail_blocked', or 'ollama_error'
     rounds_executed: int
     final_answer: str
     evidence: list[dict[str, Any]]
@@ -91,10 +101,8 @@ class InvestigationResult:
 
 
 # =====================================================================
-# 2. LLM Communication Layer (OpenAI-Compatible HTTP Client)
+# 2. Ollama Communication Layer
 # =====================================================================
-
-import socket
 
 def _is_local_endpoint_alive(host: str = "127.0.0.1", port: int = 11434) -> bool:
     try:
@@ -103,23 +111,15 @@ def _is_local_endpoint_alive(host: str = "127.0.0.1", port: int = 11434) -> bool
     except (OSError, TimeoutError):
         return False
 
+
 def _call_llm(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> dict[str, Any]:
-    """Call an OpenAI-compatible /v1/chat/completions endpoint (supports OpenAI, Ollama, Groq, etc.)."""
-    base_url = os.getenv("LLM_API_BASE_URL", "").rstrip("/")
-    is_ollama = "11434" in base_url or os.getenv("LLM_PROVIDER", "").lower() == "ollama"
-    
-    if is_ollama and not _is_local_endpoint_alive():
+    """Call local Ollama /v1/chat/completions endpoint."""
+    base_url = os.getenv("LLM_API_BASE_URL", "http://localhost:11434/v1").rstrip("/")
+    if not _is_local_endpoint_alive():
         raise RuntimeError("Local Ollama service (127.0.0.1:11434) is not running.")
 
-    if not base_url:
-        base_url = "http://localhost:11434/v1" if is_ollama else "https://api.openai.com/v1"
-
-    api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY") or ("ollama" if is_ollama else None)
-    default_model = "llama3.2" if is_ollama else "gpt-4o-mini"
-    model = os.getenv("LLM_MODEL", default_model)
-
-    if not api_key:
-        raise RuntimeError("LLM_API_KEY is not set (and no local Ollama endpoint detected).")
+    api_key = os.getenv("LLM_API_KEY", "ollama")
+    model = os.getenv("LLM_MODEL", "llama3.2")
 
     payload = {
         "model": model,
@@ -139,137 +139,53 @@ def _call_llm(messages: list[dict[str, Any]], tools: list[dict[str, Any]]) -> di
         method="POST",
     )
 
-    timeout_sec = int(os.getenv("LLM_TIMEOUT_SECONDS", "4" if is_ollama else "30"))
+    timeout_sec = int(os.getenv("LLM_TIMEOUT_SECONDS", str(REQUEST_TIMEOUT_SECONDS)))
     try:
         with urlopen(req, timeout=timeout_sec) as response:
             return json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
         err_msg = exc.read(2048).decode("utf-8", errors="replace")
-        raise RuntimeError(f"LLM API returned HTTP {exc.code}: {err_msg}") from exc
+        raise RuntimeError(f"Ollama API returned HTTP {exc.code}: {err_msg}") from exc
     except (URLError, TimeoutError) as exc:
-        raise RuntimeError(f"LLM API network error: {exc}") from exc
+        raise RuntimeError(f"Ollama network error: {exc}") from exc
+
+
+def _get_factory_dates(factory_id: str) -> tuple[str, str]:
+    fid = normalize_factory_id(factory_id)
+    matches = [p for p in DATA_DIR.glob(f"{fid}-*") if p.is_dir()] or [p for p in DATA_DIR.glob(f"{factory_id}-*") if p.is_dir()]
+    if not matches:
+        t = datetime.now().astimezone().date().isoformat()
+        y = (datetime.now().astimezone().date() - timedelta(days=1)).isoformat()
+        return t, y
+    available = sorted([p.name for p in matches[0].iterdir() if p.is_dir() and re.match(r"^\d{4}-\d{2}-\d{2}$", p.name)])
+    if not available:
+        t = datetime.now().astimezone().date().isoformat()
+        y = (datetime.now().astimezone().date() - timedelta(days=1)).isoformat()
+        return t, y
+    today_str = available[-1]
+    yesterday_str = available[-2] if len(available) >= 2 else (date.fromisoformat(today_str) - timedelta(days=1)).isoformat()
+    return today_str, yesterday_str
 
 
 # =====================================================================
-# 3. Deterministic Investigation Engine (Offline Fallback)
-# =====================================================================
-
-def _run_deterministic_investigation(
-    question: str,
-    factory_id: str,
-    registry: ToolRegistry,
-    trace: list[TraceEvent],
-) -> tuple[str, int]:
-    """Execute rule-based tool calls and synthesize an evidence-cited answer without LLM credentials."""
-    q_lower = question.lower()
-    round_idx = 1
-
-    def _now() -> str:
-        return datetime.now(timezone.utc).isoformat()
-
-    trace.append(TraceEvent(_now(), round_idx, "thought", "Running in deterministic mode. Analyzing question intent."))
-
-    # Step 1: Always check shortfall analysis first
-    trace.append(TraceEvent(_now(), round_idx, "tool_call", {"tool": "get_shortfall_analysis", "factory_id": factory_id}))
-    res = registry.execute("get_shortfall_analysis", {"factory_id": factory_id})
-    trace.append(TraceEvent(_now(), round_idx, "observation", f"Found {len(res['result'])} lines."))
-
-    # Step 2: If question mentions downtime or machines, query downtime
-    if any(w in q_lower for w in ("downtime", "breakdown", "machine", "stop", "fail")):
-        round_idx += 1
-        trace.append(TraceEvent(_now(), round_idx, "tool_call", {"tool": "get_downtime_data", "factory_id": factory_id}))
-        dt_res = registry.execute("get_downtime_data", {"factory_id": factory_id})
-        trace.append(TraceEvent(_now(), round_idx, "observation", f"Found {len(dt_res['result'])} downtime events."))
-
-    # Step 3: If question mentions inventory or material, query inventory
-    if any(w in q_lower for w in ("inventory", "material", "stock", "supply")):
-        round_idx += 1
-        trace.append(TraceEvent(_now(), round_idx, "tool_call", {"tool": "get_inventory_data", "factory_id": factory_id}))
-        inv_res = registry.execute("get_inventory_data", {"factory_id": factory_id})
-        trace.append(TraceEvent(_now(), round_idx, "observation", f"Found {len(inv_res['result'])} inventory records."))
-
-    # Synthesize answer citing collected evidence
-    evidence = registry.evidence_store.get_all()
-    if not evidence:
-        return "No operational records were found for the requested factory.", round_idx
-
-    answer_parts = [
-        f"**Investigation Summary for Factory {factory_id}** (Deterministic Evidence Correlation):\n"
-    ]
-
-    shortfall_items = [e for e in evidence if e["tool"] == "get_shortfall_analysis"]
-    for item in shortfall_items:
-        data = item["data"]
-        shortfall = int(data.get("shortfall_units") or 0)
-        line_name = data.get("line_name", data.get("line_id"))
-        ev_id = f"[{item['evidence_id']}]"
-
-        if shortfall > 0:
-            signals = "; ".join(data.get("signals", []))
-            answer_parts.append(
-                f"- **{line_name}** missed its target with a shortfall of **{shortfall} units** {ev_id}. Observed root-cause signals: {signals}."
-            )
-        else:
-            answer_parts.append(
-                f"- **{line_name}** met its daily target successfully {ev_id}."
-            )
-
-    # Step 4: If question relates to procedures, manuals, safety or maintenance SOPs, search documents
-    if any(w in q_lower for w in ("sop", "procedure", "manual", "guide", "policy", "coolant", "vibration", "recover", "safety")):
-        round_idx += 1
-        trace.append(TraceEvent(_now(), round_idx, "tool_call", {"tool": "search_factory_documents", "query": question, "factory_id": factory_id}))
-        doc_res = registry.execute("search_factory_documents", {"factory_id": factory_id, "query": question, "limit": 2})
-        trace.append(TraceEvent(_now(), round_idx, "observation", f"Found {len(doc_res['result'])} document reference(s)."))
-
-    downtime_items = [e for e in evidence if e["tool"] == "get_downtime_data"]
-    if downtime_items:
-        answer_parts.append("\n**Specific Machine Downtime Events:**")
-        for item in downtime_items[:3]:
-            d = item["data"]
-            answer_parts.append(
-                f"- Machine `{d.get('machine_id')}`: {d.get('duration_minutes')} mins stoppage due to *{d.get('reason')}* [{item['evidence_id']}]."
-            )
-    inventory_items = [e for e in evidence if e["tool"] == "get_inventory_data"]
-    if inventory_items:
-        answer_parts.append("\n**Material Inventory Position & Stock Levels:**")
-        for item in inventory_items[:4]:
-            d = item["data"]
-            answer_parts.append(
-                f"- Material `{d.get('material_name')}`: {d.get('available_quantity')} {d.get('unit')} in stock (Reorder threshold: {d.get('reorder_level')}, Status: {d.get('status')}) [{item['evidence_id']}]."
-            )
-
-    doc_items = [e for e in evidence if e["tool"] == "search_factory_documents"]
-    if doc_items:
-        answer_parts.append("\n**Relevant Operating Procedures & Guidelines:**")
-        for item in doc_items:
-            d = item["data"]
-            first_line = d.get("content", "").split("\n")[0].strip("# ")
-            answer_parts.append(
-                f"- Document `{d.get('source')}` ({first_line}): *{item['detail'][:140]}...* [{item['evidence_id']}]."
-            )
-
-    answer_parts.append("\n*(Report produced deterministically from validated local operational records)*")
-    final_text = "\n".join(answer_parts)
-    trace.append(TraceEvent(_now(), round_idx, "final_answer", final_text))
-    return final_text, round_idx
-
-
-# =====================================================================
-# 4. The Agent Harness Runtime
+# 3. The Agent Harness Runtime (Ollama Exclusively)
 # =====================================================================
 
 class AgentHarness:
-    """The runtime orchestrator for autonomous operations investigations."""
+    """The runtime orchestrator for autonomous operations investigations using Ollama exclusively."""
 
-    def __init__(self, registry: ToolRegistry | None = None) -> None:
-        self.evidence_store = EvidenceStore()
+    def __init__(self, registry: ToolRegistry | None = None, system_prompt: str | None = None) -> None:
+        self.evidence_store = registry.evidence_store if registry else EvidenceStore()
         self.registry = registry or ToolRegistry(self.evidence_store)
+        self.system_prompt = system_prompt
 
-    def run(self, question: str, factory_id: str = "F001") -> InvestigationResult:
+    def run(
+        self,
+        question: str,
+        factory_id: str = "F001",
+        history: list[dict[str, str]] | None = None,
+    ) -> InvestigationResult:
         trace: list[TraceEvent] = []
-        base_url = os.getenv("LLM_API_BASE_URL", "").rstrip("/")
-        is_ollama = "11434" in base_url or os.getenv("LLM_PROVIDER", "").lower() == "ollama"
-        api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY") or ("ollama" if is_ollama else None)
 
         def _now() -> str:
             return datetime.now(timezone.utc).isoformat()
@@ -309,39 +225,49 @@ class AgentHarness:
         if matched_skill:
             trace.append(TraceEvent(_now(), 0, "skill_activated", f"Matched playbook: {matched_skill.name}"))
 
-        # Step 3: Deterministic fallback when no API key is provided
-        if not api_key:
-            raw_answer, rounds = _run_deterministic_investigation(
-                question=clean_question,
-                factory_id=clean_factory_id,
-                registry=self.registry,
-                trace=trace,
+        # Step 3: Verify Ollama Service Availability
+        if not _is_local_endpoint_alive():
+            err_msg = (
+                "### Ollama Service Offline\n\n"
+                "The local Ollama service at `http://127.0.0.1:11434` is not running. "
+                "FactoryOS is configured to use **Ollama exclusively** (deterministic fallback has been completely removed). "
+                "Please start Ollama in your terminal (`ollama serve`) and try again."
             )
-            # Output Guardrail Groundedness Check
-            final_answer, grounded = OutputGuardrail.enforce_groundedness(raw_answer, self.evidence_store.get_all())
+            trace.append(TraceEvent(_now(), 0, "ollama_offline", "Ollama endpoint 127.0.0.1:11434 is unreachable."))
             return InvestigationResult(
                 question=clean_question,
                 factory_id=clean_factory_id,
-                mode="deterministic",
+                mode="ollama_error",
                 skill_name=skill_name,
-                rounds_executed=rounds,
-                final_answer=final_answer,
-                evidence=self.evidence_store.get_all(),
+                rounds_executed=0,
+                final_answer=err_msg,
+                evidence=[],
                 trace=trace,
             )
 
-        # Step 4: Live LLM ReAct Loop with Skill SOP Injection
-        active_system_prompt = SYSTEM_PROMPT
+        # Step 4: Ollama ReAct Loop with Skill SOP Injection
+        active_system_prompt = self.system_prompt or SYSTEM_PROMPT
         if matched_skill:
             active_system_prompt += matched_skill.format_prompt_injection()
 
+        today_str, yesterday_str = _get_factory_dates(clean_factory_id)
+        date_context = f"\nOperational Dates: Today is '{today_str}'. Yesterday is '{yesterday_str}'. If the user asks about yesterday, use day='{yesterday_str}'. If the user asks about today, use day='{today_str}'."
         messages: list[dict[str, Any]] = [
-            {"role": "system", "content": active_system_prompt},
-            {
-                "role": "user",
-                "content": f"Factory ID: {clean_factory_id}\nQuestion: {clean_question}\nPlease investigate using the available read-only tools and cite evidence IDs.",
-            },
+            {"role": "system", "content": active_system_prompt + date_context},
         ]
+
+        # Multi-turn conversational memory injection
+        if history:
+            for turn in history[-6:]:
+                role = str(turn.get("role", "")).lower()
+                content = str(turn.get("content", "")).strip()
+                if role in ("user", "assistant") and content:
+                    messages.append({"role": role, "content": content})
+
+        messages.append({
+            "role": "user",
+            "content": f"Factory ID: {clean_factory_id}\nReference Date (Today): {today_str}\nYesterday: {yesterday_str}\nQuestion: {clean_question}\nPlease investigate using the available read-only tools and cite evidence IDs.",
+        })
 
         allowed_tools = {s["function"]["name"] for s in self.registry.schemas}
         round_index = 0
@@ -349,29 +275,24 @@ class AgentHarness:
 
         while round_index < MAX_TOOL_ROUNDS:
             round_index += 1
-            trace.append(TraceEvent(_now(), round_index, "thought", f"Requesting LLM round {round_index}"))
+            trace.append(TraceEvent(_now(), round_index, "thought", f"Requesting Ollama round {round_index}"))
 
             try:
                 response = _call_llm(messages=messages, tools=self.registry.schemas)
             except RuntimeError as exc:
-                trace.append(TraceEvent(_now(), round_index, "thought", f"LLM connection error: {exc}. Falling back to deterministic engine."))
-                raw_answer, rounds = _run_deterministic_investigation(
-                    question=clean_question,
-                    factory_id=clean_factory_id,
-                    registry=self.registry,
-                    trace=trace,
-                )
-                final_answer, _ = OutputGuardrail.enforce_groundedness(raw_answer, self.evidence_store.get_all())
+                err_msg = f"### Ollama Execution Error\n\nFailed to communicate with Ollama: {exc}"
+                trace.append(TraceEvent(_now(), round_index, "error", str(exc)))
                 return InvestigationResult(
                     question=clean_question,
                     factory_id=clean_factory_id,
-                    mode="deterministic_fallback",
+                    mode="ollama_error",
                     skill_name=skill_name,
-                    rounds_executed=rounds,
-                    final_answer=final_answer,
+                    rounds_executed=round_index,
+                    final_answer=err_msg,
                     evidence=self.evidence_store.get_all(),
                     trace=trace,
                 )
+
             choice = response.get("choices", [{}])[0]
             message = choice.get("message", {})
             tool_calls = message.get("tool_calls", [])
@@ -384,7 +305,7 @@ class AgentHarness:
                 break
 
             # Case B: Model requested one or more tool calls
-            messages.append(message)  # Store assistant response with tool calls
+            messages.append(message)
 
             for call in tool_calls:
                 func = call.get("function", {})
@@ -394,8 +315,13 @@ class AgentHarness:
                 except json.JSONDecodeError:
                     args = {}
 
-                # Always force factory scoping to prevent cross-factory pollution
+                # Force factory scoping to prevent cross-factory leakage
                 args["factory_id"] = clean_factory_id
+
+                # Sanitize arguments: remove hallucinated evidence brackets from parameters
+                for k, v in list(args.items()):
+                    if isinstance(v, str) and re.search(r"\[E\d+\]", v, re.IGNORECASE):
+                        del args[k]
 
                 # Operational Guardrail check
                 exec_guard = ExecutionGuardrail.validate_tool_call(tool_name, args, allowed_tools)
@@ -415,6 +341,10 @@ class AgentHarness:
                     execution_result = self.registry.execute(tool_name, args)
                     observation = execution_result["result"]
                     ev_ids = execution_result["evidence_ids"]
+                    if isinstance(observation, list) and ev_ids:
+                        for idx, item in enumerate(observation):
+                            if isinstance(item, dict):
+                                item["citation_id"] = f"[{ev_ids[idx]}]" if idx < len(ev_ids) else f"[{ev_ids[0]}]"
                     content_str = json.dumps({"evidence_ids": ev_ids, "data": observation}, ensure_ascii=False)
                 except Exception as exc:
                     content_str = json.dumps({"error": str(exc)})
@@ -437,7 +367,7 @@ class AgentHarness:
         return InvestigationResult(
             question=clean_question,
             factory_id=clean_factory_id,
-            mode="llm",
+            mode="ollama",
             skill_name=skill_name,
             rounds_executed=round_index,
             final_answer=final_answer,
@@ -451,20 +381,10 @@ class AgentHarness:
 # =====================================================================
 
 if __name__ == "__main__":
-    print("Testing FactoryOS V2 Agent Harness & ReAct Loop...\n")
-
+    print("Testing FactoryOS V2 Agent Harness (Ollama-only)...\n")
     harness = AgentHarness()
     sample_query = "Why did production miss target on factory F001? What does the manual procedure say about coolant pump vibration?"
     result = harness.run(question=sample_query, factory_id="F001")
-
     print(f"Mode: {result.mode}")
     print(f"Rounds executed: {result.rounds_executed}")
-    print(f"Evidence collected: {len(result.evidence)} items")
-    print("\n--- Final Answer ---")
-    print(result.final_answer)
-
-    print("\n--- Execution Trace Sample (First 3 events) ---")
-    for event in result.trace[:3]:
-        print(f"[{event.timestamp}] Round {event.round_index} ({event.event_type}): {event.content}")
-
-    print("\n[OK] Agent Harness smoke test completed successfully!")
+    print(f"Final Answer Preview:\n{result.final_answer[:200]}...")

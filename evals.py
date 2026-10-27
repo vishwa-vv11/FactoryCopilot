@@ -65,7 +65,22 @@ BENCHMARK_SUITE: list[EvalTestCase] = [
         expected_concepts=["material", "inventory", "stock", "reorder"],
         is_adversarial=False,
     ),
-    # 2. Adversarial & Guardrail Scenarios
+    # 2. Workforce & Staffing Scenarios
+    EvalTestCase(
+        test_id="TC-07-WORKFORCE",
+        factory_id="F001",
+        question="Give the list of operators present today on the floor.",
+        expected_concepts=["operator", "engine", "transmission", "brake"],
+        is_adversarial=False,
+    ),
+    EvalTestCase(
+        test_id="TC-08-STAFFING",
+        factory_id="F001",
+        question="Who is working on machine L01-M01 and what is their assignment?",
+        expected_concepts=["rajesh", "emp-101", "cnc"],
+        is_adversarial=False,
+    ),
+    # 3. Adversarial & Guardrail Scenarios
     EvalTestCase(
         test_id="TC-04-SECURITY",
         factory_id="F001",

@@ -12,67 +12,67 @@
       "daily_target": 960,
       "product_code": "FC",
       "product_name": "Finished Crankshaft",
-      "process_description": "Produces finished crankshaft through CNC Turning \u2192 Milling \u2192 Gun Drilling \u2192 Induction Hardening \u2192 Cylindrical Grinding \u2192 Ultrasonic Cleaning \u2192 Automated Deburring \u2192 Dynamic Balancing \u2192 Laser CMM \u2192 Final Inspection.",
+      "process_description": "Produces finished crankshaft through CNC Turning \u2192 Milling \u2192 Gun Drilling \u2192 Induction Hardening \u2192 Cylindrical Grinding \u2192 Ultrasonic Cleaning \u2192 Dynamic Balancing \u2192 Final Inspection.",
       "finished_output_stage": "Final Inspection",
       "machines": [
         {
           "machine_id": "L01-M01",
           "code": "CT1",
-          "name": "CNC Turning 1",
+          "name": "CNC Turning (WS 1/2)",
           "machine_type": "CNC Turning"
         },
         {
           "machine_id": "L01-M02",
-          "code": "M2",
-          "name": "Milling 2",
-          "machine_type": "Milling"
+          "code": "CT2",
+          "name": "CNC Turning (WS 2/2)",
+          "machine_type": "CNC Turning"
         },
         {
           "machine_id": "L01-M03",
-          "code": "GD3",
-          "name": "Gun Drilling 3",
-          "machine_type": "Gun Drilling"
+          "code": "M3",
+          "name": "Milling (WS 1/1)",
+          "machine_type": "Milling"
         },
         {
           "machine_id": "L01-M04",
-          "code": "IH4",
-          "name": "Induction Hardening 4",
-          "machine_type": "Induction Hardening"
+          "code": "GD4",
+          "name": "Gun Drilling (WS 1/1)",
+          "machine_type": "Gun Drilling"
         },
         {
           "machine_id": "L01-M05",
-          "code": "CG5",
-          "name": "Cylindrical Grinding 5",
-          "machine_type": "Cylindrical Grinding"
+          "code": "IH5",
+          "name": "Induction Hardening (WS 1/1)",
+          "machine_type": "Induction Hardening"
         },
         {
           "machine_id": "L01-M06",
-          "code": "UC6",
-          "name": "Ultrasonic Cleaning 6",
-          "machine_type": "Ultrasonic Cleaning"
+          "code": "CG1",
+          "name": "Cylindrical Grinding (WS 1/2)",
+          "machine_type": "Cylindrical Grinding"
         },
         {
           "machine_id": "L01-M07",
-          "code": "AD7",
-          "name": "Automated Deburring 7",
-          "machine_type": "Automated Deburring"
+          "code": "CG2",
+          "name": "Cylindrical Grinding (WS 2/2)",
+          "machine_type": "Cylindrical Grinding"
         },
         {
           "machine_id": "L01-M08",
-          "code": "DB8",
-          "name": "Dynamic Balancing 8",
-          "machine_type": "Dynamic Balancing"
+          "code": "UC8",
+          "name": "Ultrasonic Cleaning (WS 1/1)",
+          "machine_type": "Ultrasonic Cleaning"
         },
         {
           "machine_id": "L01-M09",
-          "code": "LC9",
-          "name": "Laser CMM 9",
-          "machine_type": "Laser CMM"
+          "code": "DB9",
+          "name": "Dynamic Balancing (WS 1/1)",
+          "machine_type": "Dynamic Balancing"
         },
         {
           "machine_id": "L01-M10",
           "code": "FI10",
-          "name": "Final Inspection 10",
+          "name": "Final Inspection (WS 1/1)",
           "machine_type": "Final Inspection"
         }
       ]
@@ -84,67 +84,67 @@
       "daily_target": 900,
       "product_code": "FTG",
       "product_name": "Finished Transmission Gear",
-      "process_description": "Produces finished transmission gear through Forging Prep \u2192 Gear Hobbing \u2192 Gear Shaping \u2192 Carburizing Furnace \u2192 Quenching Bath \u2192 Shot Peening \u2192 Gear Grinding \u2192 Tooth Profile CMM \u2192 Washing Station \u2192 Final Pack.",
+      "process_description": "Produces finished transmission gear through Forging Prep \u2192 Gear Hobbing \u2192 Carburizing Furnace \u2192 Quenching Bath \u2192 Shot Peening \u2192 Gear Grinding \u2192 Final Pack.",
       "finished_output_stage": "Final Pack",
       "machines": [
         {
           "machine_id": "L02-M01",
           "code": "FP1",
-          "name": "Forging Prep 1",
+          "name": "Forging Prep (WS 1/1)",
           "machine_type": "Forging Prep"
         },
         {
           "machine_id": "L02-M02",
-          "code": "GH2",
-          "name": "Gear Hobbing 2",
+          "code": "GH1",
+          "name": "Gear Hobbing (WS 1/3)",
           "machine_type": "Gear Hobbing"
         },
         {
           "machine_id": "L02-M03",
-          "code": "GS3",
-          "name": "Gear Shaping 3",
-          "machine_type": "Gear Shaping"
+          "code": "GH2",
+          "name": "Gear Hobbing (WS 2/3)",
+          "machine_type": "Gear Hobbing"
         },
         {
           "machine_id": "L02-M04",
-          "code": "CF4",
-          "name": "Carburizing Furnace 4",
-          "machine_type": "Carburizing Furnace"
+          "code": "GH3",
+          "name": "Gear Hobbing (WS 3/3)",
+          "machine_type": "Gear Hobbing"
         },
         {
           "machine_id": "L02-M05",
-          "code": "QB5",
-          "name": "Quenching Bath 5",
-          "machine_type": "Quenching Bath"
+          "code": "CF5",
+          "name": "Carburizing Furnace (WS 1/1)",
+          "machine_type": "Carburizing Furnace"
         },
         {
           "machine_id": "L02-M06",
-          "code": "SP6",
-          "name": "Shot Peening 6",
-          "machine_type": "Shot Peening"
+          "code": "QB6",
+          "name": "Quenching Bath (WS 1/1)",
+          "machine_type": "Quenching Bath"
         },
         {
           "machine_id": "L02-M07",
-          "code": "GG7",
-          "name": "Gear Grinding 7",
-          "machine_type": "Gear Grinding"
+          "code": "SP7",
+          "name": "Shot Peening (WS 1/1)",
+          "machine_type": "Shot Peening"
         },
         {
           "machine_id": "L02-M08",
-          "code": "TPC8",
-          "name": "Tooth Profile CMM 8",
-          "machine_type": "Tooth Profile CMM"
+          "code": "GG1",
+          "name": "Gear Grinding (WS 1/2)",
+          "machine_type": "Gear Grinding"
         },
         {
           "machine_id": "L02-M09",
-          "code": "WS9",
-          "name": "Washing Station 9",
-          "machine_type": "Washing Station"
+          "code": "GG2",
+          "name": "Gear Grinding (WS 2/2)",
+          "machine_type": "Gear Grinding"
         },
         {
           "machine_id": "L02-M10",
           "code": "FP10",
-          "name": "Final Pack 10",
+          "name": "Final Pack (WS 1/1)",
           "machine_type": "Final Pack"
         }
       ]
@@ -156,67 +156,67 @@
       "daily_target": 840,
       "product_code": "FBC",
       "product_name": "Finished Brake Caliper",
-      "process_description": "Produces finished brake caliper through Sand Casting Prep \u2192 Shot Blasting \u2192 CNC Milling \u2192 Bore Honing \u2192 Leak Pressure Test \u2192 Seal Assembly \u2192 Piston Insertion \u2192 Torque Verification \u2192 Laser Marking \u2192 Final Inspection.",
+      "process_description": "Produces finished brake caliper through Sand Casting Prep \u2192 CNC Milling \u2192 Bore Honing \u2192 Seal Assembly \u2192 Piston Insertion \u2192 Leak Pressure Test \u2192 Final Inspection.",
       "finished_output_stage": "Final Inspection",
       "machines": [
         {
           "machine_id": "L03-M01",
           "code": "SCP1",
-          "name": "Sand Casting Prep 1",
+          "name": "Sand Casting Prep (WS 1/1)",
           "machine_type": "Sand Casting Prep"
         },
         {
           "machine_id": "L03-M02",
-          "code": "SB2",
-          "name": "Shot Blasting 2",
-          "machine_type": "Shot Blasting"
+          "code": "CM1",
+          "name": "CNC Milling (WS 1/2)",
+          "machine_type": "CNC Milling"
         },
         {
           "machine_id": "L03-M03",
-          "code": "CM3",
-          "name": "CNC Milling 3",
+          "code": "CM2",
+          "name": "CNC Milling (WS 2/2)",
           "machine_type": "CNC Milling"
         },
         {
           "machine_id": "L03-M04",
           "code": "BH4",
-          "name": "Bore Honing 4",
+          "name": "Bore Honing (WS 1/1)",
           "machine_type": "Bore Honing"
         },
         {
           "machine_id": "L03-M05",
-          "code": "LPT5",
-          "name": "Leak Pressure Test 5",
-          "machine_type": "Leak Pressure Test"
+          "code": "SA1",
+          "name": "Seal Assembly (WS 1/2)",
+          "machine_type": "Seal Assembly"
         },
         {
           "machine_id": "L03-M06",
-          "code": "SA6",
-          "name": "Seal Assembly 6",
+          "code": "SA2",
+          "name": "Seal Assembly (WS 2/2)",
           "machine_type": "Seal Assembly"
         },
         {
           "machine_id": "L03-M07",
-          "code": "PI7",
-          "name": "Piston Insertion 7",
+          "code": "PI1",
+          "name": "Piston Insertion (WS 1/2)",
           "machine_type": "Piston Insertion"
         },
         {
           "machine_id": "L03-M08",
-          "code": "TV8",
-          "name": "Torque Verification 8",
-          "machine_type": "Torque Verification"
+          "code": "PI2",
+          "name": "Piston Insertion (WS 2/2)",
+          "machine_type": "Piston Insertion"
         },
         {
           "machine_id": "L03-M09",
-          "code": "LM9",
-          "name": "Laser Marking 9",
-          "machine_type": "Laser Marking"
+          "code": "LPT9",
+          "name": "Leak Pressure Test (WS 1/1)",
+          "machine_type": "Leak Pressure Test"
         },
         {
           "machine_id": "L03-M10",
           "code": "FI10",
-          "name": "Final Inspection 10",
+          "name": "Final Inspection (WS 1/1)",
           "machine_type": "Final Inspection"
         }
       ]

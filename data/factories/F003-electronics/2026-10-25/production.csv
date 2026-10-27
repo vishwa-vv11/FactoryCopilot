@@ -1,0 +1,4 @@
+date,factory_id,factory_name,industry,line_id,line_code,line_name,product_code,product_name,target_units,achieved_units,active_batch_units,shortfall_units,attainment_pct,line_status
+2026-10-25,F003,Hosur Electronics Assembly,electronics,L01,CB,Control Boards,TCB,Tested Control Board,1200,1265,65,0,105.4,material_shortage
+2026-10-25,F003,Hosur Electronics Assembly,electronics,L02,SM,Sensor Modules,TSM,Tested Sensor Module,1050,1124,74,0,107.0,material_shortage
+2026-10-25,F003,Hosur Electronics Assembly,electronics,L03,PM,Power Modules,TPM,Tested Power Module,960,1011,51,0,105.3,material_shortage

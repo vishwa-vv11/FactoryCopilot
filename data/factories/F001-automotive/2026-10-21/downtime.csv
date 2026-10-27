@@ -1,0 +1,3 @@
+event_id,factory_id,line_id,machine_id,started_at,ended_at,duration_minutes,reason
+DT-38b3b49f,F001,L01,L01-M01,2026-10-21T09:30:00+00:00,,0,tool wear or coolant fault
+b44382b87c7d48fd862085981d69eeb9,F001,L01,L01-M01,2026-10-21T09:30:00+00:00,2026-10-21T14:33:00+00:00,303,tool wear or coolant fault

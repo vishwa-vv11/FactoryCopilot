@@ -48,21 +48,19 @@ class Skill:
 
 RCA_SKILL = Skill(
     name="Root Cause Analysis (RCA)",
-    description="Structured 5-Whys methodology to trace production shortfalls to machine, quality, or material root causes.",
-    trigger_keywords=["why did", "root cause", "shortfall", "missed target", "attainment", "investigate drop", "production down"],
-    required_tools=["get_shortfall_analysis", "get_downtime_data", "get_quality_data", "search_factory_documents"],
+    description="Structured 5-Whys methodology to trace production shortfalls and line stoppages to staffing bottlenecks, machine downtime, quality defects, or material starvation.",
+    trigger_keywords=["why did", "root cause", "shortfall", "missed target", "attainment", "investigate drop", "production down", "halt", "halted", "stopped", "why stopped", "line stopped", "why is line", "why did line halt"],
+    required_tools=["get_shortfall_analysis", "get_employees_data", "get_machine_status", "get_downtime_data", "get_quality_data", "search_factory_documents"],
     sop_procedure=(
-        "1. Identify the exact line and quantity of shortfall using get_shortfall_analysis.\n"
-        "2. Check if machine stoppages occurred using get_downtime_data. Note machine IDs and stoppage reasons.\n"
-        "3. Check if defects or rejections occurred using get_quality_data.\n"
-        "4. Search machine operating manuals with search_factory_documents to verify warning signs and recovery protocols.\n"
+        "1. Identify the exact line status and operational disruption using get_shortfall_analysis and get_machine_status.\n"
+        "2. CHECK STAFFING FIRST: If get_shortfall_analysis or get_employees_data reports an UNSTAFFED BOTTLENECK (an operator is absent with NO relief floater assigned), conclude definitively that the line is halted/slowed due to the UNSTAFFED WORKSTATION! Do NOT search for or invent mechanical coolant faults when an unstaffed operator bottleneck is present.\n"
+        "3. Only if all workstations are fully staffed, check get_downtime_data for active mechanical stoppages.\n"
+        "4. Never output or cite raw hex event IDs. Always use evidence citations like [E1], [E2].\n"
         "5. Connect the chain of causality: Symptom -> Direct Cause -> Contributing Factor -> Root Cause."
     ),
     output_format=(
-        "- Problem Statement: Line name and shortfall units [E#].\n"
-        "- Direct Observed Causes: Machine stops [E#] or quality scrap [E#].\n"
-        "- Operational Guidelines: Relevant manual excerpts [E#].\n"
-        "- Root Cause Determination: Definitive conclusion grounded in evidence."
+        "Keep your response strictly to 1 or 2 concise lines (no boilerplate headings, no repeating the explanation):\n"
+        "State directly why the line is halted/slowed (naming the unstaffed workstation, machine ID, and absent operator [E#]), followed by the single immediate action needed."
     ),
 )
 
@@ -106,21 +104,69 @@ DAY_COMPARISON_SKILL = Skill(
     name="Day-on-Day Shift & Trend Comparison",
     description="Compares production output, plan attainment, and machine losses between yesterday and today or across historical dates.",
     trigger_keywords=[
-        "compare", "yesterday", "yesterdays", "day-on-day", "shift comparison",
-        "trend", "change from", "versus yesterday", "vs yesterday", "previous day",
+        "compare", "day-on-day", "shift comparison",
+        "trend", "change from", "versus yesterday", "vs yesterday", "variance between",
     ],
     required_tools=["get_production_data", "get_shortfall_analysis", "get_downtime_data"],
     sop_procedure=(
-        "1. Query daily production and shortfall data for the target dates using get_production_data and get_shortfall_analysis.\n"
-        "2. Calculate unit output delta and attainment variance across all lines between the comparison dates.\n"
-        "3. Cross-reference with get_downtime_data to determine which machine faults or stops caused any drop.\n"
-        "4. Synthesize an executive variance explanation indicating which lines gained or lost output and the direct operational cause."
+        "1. Focus directly on the specific line or date variance requested by the user.\n"
+        "2. Query daily production data for the target dates using get_production_data.\n"
+        "3. Provide the requested output units, target, and delta concisely without dumping unrequested line details."
     ),
     output_format=(
-        "- Date Comparison: Today vs Comparison Day total output variance [E#].\n"
-        "- Line-by-Line Breakdown: Units achieved, shortfalls, and delta percentage [E#].\n"
-        "- Operational Cause: Machine stoppages or material delays explaining the delta [E#].\n"
-        "- Trend Assessment: Assessment whether the factory is recovering or experiencing ongoing disruption."
+        "Directly answer the comparison or date query requested:\n"
+        "- State the achieved units and delta for the requested line/dates [E#].\n"
+        "Do NOT attach unsolicited factory-wide trend essays unless explicitly asked."
+    ),
+)
+
+WORKFORCE_SKILL = Skill(
+    name="Shift Workforce Staffing & Attendance Management",
+    description="Analyzes shift roll-call attendance, operator workstation assignments, absenteeism, unstaffed bottleneck machines, and standby relief floaters.",
+    trigger_keywords=[
+        "operator", "operators", "worker", "workers", "employee", "employees",
+        "staff", "staffing", "absent", "absence", "absenteeism", "attendance",
+        "roster", "crew", "floater", "floaters", "unstaffed", "standby", "free pool",
+        "relief", "who is working", "ops", "personnel", "replace", "replaced", "replacement",
+        "replacing", "cover", "covering", "coverage",
+    ],
+    required_tools=["get_employees_data", "get_machine_status"],
+    sop_procedure=(
+        "1. Focus directly and specifically on the workforce question asked by the user.\n"
+        "2. If asked who is replaced or who replaced absent operators, list the relief floaters covering for absent operators strictly from the tool evidence (e.g. Floater Name [ID] covering for Absent Operator [ID]), and note if any absent operator is unstaffed without coverage.\n"
+        "3. If asked who is absent, state the actual count and list the absent operators found in the tool evidence with their workstations and line names. Never mention or hallucinate names not present in the tool evidence.\n"
+        "4. Do NOT confuse absent operators with replacement floaters. Clearly distinguish between who is absent and who replaced them.\n"
+        "5. If asked about Free Pool or available floaters, report only unassigned operators who are on standby in the Free Pool. If a floater is deployed to a machine, report that they are actively deployed covering that machine, NOT available in the Free Pool. Never claim a standby operator is assigned to a machine."
+    ),
+    output_format=(
+        "Respond concisely to the specific workforce query:\n"
+        "- If asked about replacements: State which relief floater replaced which absent operator [E#]\n"
+        "- If asked about absentees: State total count and list absent operators with Name, ID, Workstation, and Line [E#]\n"
+        "- If asked about Free Pool / floaters: List available standby operators, and separate any actively deployed floaters covering machines [E#]\n"
+        "Keep it direct and accurate."
+    ),
+)
+
+
+ORDER_SKILL = Skill(
+    name="Manufacturing Work Order & Queue Management",
+    description="Tracks work order progress, completion status, sequential order IDs (ORD-001, ORD-002, etc.), queued next orders, and order dispatching.",
+    trigger_keywords=[
+        "order", "orders", "next order", "order id", "unique id",
+        "work order", "batch completed", "order completed", "queued order",
+        "dispatch", "load order", "ord-", "ord ", "ord", "ends", "end", "complete", "finish",
+    ],
+    required_tools=["get_orders_data", "get_production_data"],
+    sop_procedure=(
+        "1. Check the status of current and queued work orders using get_orders_data.\n"
+        "2. If an order on a line is completed (100% quota achieved), identify the next sequential queued order for that line.\n"
+        "3. Explain which order is currently active, which orders are completed, and the unique ID of the next queued order.\n"
+        "4. Note that orders progress sequentially (e.g. ORD-001, ORD-002, ORD-003 -> ORD-004, ORD-005, etc.) so each order maintains a unique traceable ID across days."
+    ),
+    output_format=(
+        "Respond concisely regarding the requested work order:\n"
+        "- Active / Completed Order: ID, customer, product, and progress [E#]\n"
+        "- Next Sequential Order: Next queued order ID and ready status [E#]"
     ),
 )
 
@@ -138,11 +184,17 @@ class SkillRegistry:
             "inventory": INVENTORY_SKILL,
             "maintenance": MAINTENANCE_SKILL,
             "comparison": DAY_COMPARISON_SKILL,
+            "workforce": WORKFORCE_SKILL,
+            "order": ORDER_SKILL,
         }
 
     def match_skill(self, question: str) -> Skill | None:
         """Find the best-fitting domain skill based on semantic keywords in the question."""
         q_lower = question.lower()
+
+        # Direct pattern match for work order codes like "ord 12", "ord-012", "order 7"
+        if re.search(r"\b(?:ord(?:er)?[-_\s]*\d+)\b", q_lower):
+            return ORDER_SKILL
 
         # Score skills based on keyword hits
         best_skill = None

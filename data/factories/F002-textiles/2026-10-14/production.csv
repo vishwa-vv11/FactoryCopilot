@@ -1,0 +1,4 @@
+date,factory_id,factory_name,industry,line_id,line_code,line_name,product_code,product_name,target_units,achieved_units,shortfall_units,attainment_pct,line_status
+2026-10-14,F002,Mysuru Textile Works,textiles,L01,CF,Cotton Fabric,PCFR,Packed Cotton Fabric Roll,1100,525,575,47.7,material_shortage
+2026-10-14,F002,Mysuru Textile Works,textiles,L02,DF,Denim Fabric,PDFR,Packed Denim Fabric Roll,1000,460,540,46.0,material_shortage
+2026-10-14,F002,Mysuru Textile Works,textiles,L03,BF,Blended Fabric,PBFR,Packed Blended Fabric Roll,900,474,426,52.7,material_shortage

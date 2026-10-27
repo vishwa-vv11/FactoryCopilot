@@ -1,0 +1,772 @@
+[
+  {
+    "employee_id": "EMP-101",
+    "name": "Rajesh Kumar",
+    "role": "Senior CNC Operator",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M01",
+    "workstation_name": "CNC Turning (WS 1/2)",
+    "primary_skill": "CNC Turning",
+    "skills": [
+      "CNC Turning",
+      "Precision Lathe",
+      "LOTO Level 1"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:50 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Operating primary turning station at nominal feed rate."
+  },
+  {
+    "employee_id": "EMP-102",
+    "name": "Karthik Subramanian",
+    "role": "CNC Operator",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M02",
+    "workstation_name": "CNC Turning (WS 2/2)",
+    "primary_skill": "CNC Turning",
+    "skills": [
+      "CNC Turning",
+      "Tool Setter"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": null,
+    "attendance": "absent",
+    "status": "absent",
+    "replacement_employee_id": "EMP-131",
+    "notes": "Absent on medical leave. Station L01-M02 unstaffed until replacement selected from Free Pool."
+  },
+  {
+    "employee_id": "EMP-103",
+    "name": "Murugan Palanisamy",
+    "role": "Milling Machinist",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M03",
+    "workstation_name": "Milling (WS 1/1)",
+    "primary_skill": "CNC Milling",
+    "skills": [
+      "CNC Milling",
+      "Face Milling",
+      "Fixture Calibration"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": null,
+    "attendance": "absent",
+    "status": "absent",
+    "replacement_employee_id": "EMP-133",
+    "notes": "shortcut: static temp bottleneck for 1/1 workstation demonstration, remove when live staffing scenario is configured. Single-workstation milling stage is unstaffed, halting the entire line."
+  },
+  {
+    "employee_id": "EMP-104",
+    "name": "Dinesh Chandran",
+    "role": "Gun Drill Technician",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M04",
+    "workstation_name": "Gun Drilling (WS 1/1)",
+    "primary_skill": "Gun Drilling",
+    "skills": [
+      "Gun Drilling",
+      "Deep Hole Bore",
+      "High Pressure Coolant"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:51 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Monitoring oil passage deep drilling tolerances."
+  },
+  {
+    "employee_id": "EMP-105",
+    "name": "Sundar Raman",
+    "role": "Heat Treat Specialist",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M05",
+    "workstation_name": "Induction Hardening (WS 1/1)",
+    "primary_skill": "Induction Hardening",
+    "skills": [
+      "Induction Hardening",
+      "Pyrometry",
+      "Quench Control"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:48 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Single workstation operator. Process bottleneck if unstaffed."
+  },
+  {
+    "employee_id": "EMP-106",
+    "name": "Gopalakrishnan V.",
+    "role": "Precision Grinder",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M06",
+    "workstation_name": "Cylindrical Grinding (WS 1/2)",
+    "primary_skill": "Cylindrical Grinding",
+    "skills": [
+      "Cylindrical Grinding",
+      "Wheel Dressing",
+      "Air Gaging"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:56 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Maintaining journal micron surface finish."
+  },
+  {
+    "employee_id": "EMP-107",
+    "name": "Naveen Prakash",
+    "role": "Precision Grinder",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M07",
+    "workstation_name": "Cylindrical Grinding (WS 2/2)",
+    "primary_skill": "Cylindrical Grinding",
+    "skills": [
+      "Cylindrical Grinding",
+      "Crankpin Grinding"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:52 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel grinding station active."
+  },
+  {
+    "employee_id": "EMP-108",
+    "name": "Senthil Nathan",
+    "role": "Wash & Cleaning Operator",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M08",
+    "workstation_name": "Ultrasonic Cleaning (WS 1/1)",
+    "primary_skill": "Ultrasonic Cleaning",
+    "skills": [
+      "Ultrasonic Cleaning",
+      "Solvent Filtration",
+      "Particle Count"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:58 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Managing de-burring and acoustic cavitation tanks."
+  },
+  {
+    "employee_id": "EMP-109",
+    "name": "Praveen Anbarasu",
+    "role": "Balancing Technician",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M09",
+    "workstation_name": "Dynamic Balancing (WS 1/1)",
+    "primary_skill": "Dynamic Balancing",
+    "skills": [
+      "Dynamic Balancing",
+      "Vibration Analysis",
+      "Counterweight Drilling"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:53 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Testing rotational unbalance within ISO 1940 standard."
+  },
+  {
+    "employee_id": "EMP-110",
+    "name": "Anand Mohan",
+    "role": "Quality Inspector",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M10",
+    "workstation_name": "Final Inspection (WS 1/1)",
+    "primary_skill": "Quality Inspection",
+    "skills": [
+      "Quality Inspection",
+      "Laser CMM",
+      "Surface Roughness Metrology",
+      "ISO 9001"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:45 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Final gatekeeper sign-off for Line 1 finished batches."
+  },
+  {
+    "employee_id": "EMP-111",
+    "name": "Vigneshwaran R.",
+    "role": "Forging Prep Operator",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M01",
+    "workstation_name": "Forging Prep (WS 1/1)",
+    "primary_skill": "Forging Operations",
+    "skills": [
+      "Forging Operations",
+      "Billet Induction Heating"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:49 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Raw blank pre-heating and descaling."
+  },
+  {
+    "employee_id": "EMP-112",
+    "name": "Manoj Kumar",
+    "role": "Gear Hobbing Specialist",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M02",
+    "workstation_name": "Gear Hobbing (WS 1/3)",
+    "primary_skill": "Gear Hobbing",
+    "skills": [
+      "Gear Hobbing",
+      "Tooth Geometry",
+      "Hob Cutter Alignment"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:51 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Hobbing lead tooth profiles on gear blanks."
+  },
+  {
+    "employee_id": "EMP-113",
+    "name": "Balaji Srinivasan",
+    "role": "Gear Hobbing Specialist",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M03",
+    "workstation_name": "Gear Hobbing (WS 2/3)",
+    "primary_skill": "Gear Hobbing",
+    "skills": [
+      "Gear Hobbing",
+      "Shaping"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:55 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel hobbing station."
+  },
+  {
+    "employee_id": "EMP-114",
+    "name": "Saravanan Natarajan",
+    "role": "Gear Hobbing Operator",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M04",
+    "workstation_name": "Gear Hobbing (WS 3/3)",
+    "primary_skill": "Gear Hobbing",
+    "skills": [
+      "Gear Hobbing",
+      "Tool Dressing"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": null,
+    "attendance": "absent",
+    "status": "absent",
+    "replacement_employee_id": "EMP-132",
+    "notes": "Casual leave. Station L02-M04 unstaffed until replacement selected from Free Pool."
+  },
+  {
+    "employee_id": "EMP-115",
+    "name": "Ravichandran M.",
+    "role": "Furnace Master",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M05",
+    "workstation_name": "Carburizing Furnace (WS 1/1)",
+    "primary_skill": "Thermal Heat Treatment",
+    "skills": [
+      "Thermal Heat Treatment",
+      "Carbon Potential Control",
+      "Atmosphere Gas Safety"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:40 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Continuous gas carburizing cycle monitor."
+  },
+  {
+    "employee_id": "EMP-116",
+    "name": "Shankar Narayanan",
+    "role": "Quench Tank Tech",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M06",
+    "workstation_name": "Quenching Bath (WS 1/1)",
+    "primary_skill": "Thermal Heat Treatment",
+    "skills": [
+      "Thermal Heat Treatment",
+      "Oil Quench Agitation"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:52 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Rapid oil cooling and Martensite transformation check."
+  },
+  {
+    "employee_id": "EMP-117",
+    "name": "Santhosh Babu",
+    "role": "Shot Peening Tech",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M07",
+    "workstation_name": "Shot Peening (WS 1/1)",
+    "primary_skill": "Surface Treatment",
+    "skills": [
+      "Surface Treatment",
+      "Almen Strip Calibration",
+      "Compressive Stress"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:57 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Fatigue strength enhancement on gear tooth root fillets."
+  },
+  {
+    "employee_id": "EMP-118",
+    "name": "Vijay Sethupathi",
+    "role": "Gear Grinder",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M08",
+    "workstation_name": "Gear Grinding (WS 1/2)",
+    "primary_skill": "Precision Gear Grinding",
+    "skills": [
+      "Precision Gear Grinding",
+      "Involute Profile Generation"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:50 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "High-accuracy gear flank finishing."
+  },
+  {
+    "employee_id": "EMP-119",
+    "name": "Thirunavukkarasu K.",
+    "role": "Gear Grinder",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M09",
+    "workstation_name": "Gear Grinding (WS 2/2)",
+    "primary_skill": "Precision Gear Grinding",
+    "skills": [
+      "Precision Gear Grinding",
+      "Cubic Boron Nitride Dressing"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:53 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel gear grinding station."
+  },
+  {
+    "employee_id": "EMP-120",
+    "name": "Mohamed Irfan",
+    "role": "Pack & Dispatch Lead",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M10",
+    "workstation_name": "Final Pack (WS 1/1)",
+    "primary_skill": "Packing & Dispatch",
+    "skills": [
+      "Packing & Dispatch",
+      "Anti-Rust VCI Application",
+      "ERP Barcode Scan"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:59 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Transmission gearsets packaged for Zenith Powertrain."
+  },
+  {
+    "employee_id": "EMP-121",
+    "name": "Velmurugan A.",
+    "role": "Casting Prep Specialist",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M01",
+    "workstation_name": "Sand Casting Prep (WS 1/1)",
+    "primary_skill": "Foundry & Casting",
+    "skills": [
+      "Foundry & Casting",
+      "De-gating",
+      "Abrasive Blasting"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:47 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Caliper housing raw casting prep."
+  },
+  {
+    "employee_id": "EMP-122",
+    "name": "Deepak Raj",
+    "role": "CNC Milling Machinist",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M02",
+    "workstation_name": "CNC Milling (WS 1/2)",
+    "primary_skill": "CNC Milling",
+    "skills": [
+      "CNC Milling",
+      "Hydraulic Clamping",
+      "4-Axis VMC"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:51 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Machining fluid port channels and mounting lugs."
+  },
+  {
+    "employee_id": "EMP-123",
+    "name": "Selvakumar T.",
+    "role": "CNC Milling Machinist",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M03",
+    "workstation_name": "CNC Milling (WS 2/2)",
+    "primary_skill": "CNC Milling",
+    "skills": [
+      "CNC Milling",
+      "End Mill Re-sharpening"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:54 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel milling station."
+  },
+  {
+    "employee_id": "EMP-124",
+    "name": "Aravindhan G.",
+    "role": "Honing Specialist",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M04",
+    "workstation_name": "Bore Honing (WS 1/1)",
+    "primary_skill": "Bore Honing",
+    "skills": [
+      "Bore Honing",
+      "Cross-Hatch Angle",
+      "Piston Seal Clearance"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:52 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Micro-honing caliper cylinder bore to 0.4 Ra."
+  },
+  {
+    "employee_id": "EMP-125",
+    "name": "Kumaran S.",
+    "role": "Assembly Tech",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M05",
+    "workstation_name": "Seal Assembly (WS 1/2)",
+    "primary_skill": "Precision Assembly",
+    "skills": [
+      "Precision Assembly",
+      "EPDM Dust Boot Insertion",
+      "Lubricant Application"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:55 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Hydraulic fluid seal positioning."
+  },
+  {
+    "employee_id": "EMP-126",
+    "name": "Pradeep Kumar",
+    "role": "Assembly Tech",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M06",
+    "workstation_name": "Seal Assembly (WS 2/2)",
+    "primary_skill": "Precision Assembly",
+    "skills": [
+      "Precision Assembly",
+      "Seal Integrity"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:58 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel seal assembly station."
+  },
+  {
+    "employee_id": "EMP-127",
+    "name": "Jeganathan P.",
+    "role": "Piston Press Tech",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M07",
+    "workstation_name": "Piston Insertion (WS 1/2)",
+    "primary_skill": "Precision Assembly",
+    "skills": [
+      "Precision Assembly",
+      "Servo Press Control",
+      "Load vs Displacement"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:50 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Automated piston press fit."
+  },
+  {
+    "employee_id": "EMP-128",
+    "name": "Harishankar B.",
+    "role": "Piston Press Tech",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M08",
+    "workstation_name": "Piston Insertion (WS 2/2)",
+    "primary_skill": "Precision Assembly",
+    "skills": [
+      "Precision Assembly",
+      "Press Calibration"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:53 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel piston insertion station."
+  },
+  {
+    "employee_id": "EMP-129",
+    "name": "Chandrasekhar R.",
+    "role": "Hydrostatic Test Tech",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M09",
+    "workstation_name": "Leak Pressure Test (WS 1/1)",
+    "primary_skill": "Pressure & Leak Testing",
+    "skills": [
+      "Pressure & Leak Testing",
+      "Hydrostatic Pressure 250 Bar",
+      "Helium Sniffing"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:46 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Critical safety pressure holding verification."
+  },
+  {
+    "employee_id": "EMP-130",
+    "name": "Subramanian Veerappan",
+    "role": "Lead Quality Auditor",
+    "line_id": "L03",
+    "line_name": "Brake Assemblies",
+    "machine_id": "L03-M10",
+    "workstation_name": "Final Inspection (WS 1/1)",
+    "primary_skill": "Quality Inspection",
+    "skills": [
+      "Quality Inspection",
+      "Torque Verification",
+      "PPAP Documentation"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:42 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Brembo brake caliper delivery sign-off."
+  },
+  {
+    "employee_id": "EMP-131",
+    "name": "Suresh Mani",
+    "role": "Multi-Skilled Relief Floater",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M02",
+    "workstation_name": "CNC Turning (WS 2/2)",
+    "primary_skill": "CNC Turning",
+    "skills": [
+      "CNC Turning",
+      "Precision Lathe",
+      "CNC Milling",
+      "Induction Hardening"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:45 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "is_replacement": true,
+    "replacement_for": "EMP-102",
+    "notes": "In Free Pool (Standby). Certified in CNC Turning, Milling, and Induction Hardening. Ready for replacement assignment."
+  },
+  {
+    "employee_id": "EMP-132",
+    "name": "Kishore Kumar",
+    "role": "Multi-Skilled Relief Floater",
+    "line_id": "L02",
+    "line_name": "Transmission Gears",
+    "machine_id": "L02-M04",
+    "workstation_name": "Gear Hobbing (WS 3/3)",
+    "primary_skill": "Gear Hobbing",
+    "skills": [
+      "Gear Hobbing",
+      "Precision Gear Grinding",
+      "Cylindrical Grinding"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:47 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "is_replacement": true,
+    "replacement_for": "EMP-114",
+    "notes": "In Free Pool (Standby). Certified in Gear Hobbing and Gear Grinding. Ready for replacement assignment."
+  },
+  {
+    "employee_id": "EMP-133",
+    "name": "Arunachalam S.",
+    "role": "Multi-Skilled Floater",
+    "line_id": "L01",
+    "line_name": "Engine Components",
+    "machine_id": "L01-M03",
+    "workstation_name": "Milling (WS 1/1)",
+    "primary_skill": "CNC Milling",
+    "skills": [
+      "CNC Milling",
+      "Gun Drilling",
+      "Bore Honing",
+      "Precision Assembly"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:50 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "In Free Pool (Standby). Certified on Milling, Drilling, and Assembly stages. Ready for immediate line coverage.",
+    "is_replacement": true,
+    "replacement_for": "EMP-103"
+  },
+  {
+    "employee_id": "EMP-134",
+    "name": "Nithyanand K.",
+    "role": "Multi-Skilled Floater",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Precision Assembly",
+    "skills": [
+      "Precision Assembly",
+      "Ultrasonic Cleaning",
+      "Pressure & Leak Testing"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:52 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "In Free Pool (Standby). Ready to relieve brake assembly lines or cleaning stations.",
+    "is_replacement": false,
+    "replacement_for": null
+  },
+  {
+    "employee_id": "EMP-135",
+    "name": "Vikramaditya Singh",
+    "role": "Senior Maintenance Engineer",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Mechanical & Spindle Repair",
+    "skills": [
+      "Mechanical & Spindle Repair",
+      "Hydraulic Circuit Diagnostics",
+      "Vibration Balancing",
+      "LOTO Master"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:35 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "Lead Maintenance Technician in Standby Pool. Dispatched automatically to any machine breakdown on the floor.",
+    "is_replacement": false,
+    "replacement_for": null
+  },
+  {
+    "employee_id": "EMP-136",
+    "name": "Balamurugan R.",
+    "role": "Electrical & PLC Technician",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Electrical & PLC Diagnostics",
+    "skills": [
+      "Electrical & PLC Diagnostics",
+      "Siemens S7 PLC",
+      "Fanuc CNC Servo Drives",
+      "Sensor Calibration"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:38 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "Electrical technician in Free Pool. Ready to resolve servo drive faults and thermocouple sensor drifts.",
+    "is_replacement": false,
+    "replacement_for": null
+  },
+  {
+    "employee_id": "EMP-137",
+    "name": "Gopinath Sundaram",
+    "role": "Utility & Tooling Specialist",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Tool Setting & Coolant Prep",
+    "skills": [
+      "Tool Setting & Coolant Prep",
+      "Central Coolant Chiller",
+      "Hydraulic Oil Top-up"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:40 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "In Free Pool (Standby). Manages cutting inserts replacement and central coolant quality."
+  },
+  {
+    "employee_id": "EMP-138",
+    "name": "Meenakshi Sundaram",
+    "role": "Shift Operations Supervisor",
+    "line_id": null,
+    "line_name": "Plant Floor Wide",
+    "machine_id": null,
+    "workstation_name": "Floor Control Desk",
+    "primary_skill": "Operations Supervision",
+    "skills": [
+      "Operations Supervision",
+      "Line Balancing",
+      "Shift Roster Allocation",
+      "Lean 5S"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:30 AM",
+    "attendance": "present",
+    "status": "on_duty_supervision",
+    "notes": "General Shift Floor Supervisor overseeing attendance, line balancing, and free pool allocations."
+  }
+]

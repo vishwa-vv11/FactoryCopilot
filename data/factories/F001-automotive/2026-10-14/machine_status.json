@@ -1,0 +1,308 @@
+{
+  "as_of": "2026-10-14T07:46:00+00:00",
+  "machines": [
+    {
+      "machine_id": "L01-M01",
+      "machine_code": "CT1",
+      "name": "CNC Turning 1",
+      "machine_type": "CNC Turning",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M02",
+      "machine_code": "M2",
+      "name": "Milling 2",
+      "machine_type": "Milling",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "unstaffed",
+      "updated_at": "2026-10-14T07:46:00+00:00",
+      "is_unstaffed": true
+    },
+    {
+      "machine_id": "L01-M03",
+      "machine_code": "GD3",
+      "name": "Gun Drilling 3",
+      "machine_type": "Gun Drilling",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "unstaffed",
+      "updated_at": "2026-10-14T07:46:00+00:00",
+      "is_unstaffed": true
+    },
+    {
+      "machine_id": "L01-M04",
+      "machine_code": "IH4",
+      "name": "Induction Hardening 4",
+      "machine_type": "Induction Hardening",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M05",
+      "machine_code": "CG5",
+      "name": "Cylindrical Grinding 5",
+      "machine_type": "Cylindrical Grinding",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M06",
+      "machine_code": "UC6",
+      "name": "Ultrasonic Cleaning 6",
+      "machine_type": "Ultrasonic Cleaning",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "down",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M07",
+      "machine_code": "AD7",
+      "name": "Automated Deburring 7",
+      "machine_type": "Automated Deburring",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M08",
+      "machine_code": "DB8",
+      "name": "Dynamic Balancing 8",
+      "machine_type": "Dynamic Balancing",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M09",
+      "machine_code": "LC9",
+      "name": "Laser CMM 9",
+      "machine_type": "Laser CMM",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L01-M10",
+      "machine_code": "FI10",
+      "name": "Final Inspection 10",
+      "machine_type": "Final Inspection",
+      "factory_id": "F001",
+      "line_id": "L01",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M01",
+      "machine_code": "FP1",
+      "name": "Forging Prep 1",
+      "machine_type": "Forging Prep",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M02",
+      "machine_code": "GH2",
+      "name": "Gear Hobbing 2",
+      "machine_type": "Gear Hobbing",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M03",
+      "machine_code": "GS3",
+      "name": "Gear Shaping 3",
+      "machine_type": "Gear Shaping",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "down",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M04",
+      "machine_code": "CF4",
+      "name": "Carburizing Furnace 4",
+      "machine_type": "Carburizing Furnace",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "unstaffed",
+      "updated_at": "2026-10-14T07:46:00+00:00",
+      "is_unstaffed": true
+    },
+    {
+      "machine_id": "L02-M05",
+      "machine_code": "QB5",
+      "name": "Quenching Bath 5",
+      "machine_type": "Quenching Bath",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M06",
+      "machine_code": "SP6",
+      "name": "Shot Peening 6",
+      "machine_type": "Shot Peening",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M07",
+      "machine_code": "GG7",
+      "name": "Gear Grinding 7",
+      "machine_type": "Gear Grinding",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M08",
+      "machine_code": "TPC8",
+      "name": "Tooth Profile CMM 8",
+      "machine_type": "Tooth Profile CMM",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M09",
+      "machine_code": "WS9",
+      "name": "Washing Station 9",
+      "machine_type": "Washing Station",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "down",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L02-M10",
+      "machine_code": "FP10",
+      "name": "Final Pack 10",
+      "machine_type": "Final Pack",
+      "factory_id": "F001",
+      "line_id": "L02",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M01",
+      "machine_code": "SCP1",
+      "name": "Sand Casting Prep 1",
+      "machine_type": "Sand Casting Prep",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M02",
+      "machine_code": "SB2",
+      "name": "Shot Blasting 2",
+      "machine_type": "Shot Blasting",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M03",
+      "machine_code": "CM3",
+      "name": "CNC Milling 3",
+      "machine_type": "CNC Milling",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M04",
+      "machine_code": "BH4",
+      "name": "Bore Honing 4",
+      "machine_type": "Bore Honing",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M05",
+      "machine_code": "LPT5",
+      "name": "Leak Pressure Test 5",
+      "machine_type": "Leak Pressure Test",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "down",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M06",
+      "machine_code": "SA6",
+      "name": "Seal Assembly 6",
+      "machine_type": "Seal Assembly",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M07",
+      "machine_code": "PI7",
+      "name": "Piston Insertion 7",
+      "machine_type": "Piston Insertion",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M08",
+      "machine_code": "TV8",
+      "name": "Torque Verification 8",
+      "machine_type": "Torque Verification",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M09",
+      "machine_code": "LM9",
+      "name": "Laser Marking 9",
+      "machine_type": "Laser Marking",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    },
+    {
+      "machine_id": "L03-M10",
+      "machine_code": "FI10",
+      "name": "Final Inspection 10",
+      "machine_type": "Final Inspection",
+      "factory_id": "F001",
+      "line_id": "L03",
+      "status": "running",
+      "updated_at": "2026-10-14T07:46:00+00:00"
+    }
+  ]
+}

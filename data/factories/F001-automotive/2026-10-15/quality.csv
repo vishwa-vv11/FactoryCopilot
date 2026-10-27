@@ -1,0 +1,4 @@
+date,factory_id,line_id,line_name,product_name,inspected_units,passed_units,rework_units,rejected_units,yield_pct
+2026-10-15,F001,L01,Engine Components,Finished Crankshaft,39,38,1,0,97.44
+2026-10-15,F001,L02,Transmission Gears,Finished Transmission Gear,56,56,0,0,100.0
+2026-10-15,F001,L03,Brake Assemblies,Finished Brake Caliper,37,36,1,0,97.3

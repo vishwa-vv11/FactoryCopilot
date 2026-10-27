@@ -10,6 +10,7 @@ This module implements a hierarchical multi-agent architecture:
    - Maintenance Specialist: Focuses on machine telemetry, breakdown logs, and repair procedures.
    - Inventory Specialist: Focuses on warehouse stock, buffer levels, and material shortages.
    - Quality Specialist: Focuses on inspection yields, defects, rework, and scrap rates.
+   - Workforce Specialist: Focuses on shift roll-call attendance, operator allocations, unstaffed machines, and standby floaters.
 """
 
 from __future__ import annotations
@@ -18,11 +19,22 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import json
 import os
+from pathlib import Path
+import sys
 from typing import Any
 
-from ..guardrails import InputGuardrail, OutputGuardrail
-from ..tools import EvidenceStore, ToolRegistry
-from ..harness import AgentHarness, InvestigationResult, TraceEvent
+_ROOT_DIR = Path(__file__).resolve().parents[2]
+if str(_ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(_ROOT_DIR))
+
+try:
+    from v2.guardrails import InputGuardrail, OutputGuardrail
+    from v2.tools import EvidenceStore, ToolRegistry
+    from v2.harness import AgentHarness, InvestigationResult, TraceEvent
+except ImportError:
+    from ..guardrails import InputGuardrail, OutputGuardrail
+    from ..tools import EvidenceStore, ToolRegistry
+    from ..harness import AgentHarness, InvestigationResult, TraceEvent
 
 
 # =====================================================================
@@ -55,8 +67,8 @@ class SpecialistAgent:
         shared_evidence_store: EvidenceStore,
     ) -> SpecialistReport:
         """Run a focused investigation scoped to this specialist's tools."""
-        registry = ToolRegistry(shared_evidence_store)
-        harness = AgentHarness(registry=registry)
+        registry = ToolRegistry(shared_evidence_store, allowed_tools=self.tool_names)
+        harness = AgentHarness(registry=registry, system_prompt=self.system_prompt)
 
         result = harness.run(question=subtask_question, factory_id=factory_id)
         return SpecialistReport(
@@ -111,6 +123,16 @@ def create_specialists() -> dict[str, SpecialistAgent]:
                 "inspections, rework, and scrap. Use get_quality_data."
             ),
             tool_names={"get_quality_data"},
+        ),
+        "workforce": SpecialistAgent(
+            name="Workforce Specialist",
+            domain="workforce_and_staffing",
+            system_prompt=(
+                "You are the Workforce Specialist Agent. Your focus is strictly shift roll-call attendance, "
+                "machine operator workstation allocations, absenteeism, unstaffed machines, and standby free pool relief floaters. "
+                "Use get_employees_data and get_machine_status."
+            ),
+            tool_names={"get_employees_data", "get_machine_status"},
         ),
     }
 
@@ -195,6 +217,15 @@ class SupervisorAgent:
         # Consult quality specialist if quality, defects, or scrap are mentioned
         if any(w in q_lower for w in ("quality", "defect", "rework", "scrap", "yield", "inspection")):
             subtasks.append(("quality", f"Inspect quality pass rates, rework units, and defect logs: {question}"))
+
+        # Consult workforce specialist if operators, staffing, attendance, absence, floaters, unstaffed machines, or crew are mentioned
+        if any(w in q_lower for w in (
+            "operator", "operators", "worker", "workers", "employee", "employees",
+            "staff", "staffing", "absent", "absence", "absenteeism", "attendance",
+            "roster", "crew", "floater", "floaters", "unstaffed", "standby", "free pool",
+            "relief", "ops", "personnel", "who is working", "who is assigned",
+        )):
+            subtasks.append(("workforce", f"Assess shift crew attendance, operator allocations, and unstaffed stations: {question}"))
 
         # Default fallback: Production + Maintenance
         if not subtasks:
@@ -314,7 +345,7 @@ if __name__ == "__main__":
     print("Testing FactoryOS V2 Multi-Agent Orchestration System...\n")
 
     supervisor = SupervisorAgent()
-    master_query = "Why did production miss target on Factory F001? Did machine breakdown or coolant vibration cause it?"
+    master_query = "Why did production miss target on Factory F001? Did machine breakdown or absent operators on unstaffed stations cause it?"
 
     result = supervisor.run(question=master_query, factory_id="F001")
 

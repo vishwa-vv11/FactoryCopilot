@@ -1,0 +1,7 @@
+date,factory_id,material_code,material_name,unit,opening_quantity,received_quantity,consumed_quantity,available_quantity,reorder_level,status
+2026-10-14,F001,STL,Steel blanks,pieces,2060.8,0.0,749.2,1311.6,3000,reorder
+2026-10-14,F001,ALU,Aluminum alloy,kg,3218.1,0.0,478.5,2739.6,800,in_stock
+2026-10-14,F001,BRG,Bearings,pieces,3896.0,0.0,399.0,3497.0,1000,in_stock
+2026-10-14,F001,FST,Fasteners,pieces,23148.0,0.0,2170.0,20978.0,4000,in_stock
+2026-10-14,F001,SEA,Caliper seals,pieces,7742.0,0.0,870.0,6872.0,2000,in_stock
+2026-10-14,F001,CLT,Coolant,liters,568.08,0.0,33.47,534.61,150,in_stock

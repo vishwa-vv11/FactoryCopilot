@@ -88,23 +88,35 @@ def _initials(label: str) -> str:
 
 
 def _line(number: int, name: str, product_name: str, target: int,
-          machine_types: tuple[str, str, str],
+          machine_types: tuple[str, ...],
           bill_of_materials: tuple[tuple[str, float], ...]) -> LineSpec:
-    machines = tuple(
-        MachineSpec(
-            machine_id=f"L{number:02d}-M{index:02d}",
-            code=f"{_initials(machine_type)}{index}",
-            name=f"{machine_type} {index}",
-            machine_type=machine_type,
+    # Compute total workstation count per operation stage
+    op_counts: dict[str, int] = {}
+    for mt in machine_types:
+        op_counts[mt] = op_counts.get(mt, 0) + 1
+
+    op_current_idx: dict[str, int] = {}
+    machines_list = []
+    for index, machine_type in enumerate(machine_types, start=1):
+        op_current_idx[machine_type] = op_current_idx.get(machine_type, 0) + 1
+        ws_idx = op_current_idx[machine_type]
+        total_for_op = op_counts[machine_type]
+        ws_label = f"WS {ws_idx}/{total_for_op}" if total_for_op > 1 else "WS 1/1"
+        machines_list.append(
+            MachineSpec(
+                machine_id=f"L{number:02d}-M{index:02d}",
+                code=f"{_initials(machine_type)}{ws_idx}" if total_for_op > 1 else f"{_initials(machine_type)}{index}",
+                name=f"{machine_type} ({ws_label})",
+                machine_type=machine_type,
+            )
         )
-        for index, machine_type in enumerate(machine_types, start=1)
-    )
+    machines = tuple(machines_list)
     return LineSpec(
         line_id=f"L{number:02d}", code=_initials(name), name=name,
         product_code=_initials(product_name), product_name=product_name,
         process_description=(
             f"Produces {product_name.lower()} through "
-            f"{' → '.join(machine_types)}."
+            f"{' → '.join(dict.fromkeys(machine_types))}."
         ),
         daily_target=target, machines=machines,
         bill_of_materials=tuple(MaterialRequirement(code, qty) for code, qty in bill_of_materials),
@@ -125,19 +137,19 @@ FACTORIES: tuple[FactorySpec, ...] = (
         ),
         lines=(
             _line(1, "Engine Components", "Finished Crankshaft", 960,
-                  ("CNC Turning", "Milling", "Gun Drilling", "Induction Hardening",
-                   "Cylindrical Grinding", "Ultrasonic Cleaning", "Automated Deburring",
-                   "Dynamic Balancing", "Laser CMM", "Final Inspection"),
+                  ("CNC Turning", "CNC Turning", "Milling", "Gun Drilling",
+                   "Induction Hardening", "Cylindrical Grinding", "Cylindrical Grinding",
+                   "Ultrasonic Cleaning", "Dynamic Balancing", "Final Inspection"),
                   (("STL", 1.0), ("CLT", 0.05), ("FST", 1.0))),
             _line(2, "Transmission Gears", "Finished Transmission Gear", 900,
-                  ("Forging Prep", "Gear Hobbing", "Gear Shaping", "Carburizing Furnace",
-                   "Quenching Bath", "Shot Peening", "Gear Grinding",
-                   "Tooth Profile CMM", "Washing Station", "Final Pack"),
+                  ("Forging Prep", "Gear Hobbing", "Gear Hobbing", "Gear Hobbing",
+                   "Carburizing Furnace", "Quenching Bath", "Shot Peening",
+                   "Gear Grinding", "Gear Grinding", "Final Pack"),
                   (("STL", 0.8), ("BRG", 1.0), ("CLT", 0.03))),
             _line(3, "Brake Assemblies", "Finished Brake Caliper", 840,
-                  ("Sand Casting Prep", "Shot Blasting", "CNC Milling", "Bore Honing",
-                   "Leak Pressure Test", "Seal Assembly", "Piston Insertion",
-                   "Torque Verification", "Laser Marking", "Final Inspection"),
+                  ("Sand Casting Prep", "CNC Milling", "CNC Milling", "Bore Honing",
+                   "Seal Assembly", "Seal Assembly", "Piston Insertion", "Piston Insertion",
+                   "Leak Pressure Test", "Final Inspection"),
                   (("ALU", 1.1), ("SEA", 2.0), ("FST", 4.0))),
         ),
         failure_reason="tool wear or coolant fault",
@@ -155,19 +167,19 @@ FACTORIES: tuple[FactorySpec, ...] = (
         ),
         lines=(
             _line(1, "Cotton Fabric", "Packed Cotton Fabric Roll", 1100,
-                  ("Bale Opening", "Carding Machine", "Drawing Frame", "Roving Frame",
-                   "Ring Spinning", "Winding Machine", "Warping Mill",
-                   "Weaving Loom", "Dyeing Jet", "Stenter & Inspection"),
+                  ("Bale Opening", "Carding Machine", "Carding Machine", "Drawing Frame",
+                   "Ring Spinning", "Ring Spinning", "Warping Mill",
+                   "Weaving Loom", "Weaving Loom", "Stenter & Inspection"),
                   (("CTN", 4.0), ("DYE", 0.15), ("SIZ", 0.1), ("FIN", 0.08), ("PKG", 1.0))),
             _line(2, "Denim Fabric", "Packed Denim Fabric Roll", 1000,
                   ("Yarn Prep", "Rope Dyeing", "Sizing Range", "Air Jet Loom",
-                   "Desizing Wash", "Mercerization", "Sanforizing",
-                   "Inspection Table", "Rolling Unit", "Packaging Station"),
+                   "Air Jet Loom", "Air Jet Loom", "Desizing Wash", "Sanforizing",
+                   "Inspection Table", "Packaging Station"),
                   (("CTN", 2.0), ("POL", 2.0), ("DYE", 0.2), ("FIN", 0.1), ("PKG", 1.0))),
             _line(3, "Blended Fabric", "Packed Blended Fabric Roll", 900,
                   ("Fiber Blending", "Carding Web", "Drafting System", "Vortex Spinning",
-                   "Assembly Winder", "Twisting Machine", "Rapier Loom",
-                   "Heat Setting", "Color Fastness QA", "Roll Packaging"),
+                   "Vortex Spinning", "Twisting Machine", "Rapier Loom",
+                   "Rapier Loom", "Heat Setting", "Roll Packaging"),
                   (("CTN", 2.0), ("POL", 3.0), ("FIN", 0.12), ("PKG", 1.0))),
         ),
         failure_reason="thread break or loom stoppage",
@@ -185,19 +197,19 @@ FACTORIES: tuple[FactorySpec, ...] = (
         ),
         lines=(
             _line(1, "Control Boards", "Tested Control Board", 1200,
-                  ("Solder Paste Printer", "Pick & Place High-Speed", "Pick & Place Multi",
-                   "Reflow Oven", "AOI Optical Inspection", "Through-Hole Insertion",
-                   "Wave Soldering", "In-Circuit Tester", "Conformal Coating", "Final Pack"),
+                  ("Solder Paste Printer", "Pick & Place High-Speed", "Pick & Place High-Speed",
+                   "Reflow Oven", "AOI Optical Inspection", "AOI Optical Inspection",
+                   "Through-Hole Insertion", "Wave Soldering", "In-Circuit Tester", "Final Pack"),
                   (("PCB", 1.0), ("MCU", 1.0), ("PAS", 1.0), ("CON", 1.0), ("SLD", 5.0))),
             _line(2, "Sensor Modules", "Tested Sensor Module", 1050,
-                  ("SMT Stencil Printer", "Chip Mounter High-Speed", "Component Mounter Fine",
+                  ("SMT Stencil Printer", "Chip Mounter High-Speed", "Chip Mounter High-Speed",
                    "Nitrogen Reflow Oven", "3D AOI Inspection", "Selective Soldering",
-                   "Sensor Integration", "Thermal Calibration", "X-Ray Inspection", "Final Pack"),
+                   "Sensor Integration", "Thermal Calibration", "Thermal Calibration", "Final Pack"),
                   (("PCB", 1.0), ("MCU", 1.0), ("SNS", 2.0), ("CON", 1.0), ("SLD", 5.0))),
             _line(3, "Power Modules", "Tested Power Module", 960,
-                  ("Substrate Feeder", "High-Speed SMT Placer", "Odd-Form Inserter",
-                   "Vacuum Reflow", "Automated X-Ray (AXI)", "Heatsink Attachment",
-                   "Torque Screwdriving", "Burn-in Testing", "Hipot Safety Test", "Final Pack"),
+                  ("Substrate Feeder", "High-Speed SMT Placer", "High-Speed SMT Placer",
+                   "Odd-Form Inserter", "Vacuum Reflow", "Automated X-Ray (AXI)",
+                   "Torque Screwdriving", "Torque Screwdriving", "Burn-in Testing", "Final Pack"),
                   (("PCB", 1.0), ("MCU", 2.0), ("PAS", 2.0), ("CON", 2.0), ("SLD", 8.0))),
         ),
         failure_reason="feeder fault or test-station calibration",
@@ -207,7 +219,7 @@ FACTORIES: tuple[FactorySpec, ...] = (
 PRODUCTION_FIELDS = (
     "date", "factory_id", "factory_name", "industry", "line_id", "line_code",
     "line_name", "product_code", "product_name", "target_units", "achieved_units",
-    "shortfall_units", "attainment_pct", "line_status",
+    "active_batch_units", "shortfall_units", "attainment_pct", "line_status",
 )
 DOWNTIME_FIELDS = (
     "event_id", "factory_id", "line_id", "machine_id", "started_at",
@@ -266,11 +278,13 @@ class FactorySimulator:
         self.delivered_today: set[tuple[str, str, date]] = set()
         self.status: dict[tuple[str, str], str] = {}
         self.down_ticks: dict[tuple[str, str], int] = {}
+        self.factory_cooldown: dict[str, int] = {factory.factory_id: 0 for factory in FACTORIES}
         self.open_downtime: dict[tuple[str, str], dict] = {}
         self.tick_number = 0
         self.stop_requested = False
         self.simulated_now: datetime | None = None
         self.active_day: date | None = None
+        self.active_batch_units: dict[tuple[str, str], int] = {}
 
         for factory in FACTORIES:
             for material in factory.materials:
@@ -390,11 +404,12 @@ class FactorySimulator:
                     
                     target = line.daily_target
                     achieved = round(target * disruption)
-                    if is_today and has_breakdown:
-                        achieved = round(target * 0.65)  # Currently lagging behind target
+                    if is_today:
+                        # Early shift mode: start with morning shift numbers (10-25 units) and tick upward live
+                        achieved = rng.randint(10, 25)
                     
                     status_label = "machine_down" if (is_today and has_breakdown) else (
-                        "target_met" if achieved >= target else "material_shortage" if not has_breakdown else "machine_down"
+                        "target_met" if achieved >= target else "running" if not has_breakdown else "machine_down"
                     )
                     rows.append(self._production_row(factory, line, day, achieved, line_status=status_label))
 
@@ -527,6 +542,9 @@ class FactorySimulator:
 
     def _production_row(self, factory: FactorySpec, line: LineSpec,
                         day: date, achieved: int, line_status: str | None = None) -> dict:
+        key = (factory.factory_id, line.line_id)
+        active_batch = self.active_batch_units.get(key, max(0, achieved - line.daily_target) if achieved > line.daily_target else 0)
+        curr_batch_achieved = active_batch if (active_batch > 0 or achieved > line.daily_target) else achieved
         return {
             "date": day.isoformat(),
             "factory_id": factory.factory_id,
@@ -539,9 +557,10 @@ class FactorySimulator:
             "product_name": line.product_name,
             "target_units": line.daily_target,
             "achieved_units": achieved,
-            "shortfall_units": max(0, line.daily_target - achieved),
-            "attainment_pct": round(achieved / line.daily_target * 100, 1),
-            "line_status": line_status or ("target_met" if achieved >= line.daily_target else "historical"),
+            "active_batch_units": active_batch,
+            "shortfall_units": max(0, line.daily_target - curr_batch_achieved),
+            "attainment_pct": round(curr_batch_achieved / line.daily_target * 100, 1),
+            "line_status": line_status or ("running" if achieved > line.daily_target else ("target_met" if achieved == line.daily_target else "historical")),
         }
 
     def _write_day_summary(self, factory: FactorySpec, day: date,
@@ -600,6 +619,9 @@ class FactorySimulator:
                         key = (factory.factory_id, row["line_id"])
                         if key in self.achieved:
                             self.achieved[key] = int(row["achieved_units"])
+                            line_spec = next((l for l in factory.lines if l.line_id == row["line_id"]), None)
+                            if line_spec and self.achieved[key] >= line_spec.daily_target:
+                                self.active_batch_units[key] = int(row.get("active_batch_units") or max(0, self.achieved[key] - line_spec.daily_target))
             quality_path = folder / "quality.csv"
             if quality_path.exists():
                 with quality_path.open(newline="", encoding="utf-8") as stream:
@@ -620,7 +642,9 @@ class FactorySimulator:
                 status_snapshot = json.loads(status_path.read_text(encoding="utf-8"))
                 raw_time_str = status_snapshot["as_of"].replace("Z", "+00:00")
                 saved_time = datetime.fromisoformat(raw_time_str)
-                if self.simulated_now is None or saved_time > self.simulated_now:
+                if saved_time.date() > day:
+                    saved_time = datetime.combine(day, time(hour=14, minute=0), tzinfo=timezone.utc)
+                if self.simulated_now is None or (saved_time > self.simulated_now and saved_time.date() <= day):
                     self.simulated_now = saved_time
 
             # Recover each machine's last status and any downtime that was
@@ -675,9 +699,13 @@ class FactorySimulator:
                 key = (factory.factory_id, row["material_code"])
                 if key not in self.stock:
                     continue
-                self.stock[key] = float(row["available_quantity"])
+                avail = float(row["available_quantity"])
+                mat_spec = next((m for m in factory.materials if m.code == row["material_code"]), None)
+                if avail <= 0 and mat_spec:
+                    avail = round(mat_spec.opening_stock * 0.75, 1)
+                self.stock[key] = avail
                 if snapshot_day == today:
-                    self.daily_opening_stock[key] = float(row["opening_quantity"])
+                    self.daily_opening_stock[key] = float(row["opening_quantity"]) if float(row["opening_quantity"]) > 0 else avail
                     self.daily_consumed[key] = float(row["consumed_quantity"])
                     self.daily_received[key] = float(row["received_quantity"])
                 else:
@@ -689,7 +717,31 @@ class FactorySimulator:
         """Apply scheduled receipts once, recording expected and actual arrival."""
         day = now.date()
         for index, material in enumerate(factory.materials):
+            key = (factory.factory_id, material.code)
             receipt_key = (factory.factory_id, material.code, day)
+
+            # Auto-replenishment: if stock is critically depleted or at reorder level during live runs, deliver a fresh batch immediately
+            if self.stock[key] <= material.reorder_level * 0.4 or self.stock[key] <= 50.0:
+                replenish_qty = max(self._delivery_quantity(material), material.opening_stock * 0.5)
+                self.stock[key] = round(self.stock[key] + replenish_qty, 3)
+                self.daily_received[key] = round(self.daily_received[key] + replenish_qty, 3)
+                event = {
+                    "event_id": f"DEL-{factory.factory_id}-{material.code}-{day:%Y%m%d}-{int(now.timestamp())}",
+                    "factory_id": factory.factory_id,
+                    "material_code": material.code,
+                    "material_name": material.name,
+                    "supplier_name": self._supplier_name(factory, material),
+                    "expected_at": now.isoformat(timespec="minutes"),
+                    "actual_at": now.isoformat(timespec="minutes"),
+                    "quantity": replenish_qty,
+                    "unit": material.unit,
+                    "status": "delivered_on_time",
+                    "delay_minutes": 0,
+                }
+                _append_jsonl(self.day_dir(factory, day) / "deliveries.jsonl", event)
+                self.delivered_today.add(receipt_key)
+                continue
+
             # Stagger six materials across a repeating three-day schedule.
             if (day.toordinal() + index) % 3 != 0 or receipt_key in self.delivered_today:
                 continue
@@ -700,7 +752,6 @@ class FactorySimulator:
             if now < actual:
                 continue
             quantity = self._delivery_quantity(material)
-            key = (factory.factory_id, material.code)
             event = {
                 "event_id": f"DEL-{factory.factory_id}-{material.code}-{day:%Y%m%d}",
                 "factory_id": factory.factory_id,
@@ -755,17 +806,34 @@ class FactorySimulator:
             self.stock[key] = round(max(0.0, self.stock[key] - quantity), 3)
             self.daily_consumed[key] = round(self.daily_consumed[key] + quantity, 3)
 
+    def get_unstaffed_machines(self, factory_id: str) -> set[str]:
+        """Return machine IDs where the primary operator is absent and no replacement is assigned."""
+        for p in self.data_dir.glob(f"{factory_id}-*"):
+            emp_file = p / "employees.json"
+            if emp_file.exists():
+                try:
+                    records = json.loads(emp_file.read_text(encoding="utf-8"))
+                    return {
+                        r["machine_id"] for r in records
+                        if r.get("attendance") == "absent" and not r.get("replacement_employee_id") and r.get("machine_id")
+                    }
+                except Exception:
+                    pass
+        return set()
+
     def _write_current_status(self, factory: FactorySpec, day: date,
                               timestamp: str) -> None:
         folder = self.day_dir(factory, day)
         folder.mkdir(parents=True, exist_ok=True)
         machine_rows = []
         production_rows = []
+        unstaffed_set = self.get_unstaffed_machines(factory.factory_id)
         for line in factory.lines:
             achieved = self.achieved[(factory.factory_id, line.line_id)]
             key = (factory.factory_id, line.line_id)
             production_rows.append(self._production_row(factory, line, day, achieved, self.line_status[key]))
             for machine in line.machines:
+                is_unstaffed = machine.machine_id in unstaffed_set
                 machine_rows.append({
                     "machine_id": machine.machine_id,
                     "machine_code": machine.code,
@@ -773,7 +841,9 @@ class FactorySimulator:
                     "machine_type": machine.machine_type,
                     "factory_id": factory.factory_id,
                     "line_id": line.line_id,
-                    "status": self.status[(factory.factory_id, machine.machine_id)],
+                    "status": "unstaffed" if is_unstaffed else self.status[(factory.factory_id, machine.machine_id)],
+                    "operational_status": self.status[(factory.factory_id, machine.machine_id)],
+                    "is_unstaffed": is_unstaffed,
                     "updated_at": timestamp,
                 })
         _write_csv(folder / "production.csv", PRODUCTION_FIELDS, production_rows)
@@ -848,16 +918,24 @@ class FactorySimulator:
 
     def tick(self, now: datetime | None = None) -> None:
         """Advance all factories by one simulated production minute."""
+        today = datetime.now().astimezone().date()
         if now is not None:
             self.simulated_now = now
         elif self.simulated_now is None:
-            self.simulated_now = datetime.now().astimezone()
+            self.simulated_now = datetime.combine(today, time(hour=10, minute=0), tzinfo=timezone.utc)
         else:
             self.simulated_now += timedelta(minutes=1)
+
+        if self.simulated_now.date() > today:
+            self.simulated_now = datetime.combine(
+                today,
+                time(hour=8 + (self.simulated_now.hour % 8), minute=self.simulated_now.minute),
+                tzinfo=timezone.utc,
+            )
         now = self.simulated_now
         if now.tzinfo is None:
             now = now.replace(tzinfo=UTC)
-        day = now.date()
+        day = today
         if self.active_day is not None and self.active_day != day:
             self.achieved = {key: 0 for key in self.achieved}
             self.rate_remainder = {key: 0 for key in self.rate_remainder}
@@ -867,55 +945,119 @@ class FactorySimulator:
             self.daily_opening_stock = dict(self.stock)
             self.daily_consumed = {key: 0.0 for key in self.daily_consumed}
             self.daily_received = {key: 0.0 for key in self.daily_received}
+            self.down_ticks = {key: 0 for key in self.down_ticks}
+            self.factory_cooldown = {factory.factory_id: 0 for factory in FACTORIES}
         self.active_day = day
         stamp = now.isoformat(timespec="seconds")
         self.tick_number += 1
 
         for factory in FACTORIES:
             self._process_deliveries(factory, now)
+
+            # Machine status management & isolated random breakdown logic:
+            # 1. Identify all down machines and running machines in this plant
+            down_machines: list[tuple[LineSpec, MachineSpec]] = []
+            running_machines: list[tuple[LineSpec, MachineSpec]] = []
             for line in factory.lines:
                 for machine in line.machines:
-                    machine_id = machine.machine_id
-                    machine_key = (factory.factory_id, machine_id)
-                    current_status = self.status[machine_key]
-                    if current_status == "down":
-                        self.down_ticks[machine_key] += 1
-                        # Simulated repair takes 2-5 production minutes.
-                        if self.down_ticks[machine_key] >= self.random.randint(2, 5):
-                            self.down_ticks[machine_key] = 0
-                            self._transition_machine(factory, line, machine, "running", now,
-                                                     f"maintenance completed: {machine.machine_type} serviced & recalibrated")
+                    machine_key = (factory.factory_id, machine.machine_id)
+                    if self.status[machine_key] == "down":
+                        down_machines.append((line, machine))
                     else:
-                        # Realistic demo fault chance (~2% per tick across machines)
-                        if self.random.random() < 0.02:
-                            self.down_ticks[machine_key] = 0
-                            self._transition_machine(factory, line, machine, "down", now,
-                                                     factory.failure_reason)
-                # Count completed products once per line, after every stage.
-                # A machine outage pauses the end-of-line finished-unit count.
+                        running_machines.append((line, machine))
+
+            # 2. Advance downtime counters: down machines are serviced and recover after exactly 20 ticks
+            for line, machine in down_machines:
+                machine_key = (factory.factory_id, machine.machine_id)
+                # shortcut: static temp bottleneck on L01-M03 operator absence; machine breakdowns recover after 20 ticks, remove when live staffing scenario is configured
+                self.down_ticks[machine_key] += 1
+                if self.down_ticks[machine_key] >= 20:
+                    self.down_ticks[machine_key] = 0
+                    self._transition_machine(
+                        factory, line, machine, "running", now,
+                        f"maintenance completed: {machine.machine_type} serviced & recalibrated",
+                    )
+                    # Enforce a post-repair plant cooldown period (25-45 ticks).
+                    # When one machine recovers, other machines are NOT immediately downed!
+                    self.factory_cooldown[factory.factory_id] = self.random.randint(25, 45)
+
+            # 3. Decrement cooldown if active
+            if self.factory_cooldown[factory.factory_id] > 0:
+                self.factory_cooldown[factory.factory_id] -= 1
+
+            # 4. Sporadic, decoupled stochastic breakdown generation:
+            # Check if any machine in this factory is currently down
+            has_active_down = any(
+                self.status[(factory.factory_id, m.machine_id)] == "down"
+                for l in factory.lines for m in l.machines
+            )
+            # Only trigger a new breakdown if:
+            # - No machine in this plant is currently down (isolated incident model)
+            # - Post-repair cooldown has expired
+            # - Running machines exist
+            if not has_active_down and self.factory_cooldown[factory.factory_id] == 0 and running_machines:
+                # Truly random, sporadic breakdown occurrence (~1.5% chance per tick across the plant)
+                if self.random.random() < 0.015:
+                    target_line, target_machine = self.random.choice(running_machines)
+                    target_key = (factory.factory_id, target_machine.machine_id)
+                    self.down_ticks[target_key] = 0
+                    self._transition_machine(
+                        factory, target_line, target_machine, "down", now,
+                        factory.failure_reason,
+                    )
+
+            for line in factory.lines:
                 line_key = (factory.factory_id, line.line_id)
-                line_is_running = all(
-                    self.status[(factory.factory_id, m.machine_id)] == "running"
-                    for m in line.machines
-                )
-                if self.achieved[line_key] >= line.daily_target:
-                    self.line_status[line_key] = "target_met"
-                elif not line_is_running:
-                    self.line_status[line_key] = "machine_down"
+                op_workstations: dict[str, list[MachineSpec]] = {}
+                for m in line.machines:
+                    op_workstations.setdefault(m.machine_type, []).append(m)
+
+                unstaffed_set = self.get_unstaffed_machines(factory.factory_id)
+                line_is_blocked = False
+                bottleneck_op = None
+                blocked_due_to_staffing = False
+                stage_capacities: list[float] = []
+
+                for op_name, ws_list in op_workstations.items():
+                    total_ws = len(ws_list)
+                    active_ws = sum(
+                        1 for m in ws_list
+                        if self.status[(factory.factory_id, m.machine_id)] == "running"
+                        and m.machine_id not in unstaffed_set
+                    )
+                    if active_ws == 0:
+                        # 0 active workstations for this stage: complete bottleneck! Line must halt!
+                        line_is_blocked = True
+                        bottleneck_op = op_name
+                        blocked_due_to_staffing = any(m.machine_id in unstaffed_set for m in ws_list)
+                        stage_capacities.append(0.0)
+                        break
+                    else:
+                        stage_capacities.append(active_ws / total_ws)
+
+                effective_line_capacity = min(stage_capacities) if stage_capacities else 1.0
+
+                if line_is_blocked:
+                    # Critical bottleneck: single workstation for op (or all parallel ws) is down or unstaffed!
+                    self.line_status[line_key] = "operator_shortage" if blocked_due_to_staffing else "machine_down"
                 elif self.random.random() < 0.98:
-                    self.rate_remainder[line_key] += line.daily_target
+                    # Output rate scales with the bottleneck stage's available parallel capacity
+                    effective_rate = line.daily_target * effective_line_capacity
+                    self.rate_remainder[line_key] += effective_rate
                     units, self.rate_remainder[line_key] = divmod(self.rate_remainder[line_key], 480)
+                    units = int(units)
                     material_capacity = self._available_units(factory, line)
-                    completed = min(units, line.daily_target - self.achieved[line_key], material_capacity)
+                    # Produce units up to material capacity; running lines continue producing for the active loaded order
+                    completed = min(units, material_capacity)
                     if completed:
                         self._consume_materials(factory, line, completed)
                         self.achieved[line_key] += completed
+                        if self.achieved[line_key] >= line.daily_target:
+                            self.active_batch_units[line_key] = self.active_batch_units.get(line_key, 0) + completed
                         self._record_quality(factory, line, day, stamp, completed)
                     self.line_status[line_key] = (
                         "material_shortage" if material_capacity < units else "running"
                     )
-                    if self.achieved[line_key] >= line.daily_target:
-                        self.line_status[line_key] = "target_met"
             self._write_current_status(factory, day, stamp)
 
         print(f"[{stamp}] simulator tick {self.tick_number}: "

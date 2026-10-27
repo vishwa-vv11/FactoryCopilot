@@ -1,0 +1,6 @@
+event_id,factory_id,line_id,machine_id,started_at,ended_at,duration_minutes,reason
+DT-a8f52c52,F002,L01,L01-M01,2026-10-21T09:30:00+00:00,,0,thread break or loom stoppage
+a2c7e900d4ed4cd0b43e7d30e3dd86f6,F002,L01,L01-M01,2026-10-21T09:30:00+00:00,2026-10-21T14:33:00+00:00,303,thread break or loom stoppage
+0520fc4709484922bdf1d47d27bf6941,F002,L01,L01-M05,2026-10-21T17:32:00+00:00,2026-10-21T17:52:00+00:00,20,thread break or loom stoppage
+ef6885a67a414c52abca0b6017a4444d,F002,L01,L01-M07,2026-10-21T18:58:00+00:00,2026-10-21T19:18:00+00:00,20,thread break or loom stoppage
+6b8bdfd36710445294e113efaeb5d71c,F002,L01,L01-M05,2026-10-21T20:12:00+00:00,2026-10-21T20:32:00+00:00,20,thread break or loom stoppage

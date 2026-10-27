@@ -18,8 +18,9 @@
       "machine_type": "Milling",
       "factory_id": "F001",
       "line_id": "L01",
-      "status": "running",
-      "updated_at": "2026-10-12T14:01:00+00:00"
+      "status": "unstaffed",
+      "updated_at": "2026-10-12T14:01:00+00:00",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L01-M03",
@@ -28,8 +29,9 @@
       "machine_type": "Inspection and packing",
       "factory_id": "F001",
       "line_id": "L01",
-      "status": "running",
-      "updated_at": "2026-10-12T14:01:00+00:00"
+      "status": "unstaffed",
+      "updated_at": "2026-10-12T14:01:00+00:00",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L02-M01",

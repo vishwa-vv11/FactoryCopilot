@@ -18,8 +18,9 @@
       "name": "Milling 2",
       "line_id": "L01",
       "line_name": "Engine Components",
-      "status": "running",
-      "reason": ""
+      "status": "unstaffed",
+      "reason": "",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L01-M03",
@@ -27,8 +28,9 @@
       "name": "Inspection and packing 3",
       "line_id": "L01",
       "line_name": "Engine Components",
-      "status": "running",
-      "reason": ""
+      "status": "unstaffed",
+      "reason": "",
+      "is_unstaffed": true
     },
     {
       "machine_id": "L02-M01",

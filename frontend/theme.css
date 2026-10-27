@@ -1,21 +1,23 @@
-/* Clean factory-console theme: bright work surface, ink typography, green signal colors. */
+/* Sleek Executive Slate & Aerospace Cobalt Theme */
 :root {
   color-scheme: light;
-  --panel: #fff;
-  --panel-2: #f5f7f4;
-  --border: #dce4dc;
-  --muted: #68776c;
-  --green: #188454;
-  --amber: #bc771d;
-  --red: #c4483c;
-  --blue: #3978a5;
+  --panel: #ffffff;
+  --panel-2: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --blue: #2563eb;
+  --accent: #2563eb;
+  --accent-dark: #1d4ed8;
 }
 
 body {
   position: relative;
   min-height: 100vh;
-  color: #19241e;
-  background-color: #f1f5f2;
+  color: #0f172a;
+  background-color: #f8fafc;
 }
 
 body::before {
@@ -23,13 +25,13 @@ body::before {
   position: fixed;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(244, 248, 245, 0.82), rgba(238, 243, 239, 0.88)),
+    linear-gradient(rgba(248, 250, 252, 0.78), rgba(241, 245, 249, 0.88)),
     url('/static/factory-bg.jpg');
   background-size: cover;
   background-position: center 25%;
   background-repeat: no-repeat;
-  opacity: 0.72;
-  filter: contrast(0.95) brightness(1.15);
+  opacity: 0.95;
+  filter: contrast(1.02) brightness(0.99);
   pointer-events: none;
   z-index: 0;
 }
@@ -226,9 +228,10 @@ h1 { color: #18251e; letter-spacing: -.65px; }
 .refresh-state { color: #557060; }
 
 .metric, .panel {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(14px);
   border-color: #dce4dc;
-  box-shadow: 0 3px 12px #17301d0a;
+  box-shadow: 0 4px 18px rgba(23, 48, 29, 0.08);
 }
 .metric { border-top: 3px solid #3a9562; }
 .metric:nth-child(2) { border-top-color: #689475; }
@@ -243,9 +246,10 @@ h1 { color: #18251e; letter-spacing: -.65px; }
 .legend { color: #5e6d62; }
 
 .line-lane {
-  background: #fbfcfb;
+  background: rgba(251, 252, 251, 0.92);
+  backdrop-filter: blur(8px);
   border-color: #dce5dd;
-  box-shadow: 0 2px 6px #203a2608;
+  box-shadow: 0 2px 8px rgba(32, 58, 38, 0.06);
 }
 .line-number {
   color: #146a3d;

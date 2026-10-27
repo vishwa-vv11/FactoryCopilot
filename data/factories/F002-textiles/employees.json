@@ -1,0 +1,144 @@
+[
+  {
+    "employee_id": "EMP-201",
+    "name": "Basavaraj H.",
+    "role": "Bale Opening Operator",
+    "line_id": "L01",
+    "line_name": "Cotton Fabric",
+    "machine_id": "L01-M01",
+    "workstation_name": "Bale Opening (WS 1/1)",
+    "primary_skill": "Bale Opening",
+    "skills": [
+      "Bale Opening",
+      "Fiber Plucker",
+      "Foreign Matter Removal"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:48 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Raw organic cotton bale feed."
+  },
+  {
+    "employee_id": "EMP-202",
+    "name": "Manjunath Gowda",
+    "role": "Carding Technician",
+    "line_id": "L01",
+    "line_name": "Cotton Fabric",
+    "machine_id": "L01-M02",
+    "workstation_name": "Carding Machine (WS 1/2)",
+    "primary_skill": "Carding",
+    "skills": [
+      "Carding",
+      "Sliver Alignment"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:52 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Parallel carding machine 1."
+  },
+  {
+    "employee_id": "EMP-203",
+    "name": "Shivanna K.",
+    "role": "Carding Technician",
+    "line_id": "L01",
+    "line_name": "Cotton Fabric",
+    "machine_id": "L01-M03",
+    "workstation_name": "Carding Machine (WS 2/2)",
+    "primary_skill": "Carding",
+    "skills": [
+      "Carding",
+      "Cylinder Wire Maintenance"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": null,
+    "attendance": "absent",
+    "status": "absent",
+    "replacement_employee_id": "EMP-231",
+    "notes": "Personal leave. Replaced by cross-trained floater EMP-231 from Free Pool."
+  },
+  {
+    "employee_id": "EMP-204",
+    "name": "Puttaraju M.",
+    "role": "Spinning Master",
+    "line_id": "L01",
+    "line_name": "Cotton Fabric",
+    "machine_id": "L01-M05",
+    "workstation_name": "Ring Spinning (WS 1/2)",
+    "primary_skill": "Ring Spinning",
+    "skills": [
+      "Ring Spinning",
+      "Yarn Count Calibration",
+      "Spindle Speed Control"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:50 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "notes": "Ne 30 ring spun yarn production."
+  },
+  {
+    "employee_id": "EMP-231",
+    "name": "Ranganath Swamy",
+    "role": "Multi-Skilled Floater",
+    "line_id": "L01",
+    "line_name": "Cotton Fabric",
+    "machine_id": "L01-M03",
+    "workstation_name": "Carding Machine (WS 2/2)",
+    "primary_skill": "Carding",
+    "skills": [
+      "Carding",
+      "Drawing Frame",
+      "Ring Spinning",
+      "Weaving Loom"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:44 AM",
+    "attendance": "present",
+    "status": "active_operating",
+    "is_replacement": true,
+    "replacement_for": "EMP-203",
+    "notes": "Dispatched from Free Pool to replace absent operator EMP-203 on Carding Machine 2."
+  },
+  {
+    "employee_id": "EMP-232",
+    "name": "Chandrashekariah N.",
+    "role": "Textile Maintenance Tech",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Loom & Spinning Maintenance",
+    "skills": [
+      "Loom & Spinning Maintenance",
+      "Rapier Drive Alignment",
+      "Spindle Lubrication"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:35 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "Lead maintenance technician in Free Pool on standby."
+  },
+  {
+    "employee_id": "EMP-233",
+    "name": "Kavitha Nanjappa",
+    "role": "Multi-Skilled Floater",
+    "line_id": null,
+    "line_name": null,
+    "machine_id": null,
+    "workstation_name": null,
+    "primary_skill": "Weaving & Inspection",
+    "skills": [
+      "Weaving Loom",
+      "Warping Mill",
+      "Stenter & Inspection"
+    ],
+    "shift": "Shift A (06:00 - 14:00)",
+    "clock_in": "05:46 AM",
+    "attendance": "present",
+    "status": "free_pool",
+    "notes": "Cross-trained relief operator in Free Pool."
+  }
+]

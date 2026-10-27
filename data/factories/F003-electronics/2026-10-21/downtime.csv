@@ -1,0 +1,6 @@
+event_id,factory_id,line_id,machine_id,started_at,ended_at,duration_minutes,reason
+DT-9f54606c,F003,L01,L01-M01,2026-10-21T09:30:00+00:00,,0,feeder fault or test-station calibration
+a4283ebc49e04cb098ff5c14f679dace,F003,L01,L01-M01,2026-10-21T09:30:00+00:00,2026-10-21T14:33:00+00:00,303,feeder fault or test-station calibration
+5e7bbc9ed1ca4f64a9f59c647254bcd3,F003,L01,L01-M01,2026-10-21T16:44:00+00:00,2026-10-21T17:04:00+00:00,20,feeder fault or test-station calibration
+21d57b23e779441c97fdf52ca9ae5148,F003,L03,L03-M09,2026-10-21T17:38:00+00:00,2026-10-21T17:58:00+00:00,20,feeder fault or test-station calibration
+b4b474d37d4b46c599e124d134466a0d,F003,L03,L03-M09,2026-10-21T21:05:00+00:00,2026-10-21T21:25:00+00:00,20,feeder fault or test-station calibration

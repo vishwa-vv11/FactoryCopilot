@@ -1,0 +1,4 @@
+date,factory_id,factory_name,industry,line_id,line_code,line_name,product_code,product_name,target_units,achieved_units,shortfall_units,attainment_pct,line_status
+2026-10-14,F001,Coimbatore Auto Components,automotive,L01,EC,Crankshaft,FC,Crankshaft,960,430,530,44.8,machine_down
+2026-10-14,F001,Coimbatore Auto Components,automotive,L02,TG,Transmission Gear,FTG,Transmission Gear,900,399,501,44.3,machine_down
+2026-10-14,F001,Coimbatore Auto Components,automotive,L03,BA,Brake Caliper,FBC,Brake Caliper,840,435,405,51.8,machine_down

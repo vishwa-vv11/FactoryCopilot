@@ -12,67 +12,67 @@
       "daily_target": 1100,
       "product_code": "PCFR",
       "product_name": "Packed Cotton Fabric Roll",
-      "process_description": "Produces packed cotton fabric roll through Bale Opening \u2192 Carding Machine \u2192 Drawing Frame \u2192 Roving Frame \u2192 Ring Spinning \u2192 Winding Machine \u2192 Warping Mill \u2192 Weaving Loom \u2192 Dyeing Jet \u2192 Stenter & Inspection.",
+      "process_description": "Produces packed cotton fabric roll through Bale Opening \u2192 Carding Machine \u2192 Drawing Frame \u2192 Ring Spinning \u2192 Warping Mill \u2192 Weaving Loom \u2192 Stenter & Inspection.",
       "finished_output_stage": "Stenter & Inspection",
       "machines": [
         {
           "machine_id": "L01-M01",
           "code": "BO1",
-          "name": "Bale Opening 1",
+          "name": "Bale Opening (WS 1/1)",
           "machine_type": "Bale Opening"
         },
         {
           "machine_id": "L01-M02",
-          "code": "CM2",
-          "name": "Carding Machine 2",
+          "code": "CM1",
+          "name": "Carding Machine (WS 1/2)",
           "machine_type": "Carding Machine"
         },
         {
           "machine_id": "L01-M03",
-          "code": "DF3",
-          "name": "Drawing Frame 3",
-          "machine_type": "Drawing Frame"
+          "code": "CM2",
+          "name": "Carding Machine (WS 2/2)",
+          "machine_type": "Carding Machine"
         },
         {
           "machine_id": "L01-M04",
-          "code": "RF4",
-          "name": "Roving Frame 4",
-          "machine_type": "Roving Frame"
+          "code": "DF4",
+          "name": "Drawing Frame (WS 1/1)",
+          "machine_type": "Drawing Frame"
         },
         {
           "machine_id": "L01-M05",
-          "code": "RS5",
-          "name": "Ring Spinning 5",
+          "code": "RS1",
+          "name": "Ring Spinning (WS 1/2)",
           "machine_type": "Ring Spinning"
         },
         {
           "machine_id": "L01-M06",
-          "code": "WM6",
-          "name": "Winding Machine 6",
-          "machine_type": "Winding Machine"
+          "code": "RS2",
+          "name": "Ring Spinning (WS 2/2)",
+          "machine_type": "Ring Spinning"
         },
         {
           "machine_id": "L01-M07",
           "code": "WM7",
-          "name": "Warping Mill 7",
+          "name": "Warping Mill (WS 1/1)",
           "machine_type": "Warping Mill"
         },
         {
           "machine_id": "L01-M08",
-          "code": "WL8",
-          "name": "Weaving Loom 8",
+          "code": "WL1",
+          "name": "Weaving Loom (WS 1/2)",
           "machine_type": "Weaving Loom"
         },
         {
           "machine_id": "L01-M09",
-          "code": "DJ9",
-          "name": "Dyeing Jet 9",
-          "machine_type": "Dyeing Jet"
+          "code": "WL2",
+          "name": "Weaving Loom (WS 2/2)",
+          "machine_type": "Weaving Loom"
         },
         {
           "machine_id": "L01-M10",
           "code": "S&I10",
-          "name": "Stenter & Inspection 10",
+          "name": "Stenter & Inspection (WS 1/1)",
           "machine_type": "Stenter & Inspection"
         }
       ]
@@ -84,67 +84,67 @@
       "daily_target": 1000,
       "product_code": "PDFR",
       "product_name": "Packed Denim Fabric Roll",
-      "process_description": "Produces packed denim fabric roll through Yarn Prep \u2192 Rope Dyeing \u2192 Sizing Range \u2192 Air Jet Loom \u2192 Desizing Wash \u2192 Mercerization \u2192 Sanforizing \u2192 Inspection Table \u2192 Rolling Unit \u2192 Packaging Station.",
+      "process_description": "Produces packed denim fabric roll through Yarn Prep \u2192 Rope Dyeing \u2192 Sizing Range \u2192 Air Jet Loom \u2192 Desizing Wash \u2192 Sanforizing \u2192 Inspection Table \u2192 Packaging Station.",
       "finished_output_stage": "Packaging Station",
       "machines": [
         {
           "machine_id": "L02-M01",
           "code": "YP1",
-          "name": "Yarn Prep 1",
+          "name": "Yarn Prep (WS 1/1)",
           "machine_type": "Yarn Prep"
         },
         {
           "machine_id": "L02-M02",
           "code": "RD2",
-          "name": "Rope Dyeing 2",
+          "name": "Rope Dyeing (WS 1/1)",
           "machine_type": "Rope Dyeing"
         },
         {
           "machine_id": "L02-M03",
           "code": "SR3",
-          "name": "Sizing Range 3",
+          "name": "Sizing Range (WS 1/1)",
           "machine_type": "Sizing Range"
         },
         {
           "machine_id": "L02-M04",
-          "code": "AJL4",
-          "name": "Air Jet Loom 4",
+          "code": "AJL1",
+          "name": "Air Jet Loom (WS 1/3)",
           "machine_type": "Air Jet Loom"
         },
         {
           "machine_id": "L02-M05",
-          "code": "DW5",
-          "name": "Desizing Wash 5",
-          "machine_type": "Desizing Wash"
+          "code": "AJL2",
+          "name": "Air Jet Loom (WS 2/3)",
+          "machine_type": "Air Jet Loom"
         },
         {
           "machine_id": "L02-M06",
-          "code": "M6",
-          "name": "Mercerization 6",
-          "machine_type": "Mercerization"
+          "code": "AJL3",
+          "name": "Air Jet Loom (WS 3/3)",
+          "machine_type": "Air Jet Loom"
         },
         {
           "machine_id": "L02-M07",
-          "code": "S7",
-          "name": "Sanforizing 7",
-          "machine_type": "Sanforizing"
+          "code": "DW7",
+          "name": "Desizing Wash (WS 1/1)",
+          "machine_type": "Desizing Wash"
         },
         {
           "machine_id": "L02-M08",
-          "code": "IT8",
-          "name": "Inspection Table 8",
-          "machine_type": "Inspection Table"
+          "code": "S8",
+          "name": "Sanforizing (WS 1/1)",
+          "machine_type": "Sanforizing"
         },
         {
           "machine_id": "L02-M09",
-          "code": "RU9",
-          "name": "Rolling Unit 9",
-          "machine_type": "Rolling Unit"
+          "code": "IT9",
+          "name": "Inspection Table (WS 1/1)",
+          "machine_type": "Inspection Table"
         },
         {
           "machine_id": "L02-M10",
           "code": "PS10",
-          "name": "Packaging Station 10",
+          "name": "Packaging Station (WS 1/1)",
           "machine_type": "Packaging Station"
         }
       ]
@@ -156,67 +156,67 @@
       "daily_target": 900,
       "product_code": "PBFR",
       "product_name": "Packed Blended Fabric Roll",
-      "process_description": "Produces packed blended fabric roll through Fiber Blending \u2192 Carding Web \u2192 Drafting System \u2192 Vortex Spinning \u2192 Assembly Winder \u2192 Twisting Machine \u2192 Rapier Loom \u2192 Heat Setting \u2192 Color Fastness QA \u2192 Roll Packaging.",
+      "process_description": "Produces packed blended fabric roll through Fiber Blending \u2192 Carding Web \u2192 Drafting System \u2192 Vortex Spinning \u2192 Twisting Machine \u2192 Rapier Loom \u2192 Heat Setting \u2192 Roll Packaging.",
       "finished_output_stage": "Roll Packaging",
       "machines": [
         {
           "machine_id": "L03-M01",
           "code": "FB1",
-          "name": "Fiber Blending 1",
+          "name": "Fiber Blending (WS 1/1)",
           "machine_type": "Fiber Blending"
         },
         {
           "machine_id": "L03-M02",
           "code": "CW2",
-          "name": "Carding Web 2",
+          "name": "Carding Web (WS 1/1)",
           "machine_type": "Carding Web"
         },
         {
           "machine_id": "L03-M03",
           "code": "DS3",
-          "name": "Drafting System 3",
+          "name": "Drafting System (WS 1/1)",
           "machine_type": "Drafting System"
         },
         {
           "machine_id": "L03-M04",
-          "code": "VS4",
-          "name": "Vortex Spinning 4",
+          "code": "VS1",
+          "name": "Vortex Spinning (WS 1/2)",
           "machine_type": "Vortex Spinning"
         },
         {
           "machine_id": "L03-M05",
-          "code": "AW5",
-          "name": "Assembly Winder 5",
-          "machine_type": "Assembly Winder"
+          "code": "VS2",
+          "name": "Vortex Spinning (WS 2/2)",
+          "machine_type": "Vortex Spinning"
         },
         {
           "machine_id": "L03-M06",
           "code": "TM6",
-          "name": "Twisting Machine 6",
+          "name": "Twisting Machine (WS 1/1)",
           "machine_type": "Twisting Machine"
         },
         {
           "machine_id": "L03-M07",
-          "code": "RL7",
-          "name": "Rapier Loom 7",
+          "code": "RL1",
+          "name": "Rapier Loom (WS 1/2)",
           "machine_type": "Rapier Loom"
         },
         {
           "machine_id": "L03-M08",
-          "code": "HS8",
-          "name": "Heat Setting 8",
-          "machine_type": "Heat Setting"
+          "code": "RL2",
+          "name": "Rapier Loom (WS 2/2)",
+          "machine_type": "Rapier Loom"
         },
         {
           "machine_id": "L03-M09",
-          "code": "CFQ9",
-          "name": "Color Fastness QA 9",
-          "machine_type": "Color Fastness QA"
+          "code": "HS9",
+          "name": "Heat Setting (WS 1/1)",
+          "machine_type": "Heat Setting"
         },
         {
           "machine_id": "L03-M10",
           "code": "RP10",
-          "name": "Roll Packaging 10",
+          "name": "Roll Packaging (WS 1/1)",
           "machine_type": "Roll Packaging"
         }
       ]

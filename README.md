@@ -209,7 +209,7 @@ flowchart TD
 ---
 
 ### 2. Autonomous Incident Triage & Floater Dispatch Sequence
-The following sequence diagram maps the live production stoppage scenario captured in screenshots 06 through 09:
+The following sequence diagram maps the live production stoppage scenario and autonomous floater dispatch resolution:
 
 ```mermaid
 sequenceDiagram
@@ -357,41 +357,6 @@ flowchart LR
 ![Shortfall Correlation](docs/screenshots/05_macho_shortfall_limitation.png)
 * **Context & Diagnosis:** *Initial diagnostic behavior where the agent attributed stage downtime to a broad aggregate shortfall rather than isolating stage-level staffing.*
 * **Resolution:** Solved by introducing procedural domain playbooks into the ReAct prompt chain, ensuring Macho queries machine-level telemetry and live workstation staffing before citing plant-wide figures.
-
----
-
-### 6. Critical Staffing Bottleneck: Operator Absent (Line Halted)
-![Critical Staffing Bottleneck](docs/screenshots/06_bottleneck_operator_absent.png)
-* **Real-Time Bottleneck Detection:** When a floater is released or an operator is absent without replacement, the system flags the bottleneck:
-  - **Line 01 Alert:** `BOTTLENECK: MILLING (OPERATOR ABSENT)` banner displayed in red.
-  - **Stage 03 (Milling WS 1/1, L01-M03):** Because Milling is a single-workstation stage (`WS 1/1`), its operational capacity drops to **0%**, completely halting Line 01.
-  - **Order Tracking:** Active Order `ORD-015` stays frozen at `324 / 960 TODAY` units.
-
----
-
-### 7. Direct 2-Line Macho Stoppage Diagnosis (Zero Boilerplate)
-![Macho Halt Diagnosis](docs/screenshots/07_macho_halt_diagnosis_concise.png)
-* **Concise, High-Precision Reasoning:** User asks *"why is line 1 halted ..??"*.
-* **Direct Answer:** Macho cuts through corporate boilerplate and diagnoses the exact root cause in 2 clear sentences:
-  > *"The line L01 is halted because the workstation Milling (WS 1/1) on line L01 is UNSTAFFED due to operator Murugan Palanisamy (EMP-103) being absent with no relief floater assigned. Immediate action needed: Assign a relief floater to workstation Milling (WS 1/1)."*
-
----
-
-### 8. Autonomous Floater Dispatch Action
-![Floater Dispatch Action](docs/screenshots/08_macho_floater_dispatch_action.png)
-* **Autonomous Execution:** User instructs Macho: *"assign a floater to the WS"*.
-* **Dynamic Talent Matching:** Macho identifies an eligible cross-trained operator from the Free Pool, executes `assign_floater`, and reports:
-  > *"Arunachalam S. (EMP-133) has been assigned to workstation Milling (WS 1/1) on line L01, covering for Murugan Palanisamy (EMP-103), who is absent without relief coverage."*
-
----
-
-### 9. Floor Recovery & Resumed Production
-![Floor Recovered and Running](docs/screenshots/09_floor_recovered_running.png)
-* **Instant Visual State Synchronization:**
-  - Red bottleneck alert on Line 01 clears and turns into green `RUNNING (NEW ORDER LOADED)`.
-  - Stage 03 shows `FLOATER RELIEF: Arunachalam... [✕ Release]`.
-  - Line 01 immediately resumes throughput, advancing live units from `324` to `338 / 960 TODAY`.
-  - Line 02 concurrently runs newly loaded Order `ORD-013` at `1,223 / 900 TODAY`.
 
 ---
 

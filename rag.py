@@ -239,6 +239,9 @@ class OllamaChromaEmbeddingFunction:
         self.model_name = model_name
         self.base_url = base_url.rstrip("/")
 
+    def name(self) -> str:
+        return f"ollama_{self.model_name.replace(':', '_').replace('.', '_')}"
+
     def __call__(self, input: list[str]) -> list[list[float]]:
         embeddings: list[list[float]] = []
         for text in input:
@@ -267,6 +270,7 @@ class ChromaDocumentIndex:
 
     def _init_chroma(self) -> None:
         try:
+            # pyrefly: ignore[missing-import]
             import chromadb
             client = chromadb.PersistentClient(path=str(self.persist_dir))
             embedding_fn = OllamaChromaEmbeddingFunction()

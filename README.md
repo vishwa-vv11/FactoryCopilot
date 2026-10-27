@@ -353,30 +353,18 @@ flowchart LR
 
 ---
 
-### 5. Historical Shortfall Correlation & Resolution
-![Shortfall Correlation](docs/screenshots/05_macho_shortfall_limitation.png)
-* **Context & Diagnosis:** *Initial diagnostic behavior where the agent attributed stage downtime to a broad aggregate shortfall rather than isolating stage-level staffing.*
-* **Resolution:** Solved by introducing procedural domain playbooks into the ReAct prompt chain, ensuring Macho queries machine-level telemetry and live workstation staffing before citing plant-wide figures.
+### 5. Autonomous Incident Remediation: Stoppage Diagnosis & Floater Dispatch
 
----
+This end-to-end operational sequence illustrates Macho diagnosing an unstaffed bottleneck and deploying relief coverage to restore production:
 
-### 6. End-to-End Autonomous Remediation: Stoppage Diagnosis & Floater Dispatch
-
-This unified workflow demonstrates Macho's core operational capabilities—from live bottleneck detection on the physical floor, to direct 2-line root cause diagnosis, autonomous floater dispatch, and production recovery:
-
-#### Step 1 — Floor Alert: Line 01 Halted (Operator Absent)
-![Line 01 Bottleneck Stoppage](docs/screenshots/06_bottleneck_operator_absent.png)
-* **Live Bottleneck Detection:** Operator Murugan Palanisamy is absent at Milling (`WS 1/1`), a single-workstation bottleneck stage on Line 01. Stage capacity drops to `0%`, freezing production at `324 / 960 TODAY` units and triggering a red floor alert (`BOTTLENECK: MILLING (OPERATOR ABSENT)`).
-
-#### Step 2 — Macho Diagnosis: "Why is Line 1 Halted ..??" & Autonomous Action: "Assign a Floater to the WS"
-| 1. Root Cause Diagnosis (*"why is line 1 halted ..??"*) | 2. Autonomous Floater Dispatch (*"assign a floater to the WS"*) |
+| 1. Stoppage Diagnosis (*"why is line 1 not running .??"*) | 2. Autonomous Floater Dispatch (*"assign floater to the ws"*) |
 | :---: | :---: |
-| ![Macho Halt Diagnosis](docs/screenshots/07_macho_halt_diagnosis_concise.png) | ![Macho Floater Dispatch](docs/screenshots/08_macho_floater_dispatch_action.png) |
-| **Direct 2-Line Diagnosis:** Macho queries live staffing telemetry and cuts through boilerplate: *"The line L01 is halted because the workstation Milling (WS 1/1) on line L01 is UNSTAFFED due to operator Murugan Palanisamy (EMP-103) being absent with no relief floater assigned. Immediate action needed: Assign a relief floater to workstation Milling (WS 1/1)."* | **Autonomous Dispatch:** Upon receiving *"assign a floater to the WS"*, Macho validates cross-training certifications against the standby Free Pool, calls `assign_floater`, and deploys **Arunachalam S. (`EMP-133`)** directly to the station. |
+| ![Stoppage Diagnosis](docs/screenshots/05_stoppage_diagnosis.png) | ![Floater Dispatch](docs/screenshots/06_floater_dispatch.png) |
+| **Direct 2-Line Diagnosis:** Macho identifies that Line 01 is halted because workstation Milling (`WS 1/1`) is unstaffed due to operator Murugan Palanisamy being absent with no floater assigned, and immediately recommends assigning a relief floater. | **Autonomous Dispatch:** Upon receiving *"assign floater to the ws"*, Macho validates cross-training qualifications, executes `assign_floater`, and deploys **Arunachalam S. (`EMP-133`)** directly to the station. |
 
-#### Step 3 — Floor Recovered & Production Resumed
-![Floor Recovered and Running](docs/screenshots/09_floor_recovered_running.png)
-* **Instant Production Recovery:** The red bottleneck clears and turns into green `RUNNING (NEW ORDER LOADED)`. Stage 03 shows active coverage (`FLOATER RELIEF: Arunachalam...`), and Line 01 immediately resumes throughput, advancing live units from `324` to `338 / 960 TODAY`.
+#### Restored Line 01 Throughput & Active Floater Relief
+![Line 01 Production Resumed](docs/screenshots/07_production_resumed.png)
+* **Floor Recovery:** Milling (`WS 1/1`) shows `FLOATER RELIEF: Arunachalam... [✕ Release]` alongside CNC Turning relief (`Suresh Mani`). Line 01 operational status returns to active, safely fulfilling Order `ORD-015` for Aston Martin Lagonda.
 
 ---
 

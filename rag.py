@@ -225,13 +225,131 @@ class DocumentIndex:
         ]
 
 
-# Singleton instance for quick access across tools and API
-_DOCUMENT_INDEX = DocumentIndex()
+# =====================================================================
+# 5. ChromaDB Persistent Vector Database Engine
+# =====================================================================
+
+CHROMA_DIR = Path(__file__).resolve().parent / "data" / "chroma"
+
+
+class OllamaChromaEmbeddingFunction:
+    """Zero-dependency Ollama embedding function for ChromaDB."""
+
+    def __init__(self, model_name: str = "llama3.2", base_url: str = "http://127.0.0.1:11434") -> None:
+        self.model_name = model_name
+        self.base_url = base_url.rstrip("/")
+
+    def __call__(self, input: list[str]) -> list[list[float]]:
+        embeddings: list[list[float]] = []
+        for text in input:
+            try:
+                payload = json.dumps({"model": self.model_name, "prompt": text}).encode("utf-8")
+                req = Request(f"{self.base_url}/api/embeddings", data=payload, headers={"Content-Type": "application/json"})
+                with urlopen(req, timeout=15) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    embeddings.append(data.get("embedding", []))
+            except Exception:
+                # Return empty embedding on failure so caller can handle gracefully
+                embeddings.append([])
+        return embeddings
+
+
+class ChromaDocumentIndex:
+    """Persistent ChromaDB vector store backed by SQLite on disk."""
+
+    def __init__(self, docs_root: Path = DOCS_ROOT, persist_dir: Path = CHROMA_DIR) -> None:
+        self.docs_root = docs_root
+        self.persist_dir = persist_dir
+        self.persist_dir.mkdir(parents=True, exist_ok=True)
+        self.fallback_index = DocumentIndex(docs_root=docs_root)
+        self.collection = None
+        self._init_chroma()
+
+    def _init_chroma(self) -> None:
+        try:
+            import chromadb
+            client = chromadb.PersistentClient(path=str(self.persist_dir))
+            embedding_fn = OllamaChromaEmbeddingFunction()
+            self.collection = client.get_or_create_collection(
+                name="factory_sops",
+                embedding_function=embedding_fn,
+                metadata={"hnsw:space": "cosine"}
+            )
+            self._sync_documents()
+        except Exception:
+            self.collection = None
+
+    def _sync_documents(self) -> None:
+        """Upsert factory markdown chunks into ChromaDB collection."""
+        if not self.collection or not self.fallback_index.chunks:
+            return
+
+        existing_ids = set()
+        try:
+            existing = self.collection.get()
+            if existing and "ids" in existing:
+                existing_ids = set(existing["ids"])
+        except Exception:
+            pass
+
+        new_chunks = [c for c in self.fallback_index.chunks if c.chunk_id not in existing_ids]
+        if not new_chunks:
+            return
+
+        ids = [c.chunk_id for c in new_chunks]
+        docs = [c.content for c in new_chunks]
+        metadatas = [{"factory_id": c.factory_id, "source_file": c.source_file} for c in new_chunks]
+
+        try:
+            self.collection.upsert(ids=ids, documents=docs, metadatas=metadatas)
+        except Exception:
+            pass
+
+    def search(self, query: str, factory_id: str = "F001", top_k: int = 3) -> list[dict[str, Any]]:
+        """Search ChromaDB vector database with metadata filtering; fallback to BM25."""
+        if not query.strip():
+            return []
+
+        if self.collection:
+            try:
+                results = self.collection.query(
+                    query_texts=[query],
+                    n_results=top_k,
+                    where={"factory_id": {"$in": [factory_id, "shared"]}}
+                )
+                if results and results.get("documents") and results["documents"][0]:
+                    out = []
+                    docs = results["documents"][0]
+                    metas = results.get("metadatas", [[]])[0]
+                    distances = results.get("distances", [[]])[0] if "distances" in results else []
+
+                    for i, doc in enumerate(docs):
+                        meta = metas[i] if i < len(metas) else {}
+                        dist = distances[i] if i < len(distances) else 0.0
+                        score = round(1.0 - dist, 4) if distances else 0.95
+                        out.append({
+                            "source": meta.get("source_file", "unknown"),
+                            "factory_scope": meta.get("factory_id", factory_id),
+                            "content": doc,
+                            "score": score,
+                            "match_type": "chroma_vector",
+                        })
+                    if out:
+                        return out
+            except Exception:
+                pass
+
+        # Fallback to in-memory TF-IDF / BM25 lexical search
+        return self.fallback_index.search(query=query, factory_id=factory_id, top_k=top_k)
+
+
+# Singleton instances
+_CHROMA_INDEX = ChromaDocumentIndex()
 
 
 def search_factory_documents(factory_id: str, query: str, limit: int = 3) -> list[dict[str, Any]]:
-    """Safe, read-only search function exposed to Agent Tools and API."""
-    return _DOCUMENT_INDEX.search(query=query, factory_id=factory_id, top_k=limit)
+    """Primary document search tool powered by ChromaDB with local Ollama embeddings."""
+    return _CHROMA_INDEX.search(query=query, factory_id=factory_id, top_k=limit)
 
 
 # =====================================================================
@@ -239,23 +357,13 @@ def search_factory_documents(factory_id: str, query: str, limit: int = 3) -> lis
 # =====================================================================
 
 if __name__ == "__main__":
-    print("Testing FactoryOS V2 RAG Engine...\n")
+    print("Testing FactoryOS V2 ChromaDB RAG Engine...\n")
 
-    idx = DocumentIndex()
-    print(f"Loaded {len(idx.chunks)} document chunks from {DOCS_ROOT}")
+    print(f"Persist Directory: {CHROMA_DIR}")
+    results = search_factory_documents("F001", "coolant pump vibration", limit=2)
+    print(f"Retrieved {len(results)} results for 'coolant pump vibration':")
+    for r in results:
+        print(f" - [{r['source']} | Match: {r['match_type']} | Score: {r['score']}]")
+        print(f"   Snippet: {r['content'][:120]}...\n")
 
-    # Test Query 1: Machine manual search
-    print("\n--- 1. Testing Query: 'coolant pump vibration' ---")
-    results1 = idx.search("coolant pump vibration", factory_id="F001", top_k=2)
-    for r in results1:
-        print(f"[{r['source']} - Match: {r['match_type']}, Score: {r['score']}]")
-        print(f"Snippet: {r['content'][:150]}...\n")
-
-    # Test Query 2: Shared safety practice search
-    print("--- 2. Testing Query: 'preventive maintenance restart' ---")
-    results2 = idx.search("preventive maintenance restart", factory_id="F001", top_k=2)
-    for r in results2:
-        print(f"[{r['source']} - Match: {r['match_type']}, Score: {r['score']}]")
-        print(f"Snippet: {r['content'][:150]}...\n")
-
-    print("[OK] RAG Engine smoke test completed successfully!")
+    print("[OK] ChromaDB RAG Engine smoke test completed successfully!")

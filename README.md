@@ -59,13 +59,15 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
 * **Models Supported:** `llama3.2:latest`, `mistral:latest`, `phi3:latest`, `qwen3`.
 * **Zero Cloud Dependency:** All operational logs, workforce rosters, machine telemetry, and proprietary production data stay 100% local within the plant firewall. Deterministic hardcoded bypasses have been completely removed.
 
-### 2. Retrieval-Augmented Generation (RAG) & Vector Database
+### 2. Retrieval-Augmented Generation (RAG) & Vector Database — ChromaDB
 * **Location:** [v2/rag.py](file:///e:/Vishwa/learning/agent/v2/rag.py)
+* **Vector Engine:** **ChromaDB** persistent vector database backed by SQLite on disk (`v2/data/chroma/chroma.sqlite3`).
 * **Document Knowledge Store:** Ingests factory SOPs, machine operating manuals, safety protocols, and restart checklists from `docs/factories/`.
 * **Semantic Chunking:** Custom chunking algorithm splits documentation by paragraphs with token overlap (`max_chars=600`, `overlap=100`).
 * **Hybrid Search Strategy:**
-  1. **Vector Embedding Search:** Generates dense semantic vector embeddings via Ollama's embedding API and indexes them in a local JSON vector database cache (`v2/data/document_index.json`). Executes cosine similarity search to retrieve relevant recovery protocols.
-  2. **BM25 / TF-IDF Lexical Matcher:** Offline lexical search for exact equipment codes (e.g. `CNC Turning`, `L01-M03`) ensuring high keyword precision.
+  1. **ChromaDB Vector Embeddings:** Zero-external-dependency Ollama embedding function (`OllamaChromaEmbeddingFunction`) generates dense vectors via local Ollama endpoint (`http://127.0.0.1:11434/api/embeddings`) with cosine distance indexing (`hnsw:space: cosine`).
+  2. **Metadata Filtering:** Multi-tenant scoping filters chunks by factory boundary: `where={"factory_id": {"$in": [factory_id, "shared"]}}`.
+  3. **BM25 / TF-IDF Lexical Fallback:** Offline lexical search for exact equipment codes (e.g. `CNC Turning`, `L01-M03`) ensuring high keyword precision if offline.
 * **Tool Integration:** Exposed to the agent as `search_factory_documents` for real-time operating manual verification.
 
 ### 3. Agent Reasoning Engine & Tool Registry

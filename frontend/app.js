@@ -406,6 +406,27 @@ function renderMetrics(factory, productionRows, inventoryRows, qualityRows, empD
   if (qualCapEl) qualCapEl.textContent = `${format(passed)} of ${format(inspected)} units passed`;
 }
 
+let _latestTelemetryAlerts = null;
+
+function renderMachoTelemetryAlerts(alertsData) {
+  _latestTelemetryAlerts = alertsData;
+  const alertSymbol = byId('macho-alert-symbol');
+  const speechText = byId('macho-speech-text');
+  const alerts = alertsData?.alerts || [];
+
+  if (alerts.length > 0) {
+    if (alertSymbol) alertSymbol.style.display = 'inline-block';
+    if (speechText) speechText.textContent = 'Ask Macho';
+  } else {
+    if (alertSymbol) alertSymbol.style.display = 'none';
+    if (speechText) speechText.textContent = 'Ask Macho';
+  }
+
+  if (typeof window.renderMachoDrawerAlert === 'function') {
+    window.renderMachoDrawerAlert();
+  }
+}
+
 async function loadDashboard() {
   if (refreshBusy || !factoryId || !selectedDay) return;
   refreshBusy = true;
@@ -413,14 +434,15 @@ async function loadDashboard() {
   try {
     const factory = await api(`/api/factories/${encodeURIComponent(factoryId)}`);
     const queryDay = `?day=${encodeURIComponent(selectedDay)}`;
-    // Fetch real-time operational telemetry, workforce staffing, and work orders
-    const [production, machineData, inventoryData, qualityData, empData, ordersData] = await Promise.all([
+    // Fetch real-time operational telemetry, workforce staffing, work orders, and Macho telemetry alerts
+    const [production, machineData, inventoryData, qualityData, empData, ordersData, telemetryAlerts] = await Promise.all([
       api(factoryBase(`production${queryDay}`)),
       api(factoryBase(`machines${queryDay}`)),
       api(factoryBase(`inventory${queryDay}`)),
       api(factoryBase(`quality${queryDay}`)),
       api(factoryBase('employees')).catch(() => null),
       api(factoryBase(`orders${queryDay}`)).catch(() => ({ active_orders: {}, next_orders: {} })),
+      api(factoryBase(`telemetry-alerts${queryDay}`)).catch(() => ({ alerts: [] })),
     ]);
     employeesData = empData || { summary: {}, machine_coverage: {}, free_pool: [], absent: [] };
     const productionRows = production.lines || [];
@@ -428,6 +450,7 @@ async function loadDashboard() {
     const inventoryRows = inventoryData.materials || [];
     const qualityRows = qualityData.lines || [];
     renderMetrics(factory, productionRows, inventoryRows, qualityRows, employeesData);
+    renderMachoTelemetryAlerts(telemetryAlerts);
     renderFloor(factory, productionRows, machineRows, employeesData, ordersData);
   } catch (error) {
     byId('toast').textContent = `${error.message}. Start the V2 API and simulator data first.`;
@@ -499,10 +522,73 @@ function initCopilot() {
 
   if (!drawer || !queryInput) return;
 
+  function renderDrawerAlert() {
+    const alertBox = byId('macho-drawer-alert');
+    if (!alertBox) return;
+    const alerts = _latestTelemetryAlerts?.alerts || [];
+    if (!alerts.length) {
+      alertBox.style.display = 'none';
+      if (chatIntro && !_chatHistory.length) chatIntro.style.display = 'block';
+      return;
+    }
+
+    const criticalCount = _latestTelemetryAlerts.critical_count || alerts.filter(a => a.severity === 'CRITICAL').length;
+    const isCritical = criticalCount > 0;
+    alertBox.className = `macho-drawer-alert ${isCritical ? 'is-critical' : 'is-warning'}`;
+    alertBox.style.display = 'block';
+    if (chatIntro) chatIntro.style.display = 'none';
+
+    const itemsHtml = alerts.map(a => {
+      const pct = (a.remaining_pct !== undefined && a.remaining_pct !== null) ? a.remaining_pct : (a.nominal_capacity ? Math.round((a.available_quantity / a.nominal_capacity) * 100) : null);
+      const pctBadge = pct !== null ? `<span style="background: rgba(239, 68, 68, 0.25); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); padding: 1px 7px; border-radius: 4px; font-weight: 800; font-size: 10.5px; margin-left: 6px;">${pct}% stock left</span>` : '';
+      const capacityText = a.nominal_capacity ? `${format(a.available_quantity)} / ${format(a.nominal_capacity)} ${escapeHtml(a.unit)}` : `${format(a.available_quantity)} ${escapeHtml(a.unit)}`;
+      return `
+        <div class="macho-alert-item-pill" style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 8px 10px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <span class="macho-alert-item-name" style="font-weight: 700; color: #f8fafc;">📦 ${escapeHtml(a.material_name)} (${escapeHtml(a.material_code)})</span>
+            ${pctBadge}
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; width: 100%; font-size: 11px; color: #94a3b8;">
+            <span style="color: #fbbf24; font-weight: 600;">${capacityText}</span>
+            <span>Safety threshold: ${format(a.reorder_level)} ${a.affected_lines?.length ? `· ${escapeHtml(a.affected_lines.join(', '))}` : ''}</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    alertBox.innerHTML = `
+      <div class="macho-drawer-alert-header">
+        <span class="macho-alert-tag">${isCritical ? '🚨 CRITICAL DEPLETION' : '⚠️ TELEMETRY ALERT'}</span>
+        <span class="macho-alert-time">Live Floor Telemetry</span>
+      </div>
+      <div class="macho-drawer-alert-title">
+        ${escapeHtml(_latestTelemetryAlerts.headline || 'Raw Material Depletion Detected')}
+      </div>
+      <div class="macho-drawer-alert-desc">
+        ${escapeHtml(alerts[0].macho_alert_message)}
+      </div>
+      <div class="macho-drawer-alert-items">
+        ${itemsHtml}
+      </div>
+      <button type="button" class="macho-drawer-alert-btn" id="macho-drawer-act-btn">
+        <span>Ask Macho for Restocking & Shortfall Plan</span> →
+      </button>
+    `;
+
+    const actBtn = byId('macho-drawer-act-btn');
+    if (actBtn) {
+      actBtn.onclick = () => {
+        window.triggerCopilot(`Analyze inventory telemetry alerts for ${factoryId} and provide an immediate restocking and production protection plan.`);
+      };
+    }
+  }
+
+  window.renderMachoDrawerAlert = renderDrawerAlert;
+
   function resetCopilotState() {
     _chatHistory = [];
-    if (chatIntro) chatIntro.style.display = 'block';
     if (chatStream) chatStream.innerHTML = '';
+    renderDrawerAlert();
     if (queryInput) {
       queryInput.value = '';
       queryInput.focus();
@@ -514,6 +600,7 @@ function initCopilot() {
     drawer.removeAttribute('hidden');
     backdrop.hidden = false;
     backdrop.removeAttribute('hidden');
+    renderDrawerAlert();
     setTimeout(() => queryInput.focus(), 80);
   }
 
@@ -683,8 +770,10 @@ function initCopilot() {
       queryInput.disabled = true;
       queryBtn.querySelector('.btn-text').textContent = 'Analyzing...';
 
-      // Hide intro message once chatting starts
+      // Hide intro message and drawer alert once chatting starts
       if (chatIntro) chatIntro.style.display = 'none';
+      const drawerAlert = byId('macho-drawer-alert');
+      if (drawerAlert) drawerAlert.style.display = 'none';
 
       // 1. Render Question as its own Chat Bubble widget on the right
       if (chatStream) {

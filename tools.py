@@ -18,6 +18,7 @@ import re
 from typing import Any, Callable
 
 from .rag import search_factory_documents
+from .telemetry_reporter import get_telemetry_alerts, analyze_inventory_telemetry
 
 # Base directory for V2 factory data
 DATA_DIR = Path(__file__).resolve().parent / "data" / "factories"
@@ -1072,6 +1073,21 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "get_telemetry_alerts",
+            "description": "Inspect Macho's live telemetry analysis for depleted or near-depletion raw materials and inventory shortage risks.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "factory_id": {"type": "string", "description": "Factory identifier (e.g. F001)"},
+                },
+                "required": ["factory_id"],
+                "additionalProperties": False,
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_employees_data",
             "description": "Retrieve factory workforce roster, attendance, machine operator assignments, cross-trained skills, absent operators, and standby free pool replacements.",
             "parameters": {
@@ -1168,8 +1184,16 @@ def format_evidence_detail(tool_name: str, item: dict[str, Any]) -> str:
         skills = ", ".join(item.get("skills", []))
         return f"Employee '{item.get('employee_id')}' ({item.get('name')}, {item.get('role')}){loc}: {status_info}, Shift: {item.get('shift', 'Shift A')}, Skills: [{skills}]."
     if tool_name == "search_factory_documents":
+        if item.get("status") == "insufficient_context":
+            return f"Documentation search: {item.get('content')}"
         snippet = item.get("content", "").replace("\n", " ").strip()
-        return f"Document '{item.get('source')}': {snippet[:200]}..."
+        doc_name = item.get("document_name") or item.get("source", "Document")
+        page = item.get("page_number", 1)
+        sec = item.get("section") or "General"
+        return f"Document '{doc_name}' ({item.get('source')}, p. {page}, Section: {sec}): {snippet[:220]}..."
+    if tool_name == "get_telemetry_alerts":
+        msg = item.get("macho_alert_message") or f"Material '{item.get('material_name')}' is {item.get('depletion_status')} ({item.get('available_quantity')} {item.get('unit')} available)."
+        return f"Macho Telemetry Alert [{item.get('severity')}]: {msg}"
     if tool_name == "get_production_data":
         return f"{item.get('date')}: Line {item.get('line_id')} produced {item.get('achieved_units')}/{item.get('target_units')} units (Shortfall: {item.get('shortfall_units')}, Status: {item.get('line_status')})."
     if tool_name == "get_downtime_data":
@@ -1248,6 +1272,7 @@ class ToolRegistry:
         "get_shortfall_analysis": get_shortfall_analysis,
         "get_cross_factory_overview": get_cross_factory_overview,
         "search_factory_documents": search_factory_documents,
+        "get_telemetry_alerts": get_telemetry_alerts,
         "assign_floater": assign_floater,
         "get_machine_logs": get_machine_logs,
     }

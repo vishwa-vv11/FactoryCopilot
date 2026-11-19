@@ -6,7 +6,7 @@
   <title>Factory Copilot · Operations Floor Monitor</title>
   <link rel="stylesheet" href="/static/styles.css?v=8">
   <link rel="stylesheet" href="/static/theme.css?v=8">
-  <link rel="stylesheet" href="/static/copilot.css?v=8">
+  <link rel="stylesheet" href="/static/copilot.css?v=15">
   <link rel="stylesheet" href="/static/line-overrides.css?v=8">
   <style>
     .top-nav-bar {
@@ -130,7 +130,7 @@
       box-sizing: border-box !important;
     }
   </style>
-  <script src="/static/app.js?v=12" defer></script>
+  <script src="/static/app.js?v=16" defer></script>
 </head>
 <body>
   <div class="app-shell full-width-layout">
@@ -242,7 +242,8 @@
       <aside id="macho-robot-widget" class="macho-robot-widget" aria-label="Ask Macho Agent">
         <div class="macho-speech-tag">
           <span class="macho-online-dot"></span>
-          <span>Ask Macho</span>
+          <span id="macho-alert-symbol" class="macho-alert-symbol" style="display:none;">⚠️</span>
+          <span id="macho-speech-text">Ask Macho</span>
         </div>
         <button type="button" id="floating-macho-btn" class="macho-machine-actor-btn" title="Click to chat with Macho AI Agent" aria-label="Open Macho AI Agent">
           <img src="/static/robot-cutout.png" alt="Macho AI Machine Agent" class="macho-robot-machine-img" draggable="false">
@@ -270,6 +271,9 @@
     </div>
 
     <div class="drawer-body" id="copilot-chat-body">
+      <!-- Macho Proactive Telemetry Alert Card inside Drawer -->
+      <div id="macho-drawer-alert" class="macho-drawer-alert" style="display:none;"></div>
+
       <!-- Clean Chat Intro -->
       <div id="copilot-intro" class="chat-intro-card">
         <p>How can I help you?</p>

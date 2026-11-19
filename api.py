@@ -69,6 +69,12 @@ def _run_background_simulator():
     while not _sim_stop_event.is_set():
         try:
             sim.tick()
+            try:
+                from v2.telemetry_reporter import analyze_inventory_telemetry
+            except ModuleNotFoundError:
+                from telemetry_reporter import analyze_inventory_telemetry
+            for f in ("F001", "F002", "F003", "F004"):
+                analyze_inventory_telemetry(f)
         except Exception as e:
             print(f"[Simulator Lifespan Error] {e}")
         _sim_stop_event.wait(5.0)
@@ -710,6 +716,32 @@ def production_comparison(
 def inventory(factory_id: str, day: str | None = Query(default=None)) -> dict:
     selected_day, folder = _day_dir(factory_id, day)
     return {"factory_id": factory_id, "date": selected_day.isoformat(), "materials": _read_csv(folder / "inventory.csv")}
+
+
+@app.get("/api/factories/{factory_id}/telemetry-alerts")
+def factory_telemetry_alerts(factory_id: str, day: str | None = Query(default=None)) -> dict:
+    """Macho telemetry analysis report for raw material depletion and stock shortages."""
+    try:
+        from v2.telemetry_reporter import analyze_inventory_telemetry
+    except ModuleNotFoundError:
+        from telemetry_reporter import analyze_inventory_telemetry
+    return analyze_inventory_telemetry(factory_id)
+
+
+@app.get("/api/alerts")
+def all_telemetry_alerts() -> dict:
+    """Retrieve all active Macho telemetry depletion alerts across all factories."""
+    try:
+        from v2.telemetry_reporter import _REPORTER
+    except ModuleNotFoundError:
+        from telemetry_reporter import _REPORTER
+    all_alerts = _REPORTER.get_active_alerts()
+    return {
+        "count": len(all_alerts),
+        "critical_count": sum(1 for a in all_alerts if a.get("severity") == "CRITICAL"),
+        "warning_count": sum(1 for a in all_alerts if a.get("severity") == "WARNING"),
+        "alerts": all_alerts,
+    }
 
 
 @app.get("/api/factories/{factory_id}/deliveries")

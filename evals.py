@@ -213,7 +213,16 @@ class BenchmarkRunner:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run FactoryOS V2 Evaluation Benchmark")
     parser.add_argument("--multi-agent", action="store_true", help="Evaluate Multi-Agent Supervisor instead of Single-Agent")
+    parser.add_argument("--ragas", action="store_true", help="Run RAGAS-based evaluation suite for hybrid RAG engine")
     args = parser.parse_args()
+
+    if args.ragas:
+        try:
+            from v2.ragas_eval import main as ragas_main
+        except ModuleNotFoundError:
+            from ragas_eval import main as ragas_main
+        ragas_main()
+        return
 
     runner = BenchmarkRunner(use_multi_agent=args.multi_agent)
     mode_name = "Multi-Agent System" if args.multi_agent else "Single-Agent Harness"

@@ -1,6 +1,6 @@
 # FactoryOS V2 — Autonomous Industrial Operations & Macho AI Copilot
 
-FactoryOS V2 is an autonomous, full-stack industrial operations intelligence platform and simulation environment. It combines discrete-time manufacturing floor telemetry, multi-order batch scheduling, dynamic shift workforce allocation, and **Macho** — a private, local ReAct AI Operations Copilot powered strictly by **Ollama**, featuring a hybrid **RAG (Retrieval-Augmented Generation) & Vector Database** knowledge engine.
+FactoryOS V2 is an autonomous, full-stack industrial operations intelligence platform and simulation environment. It combines discrete-time manufacturing floor telemetry, multi-order batch scheduling, dynamic shift workforce allocation, and **Macho** — a private, local ReAct AI Operations Copilot powered strictly by **Ollama**, featuring an advanced hybrid **RAG (Retrieval-Augmented Generation) & Knowledge Engine** (BM25 + Dense Vectors + RRF + Cross-Encoder Reranking) and a proactive **Real-Time Telemetry Analysis Reporter**.
 
 ---
 
@@ -10,11 +10,14 @@ FactoryOS V2 is an autonomous, full-stack industrial operations intelligence pla
 Industrial discrete manufacturing floors (automotive components, precision gearing, aerospace assemblies) operate under tight delivery deadlines and high asset utilization. In traditional plants:
 1. **Unplanned Bottlenecks:** When a machine operator is absent on a single-workstation bottleneck stage (e.g., Milling `WS 1/1`), the entire sequential production line halts immediately. Supervisors often take 30–60 minutes to notice, diagnose, and dispatch a certified replacement.
 2. **Data Silos & Noise:** Telemetry (machine alarms, scrap rates, downtime logs) is scattered across PLC logs, paper shift rosters, ERP inventory databases, and PDF maintenance binders.
-3. **Cloud & Privacy Risks:** Enterprise manufacturers cannot stream proprietary telemetry, internal scrap rates, or workforce records to third-party cloud LLMs due to intellectual property and regulatory boundaries.
+3. **Inventory Starvation:** Raw materials deplete silently across fast-running production shifts; operators only notice material starvation when a machine runs dry, causing sudden line stoppages.
+4. **Cloud & Privacy Risks:** Enterprise manufacturers cannot stream proprietary telemetry, internal scrap rates, or workforce records to third-party cloud LLMs due to intellectual property and regulatory boundaries.
 
 ### The Solution: FactoryOS V2
 FactoryOS V2 bridges physical floor telemetry and autonomous operational action. It pairs a **5-second discrete-time simulation engine** with **Macho**, an autonomous on-premise operations copilot:
 - **100% Local & Private:** Powered by **Ollama** running local open-weights LLMs (`llama3.2`, `mistral`) inside the factory firewall with zero cloud data transmission.
+- **Proactive Telemetry Watchdog:** Continuously analyzes inventory burn rates, predicts runout hours, and alerts supervisors when raw material stock hits $\le 20\%$ of nominal capacity.
+- **Advanced Hybrid RAG Knowledge Engine:** Ingests factory SOPs, manuals, and safety checklists with Parent-Child chunking, BM25 + dense vector search fused via Reciprocal Rank Fusion (RRF), cross-encoder reranking, and confidence gating.
 - **Root Cause Determination in Seconds:** Eliminates multi-part corporate boilerplate by providing precise, 2-line root cause diagnosis and recommending instant remediations.
 - **Autonomous Floor Actions:** Not just an informational chatbot—Macho executes real operational actions (e.g., querying the standby Free Pool and autonomously deploying certified relief floaters to halted workstations).
 - **Multi-Batch Scheduling:** Coordinates sequential multi-order customer contracts, automatically tracking quotas and enabling 1-click batch changeovers.
@@ -30,6 +33,7 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                       MODERN WEB FRONTEND (VANILLA JS/CSS)                  │
 │   Floor Monitor  │  Interactive Line Routes  │  Macho Copilot Slide Drawer  │
+│   Companion Robot Alert Symbol (⚠️)          │  Telemetry Alert Card        │
 └──────────────────────────────────────┬──────────────────────────────────────┘
                                        │ HTTP / JSON
 ┌──────────────────────────────────────▼──────────────────────────────────────┐
@@ -38,11 +42,12 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
 └──────────┬───────────────────────────┬───────────────────────────┬──────────┘
            │                           │                           │
 ┌──────────▼──────────┐     ┌──────────▼──────────┐     ┌──────────▼──────────┐
-│  DISCRETE SIMULATOR │     │  MACHO AI COPILOT   │     │  HYBRID RAG ENGINE  │
-│  - 5-sec Tick Loop  │     │  - ReAct Loop       │     │  - Vector Embeddings│
-│  - Machine Health   │     │  - Multi-Turn Memory│     │  - BM25 Lexical     │
-│  - BOM Material Use │     │  - Input Guardrails │     │  - SOP & Manual Doc │
-│  - Shift Workforce  │     │  - Evidence Engine  │     │  - Cosine Search    │
+│  DISCRETE SIMULATOR │     │  MACHO AI COPILOT   │     │  ADVANCED HYBRID    │
+│  - 5-sec Tick Loop  │     │  - ReAct Loop       │     │     RAG ENGINE      │
+│  - Machine Health   │     │  - Multi-Turn Memory│     │  - BM25 + Vector RRF│
+│  - BOM Material Use │     │  - Input Guardrails │     │  - Cross-Encoder    │
+│  - Telemetry Watch  │     │  - Evidence Engine  │     │  - Parent-Child Chk │
+│  - Shift Workforce  │     │  - Telemetry Reporter│    │  - RAGAS Evals      │
 └─────────────────────┘     └──────────┬──────────┘     └─────────────────────┘
                                        │ REST API (:11434)
                             ┌──────────▼──────────┐
@@ -57,20 +62,36 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
 * **Role:** Powers all generative reasoning, structured ReAct tool selection, and conversational synthesis.
 * **Technology:** **Ollama** running locally on `http://127.0.0.1:11434`.
 * **Models Supported:** `llama3.2:latest`, `mistral:latest`, `phi3:latest`, `qwen3`.
-* **Zero Cloud Dependency:** All operational logs, workforce rosters, machine telemetry, and proprietary production data stay 100% local within the plant firewall. Deterministic hardcoded bypasses have been completely removed.
+* **Zero Cloud Dependency:** All operational logs, workforce rosters, machine telemetry, and proprietary production data stay 100% local within the plant firewall.
 
-### 2. Retrieval-Augmented Generation (RAG) & Vector Database — ChromaDB
-* **Location:** [v2/rag.py](file:///e:/Vishwa/learning/agent/v2/rag.py)
-* **Vector Engine:** **ChromaDB** persistent vector database backed by SQLite on disk (`v2/data/chroma/chroma.sqlite3`).
-* **Document Knowledge Store:** Ingests factory SOPs, machine operating manuals, safety protocols, and restart checklists from `docs/factories/`.
-* **Semantic Chunking:** Custom chunking algorithm splits documentation by paragraphs with token overlap (`max_chars=600`, `overlap=100`).
-* **Hybrid Search Strategy:**
-  1. **ChromaDB Vector Embeddings:** Zero-external-dependency Ollama embedding function (`OllamaChromaEmbeddingFunction`) generates dense vectors via local Ollama endpoint (`http://127.0.0.1:11434/api/embeddings`) with cosine distance indexing (`hnsw:space: cosine`).
-  2. **Metadata Filtering:** Multi-tenant scoping filters chunks by factory boundary: `where={"factory_id": {"$in": [factory_id, "shared"]}}`.
-  3. **BM25 / TF-IDF Lexical Fallback:** Offline lexical search for exact equipment codes (e.g. `CNC Turning`, `L01-M03`) ensuring high keyword precision if offline.
-* **Tool Integration:** Exposed to the agent as `search_factory_documents` for real-time operating manual verification.
+### 2. Advanced Hybrid RAG Engine (BM25 + Vector Search + RRF + Cross-Encoder)
+* **Location:** [v2/rag.py](file:///e:/Vishwa/learning/agent/v2/rag.py), [v2/ragas_eval.py](file:///e:/Vishwa/learning/agent/v2/ragas_eval.py)
+* **Major Improvements Implemented:**
+  1. **Hybrid Search (BM25 + Dense Vectors + RRF):** Combines lexical Okapi BM25 ($k_1=1.5, b=0.75$, Robertson-Spärck Jones IDF smoothing, and suffix normalization) with dense vector embeddings (`all-MiniLM-L6-v2` / Ollama) using **Reciprocal Rank Fusion (RRF, $k=60$)**.
+  2. **Cross-Encoder Reranking:** Re-scores merged candidate passages with a joint query-passage cross-encoder (`ms-marco-MiniLM-L-6-v2`) with contextual fallback scoring (query coverage, heading proximity, term co-occurrence).
+  3. **Metadata-Aware & Parent-Child Chunking:** Parses markdown structure into hierarchical chunks:
+     - **Parent Chunks (~1,400 chars):** Provide complete operational context for the LLM.
+     - **Child Chunks (~380 chars):** Fine-grained semantic segments for precision vector and keyword matching.
+     - Tracks `document_name`, `section`, `page_number`, and `parent_id`.
+  4. **Document Versioning & Incremental Indexing:** Maintains `v2/data/document_manifest.json` with SHA-256 hashes and file modification timestamps (`mtime`). Only re-indexes modified or newly added SOP documents, skipping unchanged files on startup.
+  5. **Granular Source Citations:** Standardized evidence citations formatted as `[document_name.md | p. X > Section Title]` (e.g. `[machine_manual.md | p. 1 > Warning signs]`).
+  6. **Confidence-Based Retrieval & Insufficient-Context Handling:** Normalizes relevance scores $\in [0, 1]$. Searches falling below the confidence threshold (`min_confidence=0.25`) or matching no relevant documentation return structured `insufficient_context` notices to eliminate hallucinations.
+  7. **Automated RAGAS Evaluation Framework:** Comprehensive evaluation suite evaluating **Faithfulness**, **Answer Relevancy**, **Context Precision (MAP@K)**, and **Context Recall** across factory test queries (`python -m v2.evals --ragas`).
 
-### 3. Agent Reasoning Engine & Tool Registry
+### 3. Macho Proactive Telemetry Analysis Reporter & Inventory Depletion Watchdog
+* **Location:** [v2/telemetry_reporter.py](file:///e:/Vishwa/learning/agent/v2/telemetry_reporter.py), [v2/api.py](file:///e:/Vishwa/learning/agent/v2/api.py), [v2/frontend/app.js](file:///e:/Vishwa/learning/agent/v2/frontend/app.js)
+* **Core Capabilities:**
+  - **Autonomous 5-Second Monitoring Loop:** Integrated into the background simulator loop, analyzing live `inventory.csv` telemetry across all active plants.
+  - **Warehouse Nominal Capacity Baselines:** Maps material consumption against true warehouse capacities (`NOMINAL_CAPACITIES`: e.g. F001 Steel blanks: 18,000, Aluminum: 5,000, Bearings: 6,000, Fasteners: 24,000, Caliper seals: 12,000, Coolant: 900L).
+  - **Calibrated $\le 20\%$ Near-Depletion Threshold:** Alerts trigger strictly when remaining stock falls to **20% or below** of nominal warehouse capacity, preventing premature alarms.
+  - **Burn Rate & Runout Estimation:** Calculates hourly burn pace based on active shift consumption and projects remaining operating hours until exhaustion.
+  - **Downstream Line Impact Correlation:** Directly maps depleted or near-depletion raw materials to the affected production lines (e.g. `Line 01`, `Line 02`).
+  - **Proactive UI Integration:**
+    - Displays a clean alert symbol (`⚠️ Ask Macho`) over the companion robot without cluttering the plant floor layout.
+    - Clicking Macho immediately opens the slide-over drawer rendering the Telemetry Alert Card at the top of the chat with stock percentages (`[16.4% stock left]`), true capacities, safety thresholds, and 1-click action triggers (`Ask Macho for Restocking & Shortfall Plan →`).
+  - **Agent Tool Integration:** Registered `get_telemetry_alerts` tool allowing Macho to formulate autonomous restocking and shortfall avoidance strategies during conversation.
+
+### 4. Agent Reasoning Engine & Tool Registry
 * **Location:** [v2/harness.py](file:///e:/Vishwa/learning/agent/v2/harness.py), [v2/tools.py](file:///e:/Vishwa/learning/agent/v2/tools.py), [v2/skills/__init__.py](file:///e:/Vishwa/learning/agent/v2/skills/__init__.py)
 * **ReAct Architecture:** Implements a dynamic **Thought → Action → Observation** execution loop.
 * **Anti-Hallucination Evidence Engine:** Every tool execution registers structured evidence (`E1`, `E2`, etc.) in the `EvidenceStore`. Claims made by the model must cite indexed evidence tags `[E#]`.
@@ -83,7 +104,7 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
   - `Preventative Maintenance & Equipment Health`: Service logs and repair timestamps.
 * **Multi-Agent Hierarchical Supervisor:** Optional multi-agent mode ([v2/multi_agent/](file:///e:/Vishwa/learning/agent/v2/multi_agent/)) routing queries across dedicated domain specialist agents (Operations Specialist, Workforce Specialist, Inventory Specialist, Maintenance Specialist) with consensus synthesis.
 
-### 4. High-Performance REST API
+### 5. High-Performance REST API
 * **Location:** [v2/api.py](file:///e:/Vishwa/learning/agent/v2/api.py)
 * **Framework:** **FastAPI** with **Uvicorn** ASGI server.
 * **Validation:** **Pydantic V2** models for strict request/response parameter validation and type safety.
@@ -95,9 +116,11 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
   - `GET /api/factories/{id}/employees`: Real-time shift roll-call, absentees, and standby Free Pool roster.
   - `POST /api/factories/{id}/employees/assign-floater`: Allocates a relief floater to an unstaffed machine.
   - `POST /api/factories/{id}/employees/unassign-floater`: Releases a relief floater back to the Free Pool.
+  - `GET /api/factories/{id}/telemetry-alerts`: Proactive inventory depletion alerts for plant.
+  - `GET /api/alerts`: All active factory telemetry alerts.
   - `POST /api/agent/query`: Single-agent ReAct or multi-agent supervisor copilot investigation endpoint.
 
-### 5. Discrete-Time Physical Simulation Engine
+### 6. Discrete-Time Physical Simulation Engine
 * **Location:** [v2/simulator.py](file:///e:/Vishwa/learning/agent/v2/simulator.py)
 * **Lifecycle:** Runs as an asynchronous background task within FastAPI's lifespan context manager, ticking every 5 seconds.
 * **Simulation Mechanics:**
@@ -107,71 +130,45 @@ FactoryOS V2 is built with a strictly decoupled, production-grade architecture c
   - **Sporadic Breakdowns & Cooldowns:** Stochastic Poisson-like machine failures with 20-tick service recovery and plant-wide cooldowns.
   - **Quality Inspection Simulation:** Per-unit defect inspection tracking rework and rejection scrap rates.
 
-### 6. Modern Frontend Dashboard
+### 7. Modern Frontend Dashboard
 * **Location:** [v2/frontend/](file:///e:/Vishwa/learning/agent/v2/frontend/)
 * **Stack:** Vanilla **HTML5, CSS3, ES6+ JavaScript** (zero bloated node_modules or build steps).
 * **UI Features:**
   - Glassmorphic dark/light operations dashboard.
   - Interactive 10-station horizontal process route visualizer with live status dots.
   - Draggable, interactive Macho companion robot with pointer-capture physics and position persistence (`localStorage`).
+  - Proactive drawer alert card with direct 1-click prompt triggers.
   - Slide-over Operations Intelligence Drawer with live response streaming and chat bubbles.
   - 1-Click Floater Dispatch & Roster Management modal.
-
----
-
-## 🗂️ Project Directory Structure
-
-```text
-e:\Vishwa\learning\agent\
-├── docs/
-│   ├── factories/             # Operating manuals, safety protocols, and machine recovery SOPs (RAG knowledge base)
-│   └── screenshots/           # UI walkthrough and incident recovery screenshots
-├── v2/
-│   ├── api.py                 # FastAPI REST application & simulator lifespan coordinator
-│   ├── simulator.py           # Discrete-time industrial simulation engine (5s tick loop)
-│   ├── harness.py             # ReAct Agent loop, prompt manager & anti-hallucination guardrails
-│   ├── tools.py               # 12 allowlisted inspection & operational action tools
-│   ├── rag.py                 # Hybrid RAG engine (Vector embeddings + BM25 keyword search)
-│   ├── guardrails.py          # Input/output security, sanitization & citation verification
-│   ├── evals.py               # Benchmark test suite for agent accuracy & citation groundedness
-│   ├── multi_agent/           # Hierarchical Multi-Agent Supervisor & specialist agents
-│   ├── skills/                # Domain playbooks (RCA, Staffing, Orders, Inventory, Maintenance)
-│   ├── data/
-│   │   ├── factories/         # Multi-factory data (F001 Automotive, F002 Textiles, F003 Electronics)
-│   │   └── document_index.json# Pre-computed vector embeddings cache
-│   └── frontend/
-│       ├── index.html         # Live Operations Floor Monitor
-│       ├── app.js             # Real-time state synchronization, drawer & companion controller
-│       ├── style.css          # Core design system & layout tokens
-│       └── copilot.css        # Slide-over copilot drawer & chat styling
-└── README.md                  # Complete platform documentation
-```
 
 ---
 
 ## 🔄 2. System Flowcharts & Operational Workflows
 
 ### 1. End-to-End System Architecture Flowchart
-This flowchart captures the complete data loop between the interactive web dashboard, the asynchronous FastAPI backend, the physical simulation loop, the ReAct AI copilot, and the local Ollama LLM runtime:
+This flowchart captures the complete data loop between the interactive web dashboard, the asynchronous FastAPI backend, the physical simulation loop, the proactive telemetry analysis engine, the ReAct AI copilot, and the local Ollama LLM runtime:
 
 ```mermaid
 flowchart TD
     subgraph UI ["Modern Web Frontend (Vanilla HTML5 / CSS3 / ES6+)"]
         Monitor["Production Floor Monitor (10-Station Visual Route)"]
         Drawer["Macho Copilot Slide-Over Drawer"]
-        Companion["Interactive Physics Companion Robot"]
+        AlertCard["Proactive Telemetry Alert Card ([X% stock left])"]
+        Companion["Interactive Physics Companion Robot (⚠️ Badge)"]
     end
 
     subgraph API ["FastAPI Backend Server (:8000)"]
         Endpoints["REST API Endpoints (/api/factories/*)"]
+        AlertEndpoint["Telemetry Alerts Endpoint (/api/factories/{id}/telemetry-alerts)"]
         Lifespan["Async Lifespan Background Coordinator"]
     end
 
-    subgraph Sim ["Discrete-Time Simulation Engine"]
+    subgraph Sim ["Discrete-Time Simulation & Telemetry Engine"]
         Tick["5-Second Physical Tick Loop"]
         LineEng["Multi-Stage Production Line Engine"]
         Staffing["Dynamic Floater Allocation Matrix"]
         BOM["Bill of Materials Depletion Tracker"]
+        TelReporter["Macho Telemetry Analysis Reporter (<=20% Threshold Watchdog)"]
     end
 
     subgraph Agent ["Macho AI Operations Copilot"]
@@ -181,10 +178,14 @@ flowchart TD
         Skills["Domain Playbooks (RCA, Staffing, Orders, Inventory)"]
     end
 
-    subgraph Knowledge ["Hybrid RAG Knowledge Engine"]
-        VectorDB[("Local JSON Vector Store (document_index.json)")]
-        BM25[("BM25 Lexical Keyword Inverted Index")]
-        Docs["Factory SOPs, Manuals & Safety Checklists"]
+    subgraph Knowledge ["Advanced Hybrid RAG Knowledge Engine"]
+        ParentChild["Parent-Child Hierarchical Chunker"]
+        Manifest["Manifest Hash Tracker (document_manifest.json)"]
+        DenseVector[("Local Dense Vector Store (all-MiniLM-L6-v2)")]
+        BM25Index[("Okapi BM25 Inverted Lexical Index")]
+        RRFMerge["Reciprocal Rank Fusion (RRF k=60)"]
+        CrossEncoder["Cross-Encoder Reranker (ms-marco-MiniLM)"]
+        ConfGating{"Confidence >= 0.25"}
     end
 
     subgraph LLM ["Local LLM Runtime"]
@@ -193,17 +194,24 @@ flowchart TD
     end
 
     Monitor <-->|"HTTP / JSON Telemetry"| Endpoints
+    AlertCard <-->|"GET /telemetry-alerts"| AlertEndpoint
     Drawer <-->|"POST /api/agent/query"| Endpoints
     Endpoints <--> Lifespan
     Lifespan <--> Sim
+    Sim <--> TelReporter
+    TelReporter --> AlertEndpoint
     Endpoints <--> Harness
     Harness <--> Guardrails
     Harness <--> Skills
     Harness <--> Evidence
     Harness <-->|"Tool: search_factory_documents"| Knowledge
-    Knowledge <--> Docs
-    Knowledge <--> VectorDB
-    Knowledge <--> BM25
+    Knowledge --> ParentChild
+    ParentChild --> DenseVector
+    ParentChild --> BM25Index
+    DenseVector --> RRFMerge
+    BM25Index --> RRFMerge
+    RRFMerge --> CrossEncoder
+    CrossEncoder --> ConfGating
     Harness <-->|"Local REST API"| Ollama
     Ollama <--> Model
 ```
@@ -254,44 +262,97 @@ sequenceDiagram
 
 ---
 
-### 3. Hybrid RAG Knowledge Retrieval Pipeline
-This flowchart illustrates how unstructured plant documentation is vectorized, indexed, and retrieved during tool execution:
+### 3. Advanced Hybrid RAG Knowledge Retrieval Pipeline
+This flowchart illustrates how unstructured plant documentation is vectorized, indexed, and retrieved during tool execution with Parent-Child chunking, RRF fusion, and Cross-Encoder reranking:
 
 ```mermaid
 flowchart LR
-    subgraph Ingestion ["Ingestion & Indexing Pipeline"]
-        SOP["Factory SOPs & Manuals (docs/factories/*.md)"]
-        Chunker["Paragraph Chunker (600 chars, 100 overlap)"]
-        Embedder["Ollama Embedding Generator (nomic-embed-text)"]
-        VStore[("Vector DB Cache (document_index.json)")]
-        BMStore[("BM25 Inverted Lexical Index")]
+    subgraph Ingestion ["Ingestion & Incremental Indexing"]
+        Docs["SOPs & Manuals (docs/factories/*.md)"]
+        Manifest[("Manifest Hash Tracker (document_manifest.json)")]
+        PChunker["Parent-Child Chunker (Parent: 1400ch, Child: 380ch)"]
+        DenseEmbed["Dense Embeddings (MiniLM / nomic)"]
+        BM25Idx[("BM25 Inverted Index (IDF + Suffix Stemming)")]
+        VStore[("Vector DB Cache")]
     end
 
-    subgraph QueryPipeline ["Runtime Retrieval Pipeline"]
-        AgentQuery["Agent Tool Call (search_factory_documents)"]
-        DenseSearch["Cosine Similarity Search"]
-        SparseSearch["BM25 Keyword Matcher"]
-        HybridMerge["Score Fusion & Top-K Reranking"]
-        PromptContext["Injected into LLM Context Window"]
+    subgraph Retrieval ["Hybrid Retrieval & Scoring"]
+        Query["search_factory_documents(query)"]
+        BM25Search["BM25 Lexical Search"]
+        VectorSearch["Dense Vector Search"]
+        RRF["Reciprocal Rank Fusion (RRF k=60)"]
     end
 
-    SOP --> Chunker
-    Chunker --> Embedder
-    Embedder --> VStore
-    Chunker --> BMStore
+    subgraph Rerank ["Reranking & Confidence Gating"]
+        CrossEnc["Cross-Encoder Joint Reranker"]
+        ConfGate{"Confidence >= 0.25?"}
+        Fallback["insufficient_context Protocol"]
+        Citations["Parent Context & Citations [doc | p.X > sec]"]
+    end
 
-    AgentQuery --> DenseSearch
-    AgentQuery --> SparseSearch
-    VStore --> DenseSearch
-    BMStore --> SparseSearch
-    DenseSearch --> HybridMerge
-    SparseSearch --> HybridMerge
-    HybridMerge --> PromptContext
+    Docs --> Manifest
+    Manifest -->|New/Modified| PChunker
+    PChunker --> DenseEmbed
+    PChunker --> BM25Idx
+    DenseEmbed --> VStore
+    Query --> BM25Search
+    Query --> VectorSearch
+    BM25Idx --> BM25Search
+    VStore --> VectorSearch
+    BM25Search --> RRF
+    VectorSearch --> RRF
+    RRF --> CrossEnc
+    CrossEnc --> ConfGate
+    ConfGate -->|No / Low Score| Fallback
+    ConfGate -->|Yes| Citations
 ```
 
 ---
 
-### 4. Operational Step-by-Step Workflows
+### 4. Proactive Telemetry Monitoring & Raw Material Depletion Watchdog Workflow
+The following diagram illustrates how Macho continuously monitors inventory telemetry and surfaces proactive depletion alerts:
+
+```mermaid
+flowchart TD
+    subgraph TelemetryEngine ["Macho Telemetry Analysis Reporter (5s Tick Loop)"]
+        InvCSV["inventory.csv Live Telemetry"]
+        CapMap["Nominal Warehouse Capacities (F001 / F002 / F003)"]
+        CalcBurn["Burn Rate & Runout Hours Calculation"]
+        CheckThresh{"Remaining Stock <= 20%?"}
+        CriticalCheck{"Available <= 0?"}
+        CritAlert["🚨 CRITICAL Alert (Plant Line Halted)"]
+        WarnAlert["⚠️ WARNING Alert (Near Depletion)"]
+        StoreJSON[("Active Telemetry State (telemetry_alerts.json)")]
+        APIEndpoint["GET /api/factories/{id}/telemetry-alerts"]
+    end
+
+    subgraph UIInteraction ["User Experience & UI Interaction"]
+        RobotBadge["Macho Companion Alert Badge (⚠️ Ask Macho)"]
+        UserClick["User Clicks Macho Robot"]
+        DrawerAlert["Drawer Slide-Over Alert Card ([X% stock left])"]
+        ActionBtn["Button: Ask Macho for Restocking & Shortfall Plan"]
+        CopilotChat["Autonomous Shortfall & Procurement Strategy"]
+    end
+
+    InvCSV --> CalcBurn
+    CapMap --> CalcBurn
+    CalcBurn --> CheckThresh
+    CheckThresh -->|Yes| CriticalCheck
+    CriticalCheck -->|Yes| CritAlert
+    CriticalCheck -->|No| WarnAlert
+    CritAlert --> StoreJSON
+    WarnAlert --> StoreJSON
+    StoreJSON --> APIEndpoint
+    APIEndpoint --> RobotBadge
+    RobotBadge --> UserClick
+    UserClick --> DrawerAlert
+    DrawerAlert --> ActionBtn
+    ActionBtn --> CopilotChat
+```
+
+---
+
+### 5. Operational Step-by-Step Workflows
 
 #### Workflow A: Bottleneck Detection & Autonomous Floater Dispatch
 1. **Bottleneck Occurrence:** A primary operator is marked absent or a floater is unassigned. If the workstation is a single-machine bottleneck (`WS 1/1`), stage capacity drops to `0%`, and the line halts immediately.
@@ -308,13 +369,12 @@ flowchart LR
 4. **1-Click Batch Loading:** Pressing `[► Load: ORD-XXX]` calls `POST /api/factories/{id}/orders/dispatch-next`.
 5. **Telemetry Reset:** The active order indicator updates to the new contract, active batch units reset to 0, and sequential workstation flow begins immediately.
 
-#### Workflow C: ReAct Multi-Turn Reasoning & Anti-Hallucination Protocol
-1. **Input Guardrails:** User prompt is scrubbed for prompt injections and malicious system overrides.
-2. **Skill Playbook Injection:** The query is classified to match domain playbooks (`RCA`, `Staffing`, `Orders`, `Inventory`, `Maintenance`).
-3. **ReAct Execution Cycle:** The LLM executes sequential `Thought` and `Action` steps against 12 allowlisted Python inspection tools.
-4. **Evidence Indexing:** Raw outputs are scrubbed of internal hashes and registered into `EvidenceStore` with numbered keys `[E#]`.
-5. **Synthesis & Citation Verification:** The LLM produces its final response citing verified evidence tags. Output guardrails check that every claim matches an existing `[E#]`.
-6. **Context Persistence:** Conversation turns are appended to multi-turn memory to enable contextual follow-up requests.
+#### Workflow C: Proactive Raw Material Depletion Watchdog
+1. **Continuous Telemetry Polling:** The background simulator evaluates live stock consumption in `inventory.csv` every 5 seconds.
+2. **$\le 20\%$ Threshold Evaluation:** When available stock for any raw material drops to 20% or less of warehouse nominal capacity, Macho generates a `WARNING` alert. If stock drops to 0, a `CRITICAL` alert is triggered.
+3. **Non-Intrusive Companion Badge:** The Macho companion robot displays an alert symbol (`⚠️ Ask Macho`) without cluttering the canvas with text popups.
+4. **Drawer Alert Card:** Clicking Macho opens the slide-over drawer and renders the alert card displaying the exact remaining percentage (`[16.4% stock left]`), true capacity (`2,954.6 / 18,000.0 pieces`), safety threshold (`3,000.0`), and estimated hours of supply remaining.
+5. **Autonomous Restocking Strategy:** Clicking `Ask Macho for Restocking & Shortfall Plan →` triggers Macho to execute an end-to-end BOM assessment and formulate an immediate restocking priority schedule.
 
 ---
 
@@ -370,6 +430,18 @@ This end-to-end operational sequence illustrates Macho diagnosing an unstaffed b
 
 ---
 
+### 6. Proactive Telemetry Analysis & Raw Material Depletion Watchdog
+![Macho Telemetry Depletion Alert](docs/screenshots/10_macho_telemetry_depletion_alert.jpg)
+* **Real-Time Telemetry Watchdog:** Macho continuously audits plant floor raw material telemetry against nominal warehouse storage capacity (`NOMINAL_CAPACITIES`).
+* **Calibrated $\le 20\%$ Near-Depletion Warning:** When inventory falls below 20% of warehouse capacity, Macho flags the condition with an actionable directive inside the slide-over drawer:
+  - **Live Alert Headline:** `Macho Warning: 1 raw material(s) near depletion threshold in F001.`
+  - **Material & Stock Breakdown:** Pinpoints `Steel blanks (STL)` at `16.4% stock left` with `2,954.6 / 18,000.0 pieces` in stock against a safety reorder threshold of `3,000.0 pieces`.
+  - **Runout & Operational Impact:** Predicts `~469.0 hours of supply remaining` and identifies `Line 01` as the immediate downstream risk.
+  - **1-Click Restocking Action:** The `Ask Macho for Restocking & Shortfall Plan →` button triggers Macho to formulate an autonomous batch procurement and production protection strategy.
+* **Uncluttered Companion:** Replaces intrusive on-canvas chat bubbles with an unobtrusive pulsing alert badge (`⚠️ Ask Macho`) on the floating companion, keeping the production line route clean until the supervisor clicks to inspect.
+
+---
+
 ## 🚀 4. Getting Started
 
 ### 1. Prerequisites
@@ -395,3 +467,27 @@ python -m uvicorn v2.api:app --host 127.0.0.1 --port 8000
 - **Alternative 3D / Control Room Views:**
   - Creative Layout: [http://127.0.0.1:8000/static/creative.html](http://127.0.0.1:8000/static/creative.html)
   - Industrial Control Room: [http://127.0.0.1:8000/static/control-room.html](http://127.0.0.1:8000/static/control-room.html)
+
+---
+
+## 🧪 5. Testing & Verification Suite
+
+FactoryOS V2 includes automated self-checks and benchmark suites:
+
+### 1. Core End-to-End Self Checks
+Validates order contracts, HTTP error status formatting, hybrid RAG searches, citation formatting, insufficient-context guardrails, and Macho telemetry alert endpoints:
+```powershell
+python -m v2.test_core
+```
+
+### 2. RAGAS Evaluation Benchmark Suite
+Evaluates Faithfulness, Answer Relevancy, Context Precision (MAP@K), and Context Recall across factory test cases:
+```powershell
+python -m v2.evals --ragas
+```
+
+### 3. Macho Telemetry Analysis Reporter Smoke Test
+Executes stand-alone depletion analysis across multi-plant inventories, checking burn rates, nominal warehouse capacities, and $\le 20\%$ threshold filtering:
+```powershell
+python -m v2.telemetry_reporter
+```

@@ -52,6 +52,7 @@ Strict Operating Rules:
 12. When investigating why a line is halted, stopped, or slowed down, check for unstaffed operator bottlenecks first (using get_shortfall_analysis, get_employees_data, or get_machine_status). If an absent operator has no floater assigned to their workstation, conclude definitively that the line is halted due to the UNSTAFFED OPERATOR BOTTLENECK. Do NOT invent or search for mechanical coolant faults when an unstaffed operator bottleneck is present.
 13. Never cite or output raw hex event IDs (e.g. 7c417439...). Always cite clean evidence bracket tags like [E1], [E2] or workstation/machine IDs like L01-M03.
 14. Give ONLY the direct answer in 1 or 2 clear lines. NEVER output repetitive boilerplate headers like 'Problem Statement:', 'Direct Observed Causes:', 'Operational Guidelines:', or 'Root Cause Determination:'. Answer directly without filler.
+15. When asked about inventory telemetry, material shortages, or raw material depletion, call get_telemetry_alerts or get_inventory_data. Immediately alert the user if any raw material is depleted or near depletion with stock quantities, thresholds, and affected production lines.
 """
 
 

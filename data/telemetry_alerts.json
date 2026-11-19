@@ -1,0 +1,70 @@
+{
+  "last_updated": "2026-11-19T05:25:30.933399+00:00",
+  "alerts_by_factory": {
+    "F001": [
+      {
+        "alert_id": "ALERT-F001-STL-2026-11-19-NEAR",
+        "factory_id": "F001",
+        "material_code": "STL",
+        "material_name": "Steel blanks",
+        "unit": "pieces",
+        "available_quantity": 2930.2,
+        "reorder_level": 3000.0,
+        "consumed_quantity": 74.8,
+        "nominal_capacity": 18000.0,
+        "remaining_pct": 16.3,
+        "severity": "WARNING",
+        "depletion_status": "near_depletion",
+        "affected_lines": [
+          "Line 01"
+        ],
+        "burn_rate_daily": 74.8,
+        "estimated_runout_hours": 313.4,
+        "macho_alert_message": "\u26a0\ufe0f MACHO TELEMETRY ALERT: Raw material 'Steel blanks' (STL) is NEAR DEPLETION at 16.3% stock in F001. Current stock: 2,930.2 / 18,000.0 pieces (16.3% remaining; Safety reorder threshold: 3,000.0 pieces). Estimated ~313.4 hours of supply remaining. Immediate reorder required to safeguard Line 01.",
+        "created_at": "2026-11-19T05:25:30.931889+00:00"
+      }
+    ],
+    "F002": [
+      {
+        "alert_id": "ALERT-F002-FIN-2026-11-19-NEAR",
+        "factory_id": "F002",
+        "material_code": "FIN",
+        "material_name": "Finishing agent",
+        "unit": "liters",
+        "available_quantity": 313.24,
+        "reorder_level": 300.0,
+        "consumed_quantity": 12.66,
+        "nominal_capacity": 1800.0,
+        "remaining_pct": 17.4,
+        "severity": "WARNING",
+        "depletion_status": "near_depletion",
+        "affected_lines": [],
+        "burn_rate_daily": 12.66,
+        "estimated_runout_hours": 197.9,
+        "macho_alert_message": "\u26a0\ufe0f MACHO TELEMETRY ALERT: Raw material 'Finishing agent' (FIN) is NEAR DEPLETION at 17.4% stock in F002. Current stock: 313.2 / 1,800.0 liters (17.4% remaining; Safety reorder threshold: 300.0 liters). Estimated ~197.9 hours of supply remaining. Immediate reorder required to safeguard Plant Lines.",
+        "created_at": "2026-11-19T04:53:02.280614+00:00"
+      }
+    ],
+    "F003": [
+      {
+        "alert_id": "ALERT-F003-CON-2026-11-19-NEAR",
+        "factory_id": "F003",
+        "material_code": "CON",
+        "material_name": "Connector sets",
+        "unit": "sets",
+        "available_quantity": 1638.0,
+        "reorder_level": 2000.0,
+        "consumed_quantity": 161.0,
+        "nominal_capacity": 12000.0,
+        "remaining_pct": 13.7,
+        "severity": "WARNING",
+        "depletion_status": "near_depletion",
+        "affected_lines": [],
+        "burn_rate_daily": 161.0,
+        "estimated_runout_hours": 81.4,
+        "macho_alert_message": "\u26a0\ufe0f MACHO TELEMETRY ALERT: Raw material 'Connector sets' (CON) is NEAR DEPLETION at 13.7% stock in F003. Current stock: 1,638.0 / 12,000.0 sets (13.7% remaining; Safety reorder threshold: 2,000.0 sets). Estimated ~81.4 hours of supply remaining. Immediate reorder required to safeguard Plant Lines.",
+        "created_at": "2026-11-19T04:53:02.292327+00:00"
+      }
+    ]
+  }
+}

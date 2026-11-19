@@ -846,4 +846,129 @@
   50% { transform: translateY(-3px); }
 }
 
+/* Macho Drawer Telemetry Alert Card */
+.macho-drawer-alert {
+  margin: 12px 14px 14px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.12), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  animation: popUpIn 0.22s ease-out;
+}
+
+.macho-drawer-alert.is-warning {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.95));
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.macho-drawer-alert-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.macho-alert-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: #dc2626;
+  color: #fff;
+}
+
+.macho-drawer-alert.is-warning .macho-alert-tag {
+  background: #d97706;
+}
+
+.macho-alert-time {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.macho-drawer-alert-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin: 0 0 6px;
+}
+
+.macho-drawer-alert-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin: 0 0 10px;
+}
+
+.macho-drawer-alert-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.macho-alert-item-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.macho-alert-item-name {
+  font-weight: 600;
+  color: #f1f5f9;
+}
+
+.macho-alert-item-stock {
+  color: #fbbf24;
+  font-size: 10.5px;
+}
+
+.macho-drawer-alert-btn {
+  width: 100%;
+  padding: 8px 12px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.macho-drawer-alert.is-warning .macho-drawer-alert-btn {
+  background: #d97706;
+}
+
+.macho-drawer-alert-btn:hover {
+  filter: brightness(1.15);
+}
+
+.macho-alert-symbol {
+  font-size: 12px;
+  margin-right: 2px;
+  animation: pulseWarning 1.8s infinite;
+}
+
+@keyframes pulseWarning {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.25); opacity: 0.75; }
+}
+
+
 
